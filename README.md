@@ -1,7 +1,7 @@
 # automaid
 
 This program converts raw data transmitted by Mermaid instruments to
-classify datas, correct clock drifts, interpolate float position and
+classify data, correct clock drifts, interpolate float positions and
 then generates seismic SAC files, plots seismic events and dives and
 generates KML, HTML, and PNG files.
 
