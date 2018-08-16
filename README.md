@@ -1,6 +1,9 @@
 # automaid
 
-This program convert raw data transmitted by Mermaid instruments to classify datas, correct clock drifts, interpolate float position and then generate seismic SAC files, plot seismic events and dives and generate KML files.
+This program converts raw data transmitted by Mermaid instruments to
+classify datas, correct clock drifts, interpolate float position and
+then generates seismic SAC files, plots seismic events and dives and
+generates KML files.
 
 ### 1. INSTALLATION
 
@@ -12,7 +15,7 @@ of the wavelet inversion program with "make" could be problematic.
 Any python 2.7 installation with obspy, matplotlib and plotly 2.7.0 can be
 used.
 
-An easy installation procedure is described here:
+An easy (BASH!) installation procedure is described here:
 
 * Install [Miniconda](https://conda.io/miniconda.html) or the complete [Anaconda](https://www.anaconda.com/download/) that require more disk space.
 * Restart your terminal to load the new PATH variables.
