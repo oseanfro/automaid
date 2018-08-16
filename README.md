@@ -7,18 +7,17 @@ generates KML, HTML, and PNG files.
 
 Written by Sebastien Bonnieux.
 
+Slight edits to this and other README.md files by Frederik J Simons
+
 ### 1. INSTALLATION
 
 This installation procedure has been tested with macOS. For Linux the
 procedure is valid but one could prefer to use a the package manager.
-For Windows the installation of python 2.7 is valid but the
+For Windows the installation of Python 2.7 is valid but the
 compilation of the wavelet inversion program with "make" could be
 problematic.
 
-Any python 2.7 installation with obspy, matplotlib and plotly 2.7.0 can be
-used.
-
-An easy (BASH!) installation procedure is described here:
+An easy installation procedure is described here:
 
 * Install [Miniconda](https://conda.io/miniconda.html) or the complete [Anaconda](https://www.anaconda.com/download/) that require more disk space.
 * Restart your terminal to load the new PATH variables.
@@ -26,6 +25,9 @@ An easy (BASH!) installation procedure is described here:
 `conda config --add channels conda-forge`
 * Create a virtual environment called "pymaid":  
 `conda create -n pymaid python=2.7`
+
+* Make sure you are in the `bash` shell!
+
 * Activate the environment:  
 `source activate pymaid`
 * Install obspy:  
@@ -45,7 +47,7 @@ the "bin" directory and must be named `icdf24_v103_test` and
 
 To use the application: 
 
-* Copy files from server to the "server" directory:  
+* Copy files from your Mermaid server into the "server" directory:  
 `scp username@host:\{"*.LOG","*.MER","*.vit"\} server`
 * Activate the virtual environment:  
 `source activate pymaid`
@@ -53,6 +55,11 @@ To use the application:
 `python scripts/main.py`
 * Quit the virtual environment:  
 `source deactivate`
+
+You will be getting the processed files into the directory `processed`.
+You may have to remove some error-prone log files and create some
+directories - we will be editing the script for increased versatility
+as we go along.
 
 The "main.py" file can be edited to select some options:
 
