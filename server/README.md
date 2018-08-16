@@ -19,10 +19,10 @@ $somewhere/scripts -> ~fjsimons/PROGRAMS/YFILES/automaid/scripts
 
 And then IN that directory, $somewhere, I execute the sequence:
 
-`bash`
-`source activate pymaid`
-`python scripts/main.py`
-`source deactivate pymaid`
+`bash`\
+`source activate pymaid`\
+`python scripts/main.py`\
+`source deactivate pymaid`\
 
 and then I should find the processed files inside `processed` 
 
