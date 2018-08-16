@@ -9,10 +9,11 @@ Written by Sebastien Bonnieux.
 
 ### 1. INSTALLATION
 
-This installation procedure have been tested with macOS. For Linux the
-procedure is valid but one could prefer to use the package manager.
-For Windows the installation of python 2.7 is valid but the compilation
-of the wavelet inversion program with "make" could be problematic.
+This installation procedure has been tested with macOS. For Linux the
+procedure is valid but one could prefer to use a the package manager.
+For Windows the installation of python 2.7 is valid but the
+compilation of the wavelet inversion program with "make" could be
+problematic.
 
 Any python 2.7 installation with obspy, matplotlib and plotly 2.7.0 can be
 used.
