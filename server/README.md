@@ -7,15 +7,16 @@ have the whole thing running to get this to work as advertised.
 
 In my own work I keep my (copy) of the server somewhere, 
 
-$somewhere/server
+`$somewhere/server`
 
 and then I make
 
-$somewhere/processed
+`$somewhere/processed`
 
-and then I link to where I usually keep my pythons:
+and then I need to physically copy the scripts from where I usually
+keep my pythons, which I keep there so I can keep it as a small git repo. 
 
-$somewhere/scripts -> ~fjsimons/PROGRAMS/YFILES/automaid/scripts
+`cp -r $YFILES/automaid/scripts ~fjsimons/PROGRAMS/automaid/scripts`
 
 And then IN that directory, $somewhere, I execute the sequence:
 
