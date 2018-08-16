@@ -3,7 +3,7 @@
 This program converts raw data transmitted by Mermaid instruments to
 classify datas, correct clock drifts, interpolate float position and
 then generates seismic SAC files, plots seismic events and dives and
-generates KML files.
+generates KML, HTML, and PNG files.
 
 Written by Sebastien Bonnieux.
 
