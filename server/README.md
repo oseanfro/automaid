@@ -22,7 +22,7 @@ And then IN that directory, $somewhere, I execute the sequence:
 `bash`\
 `source activate pymaid`\
 `python scripts/main.py`\
-`source deactivate pymaid`\
+`source deactivate pymaid`
 
 and then I should find the processed files inside `processed` 
 
