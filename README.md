@@ -5,6 +5,8 @@ classify datas, correct clock drifts, interpolate float position and
 then generates seismic SAC files, plots seismic events and dives and
 generates KML files.
 
+Written by Sebastien Bonnieux.
+
 ### 1. INSTALLATION
 
 This installation procedure have been tested with macOS. For Linux the
