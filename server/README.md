@@ -13,19 +13,24 @@ and then, in there, I make
 
 `$somewhere/processed`
 
-and then I need to physically copy the scripts from where I usually
-keep my pythons, which I keep there so I can keep it as a small git repo. 
+and then I make a soft link to the scripts directory which itself
+resides in a place where I usually keep my other python scripts, as by
+the environmental variable $YFILES,
 
-`cp -r $YFILES/automaid/scripts $somewhere/scripts`
+`ln -s $YFILES/automaid/scripts $somewhere/scripts`
 
-And then IN that directory, $somewhere, I execute the sequence:
+I then have a script $UFILES/servercopy which syncs the data from the
+server and maintains a git repo of those files.
+
+And then for processing, I change INTO the directory $somewhere,
+where, since I usually am not in bash, I execute the sequence:
 
 `bash`\
 `source activate pymaid`\
 `python scripts/main.py`\
 `source deactivate pymaid`
 
-and then I should find the processed files inside `processed`.
+after which I should find the processed files inside `processed`.
 
 
 
