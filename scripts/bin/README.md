@@ -1,4 +1,4 @@
-This direcory, when the source code has been compiled, will contain
+This directory, when the source code has been compiled, will contain
 
 `icdf24_v103`
 `icdf24_v103ec`
