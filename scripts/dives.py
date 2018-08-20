@@ -346,6 +346,7 @@ class Dive:
         leave_great_depth_date = d1 + (mixed_layer_depth_m - p1) * (d2 - d1) / (p2 - p1)
 
         # compute location with linear interpolation
+
         self.great_depth_reach_loc = gps.linear_interpolation(gps_before_dive, reach_great_depth_date)
         self.great_depth_leave_loc = gps.linear_interpolation(gps_after_dive, leave_great_depth_date)
 
@@ -363,7 +364,7 @@ class Dive:
 
     def generate_events_sac(self):
         for event in self.events:
-            event.to_sac_and_mseed(self.export_path, self.station_number)
+            event.to_sac_and_mseed(self.export_path, self.station_number, force_without_loc=False)
 
 
 # Create dives object
