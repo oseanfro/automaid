@@ -30,7 +30,7 @@ where, since I usually am not in bash, I execute the sequence:
 `python scripts/main.py`\
 `source deactivate pymaid`
 
-after which I should find the processed files inside `processed`.
+after which I should find the processed files inside `$somewhere/processed`.
 
 
 
