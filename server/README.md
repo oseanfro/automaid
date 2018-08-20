@@ -28,7 +28,7 @@ where, since I usually am not in bash, I execute the sequence:
 `bash`\
 `source activate pymaid`\
 `python scripts/main.py`\
-`source deactivate pymaid`
+`source deactivate`
 
 after which I should find the processed files inside `$somewhere/processed`.
 
