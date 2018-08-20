@@ -1,3 +1,3 @@
-This is the landing directory for the processed files.
+This is the landing directory for all processed files.
 
 
