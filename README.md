@@ -39,10 +39,10 @@ An easy installation procedure is described here:
 * Quit the virtual environment:  
 `source deactivate`
 
-In addition to the Python 2.7 installation it is necessary to compile
-the wavelet invention program located in `scripts/bin/V103_Sources/` and
-`scripts/bin/V103EC_Sources/`. The compiled binaries must be placed in
-the "bin" directory and must be named `icdf24_v103_test` and
+In addition to the Python 2.7 installation it is necessary to compile,
+using `make` the wavelet inversion programs located in
+`scripts/src/V103/` and `scripts/src/V103EC/`. The compiled binaries
+must be in the "bin" directory and must be named `icdf24_v103_test` and
 `icdf24_v103ec_test`.
 
 ### 2. USAGE

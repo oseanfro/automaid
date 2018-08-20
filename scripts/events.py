@@ -116,12 +116,12 @@ class Event:
             f.write(self.binary)
         # Do icd24
         if edge_correction == "1":
-            subprocess.check_output(["bin/icdf24_v103ec",
+            subprocess.check_output(["bin/icdf24_v103ec_test",
                                      self.scales,
                                      normalized,
                                      "bin/wtcoeffs"])
         else:
-            subprocess.check_output(["bin/icdf24_v103",
+            subprocess.check_output(["bin/icdf24_v103_test",
                                     self.scales,
                                     normalized,
                                     "bin/wtcoeffs"])
