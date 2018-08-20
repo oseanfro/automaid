@@ -41,7 +41,7 @@ CFLAGS+= -g
 #EXEC=MovingAverage_test cdf24_test RecursiveFilter_test long_ops_test \
 #	wt_scales_power_test stalta Detection_test double2frac Event_test
 
-EXEC=../../bin/icdf24_v103
+EXEC=../../bin/icdf24_v103 
 
 # two different configurations of the make file allow to compile program cdf24_test
 # one first, whose lines are indicated with #1 first creates object files and then 
