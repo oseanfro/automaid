@@ -13,11 +13,11 @@ and then, in there, I make
 
 `$somewhere/processed`
 
-and then I make a soft link to the scripts directory which itself
-resides in a place where I usually keep my other python scripts, as by
-the environmental variable $YFILES,
+and then, since `main.py` is a bit explicit, I PHYSICALLY NEED TO COPY
+the scripts directory from where I usually keep my other python
+scripts, as by the environmental variable $YFILES,
 
-`ln -s $YFILES/automaid/scripts $somewhere/scripts`
+`cp -r $YFILES/automaid/scripts $somewhere`
 
 I then have a script $UFILES/servercopy which syncs the data from the
 server and maintains a git repo of those files.
