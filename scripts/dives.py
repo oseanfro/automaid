@@ -37,15 +37,8 @@ class Dive:
         self.log_name = log_name
         print log_name
 
-        # Get the date of the file
-        if "_" in log_name:
-            hexdate = log_name[3:-4]
-        else:
-            hexdate = log_name[0:-4]
-        timestamp = int(hexdate, 16)
-
-        # Convert to datetime object
-        self.date = UTCDateTime(timestamp)
+        # Get the date from the file name
+        self.date = utils.get_date_from_file_name(log_name)
 
         # Read the content of the LOG
         with open(self.base_path + self.log_name, "r") as f:
@@ -57,7 +50,8 @@ class Dive:
 
         # Check if the log correspond to the float initialization
         self.is_init = False
-        if "Enter in test mode?" in self.log_content and "deverminage" not in self.log_content:
+        match = re.search("\[TESTMD,\d{3}\]\"yes\"", self.log_content)
+        if "Enter in test mode?" in self.log_content and not match:
             self.is_init = True
 
         # Check if the log correspond to a dive
@@ -107,16 +101,15 @@ class Dive:
             # Get list of events associated to the dive
             self.events = events.get_events_between(self.date, self.end_date)
 
-            # Set environment information in each event object
+            # For each event
             for event in self.events:
+                # 1 Set the environment information
                 event.set_environment(self.mmd_environment)
-
-            # Correct events date
-            for event in self.events:
+                # 2 Find true sampling frequency
+                event.find_measured_sampling_frequency()
+                # 3 Correct events date
                 event.correct_date()
-
-            # Invert wavelet transform of events
-            for event in self.events:
+                # 4 Invert wavelet transform of event
                 event.invert_transform()
 
         # Find the position of the float
@@ -129,8 +122,11 @@ class Dive:
             if len(self.gps_list) == 0:
                 print "WARNING: No GPS synchronization at all for \"" \
                         + str(self.mmd_name) + "\", \"" + str(self.log_name) + "\""
-            elif self.gps_list[-1].date > surface_date:
+            elif len(self.gps_list) > 1 and self.gps_list[-1].date > surface_date:
                 self.gps_list_is_complete = True
+            elif self.gps_list[-1].date > surface_date:
+                print "WARNING: No GPS synchronization before diving for \"" \
+                        + str(self.mmd_name) + "\", \"" + str(self.log_name) + "\""
             else:
                 print "WARNING: No GPS synchronization after surfacing for \"" \
                         + str(self.mmd_name) + "\", \"" + str(self.log_name) + "\""
@@ -283,6 +279,12 @@ class Dive:
                   + str(self.mmd_name) + "\", \"" + str(self.log_name) + "\""
             return
 
+        # Warning GPS list is incomplete, do not compute event location
+        if not self.gps_list_is_complete:
+            print "WARNING: GPS list is incomplete, do not compute event location for \""\
+                  + str(self.mmd_name) + "\", \"" + str(self.log_name) + "\""
+            return
+
         # Divide gps in two list
         gps_before_dive = self.gps_list[:-1]
         gps_after_dive = [self.gps_list[-1]] + next_dive.gps_list[:-1]
@@ -346,7 +348,6 @@ class Dive:
         leave_great_depth_date = d1 + (mixed_layer_depth_m - p1) * (d2 - d1) / (p2 - p1)
 
         # compute location with linear interpolation
-
         self.great_depth_reach_loc = gps.linear_interpolation(gps_before_dive, reach_great_depth_date)
         self.great_depth_leave_loc = gps.linear_interpolation(gps_after_dive, leave_great_depth_date)
 
