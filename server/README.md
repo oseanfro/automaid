@@ -37,4 +37,4 @@ after which I should find the processed files inside
 anaconda module to make this work. 
 
 If for some reason you should have the `LD_LIBRARY_PATH` environmental
-variable set, unset it. In bash that would be using `unset LD_LIBRARY_PATH`. 
+variable set, unset it. In `bash` that would be using `unset LD_LIBRARY_PATH`. 
