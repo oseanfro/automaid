@@ -21,7 +21,8 @@ An easy installation procedure is described here:
 
 * Install [Miniconda](https://conda.io/miniconda.html) or
   [Anaconda](https://www.anaconda.com/download/) (which requires more
-  disk space). (You may already have it, you might have to do `module load anaconda/5.2.0`). 
+  disk space). (You may already have it, you might have to do `module
+  load anaconda/5.2.0` to specify the precise version).
 * Restart your terminal to load the new PATH variables.
 * Add the conda-forge channel:  
 `conda config --add channels conda-forge`
