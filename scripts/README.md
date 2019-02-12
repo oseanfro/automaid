@@ -1,1 +1,1 @@
-Scripts, source codes, exexcutables
+Scripts, source codes, executables. 
