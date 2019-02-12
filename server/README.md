@@ -20,12 +20,13 @@ scripts, as by the environmental variable $YFILES,
 
 `cp -r $YFILES/automaid/scripts $somewhere`
 
-I then have a script $UFILES/servercopy which syncs the data from the
+I then have a script `$UFILES/servercopy` which syncs the data from the
 server and maintains a git repo of those files.
 
 And then for processing, I change INTO the directory $somewhere,
 where, since I usually am not in bash, I execute the sequence:
 
+`module load anaconda/5.2.0`
 `bash`\
 `source activate pymaid`\
 `python scripts/main.py`\
