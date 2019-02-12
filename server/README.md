@@ -26,10 +26,15 @@ server and maintains a git repo of those files.
 And then for processing, I change INTO the directory $somewhere,
 where, since I usually am not in bash, I execute the sequence:
 
-`module load anaconda/5.2.0`
+`module load anaconda/5.2.0`\
 `bash`\
 `source activate pymaid`\
 `python scripts/main.py`\
 `source deactivate`
 
-after which I should find the processed files inside `$somewhere/processed`.
+after which I should find the processed files inside
+`$somewhere/processed`. Note that I reference a very particular
+anaconda module to make this work. 
+
+If for some reason you should have the `LD_LIBRARY_PATH` environmental
+variable set, unset it. In bash that would be using `unset LD_LIBRARY_PATH`. 
