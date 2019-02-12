@@ -4,7 +4,7 @@ In here, you'll find a directory structure identifying the floats by serial numb
 
 `drwxrwxr-x. 42 fjsimons fjsimons  4096 Feb 12 11:30 452.020-P-12`\
 `drwxrwxr-x. 38 fjsimons fjsimons  4096 Feb 12 11:30 452.020-P-13`\
-`drwxrwxr-x. 29 fjsimons fjsimons  4096 Feb 12 11:30 452.020-P-16`\
+`drwxrwxr-x. 29 fjsimons fjsimons  4096 Feb 12 11:30 452.020-P-16`
 
 etc, and inside of those, you will find directories with events:
 
