@@ -5,7 +5,7 @@ classify data, correct clock drifts, interpolate float positions and
 then generates seismic SAC files, plots seismic events and dives and
 generates KML, HTML, and PNG files.
 
-Written by Sebastien Bonnieux.
+Written by Sebastien Bonnieux. Maintained by Frederik J. Simons and Joel D. Simon. 
 
 Slight edits to this and other README.md files by Frederik J Simons
 
