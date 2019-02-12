@@ -1,6 +1,6 @@
 This directory needs to contain ALL the incoming server files, *LOG,
-*MER, *vit, *cmd files and the whole lot, and the main.py script will
-process it all and distributed it over the processed directory
+*MER, *vit, *cmd files and the whole lot, and the `main.py` script will
+process it all and distribute it over the `processed` directory
 incrementally.
 
 Not useful to give one or two examples of these files, you have to
@@ -32,6 +32,3 @@ where, since I usually am not in bash, I execute the sequence:
 `source deactivate`
 
 after which I should find the processed files inside `$somewhere/processed`.
-
-
-
