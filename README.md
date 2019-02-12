@@ -7,8 +7,6 @@ generates KML, HTML, and PNG files.
 
 Written by Sebastien Bonnieux. Maintained by Frederik J. Simons and Joel D. Simon. 
 
-Slight edits to this and other README.md files by Frederik J Simons
-
 ### 1. INSTALLATION
 
 This installation procedure has been tested with macOS. For Linux the
