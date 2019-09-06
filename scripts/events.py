@@ -132,11 +132,13 @@ class Event:
             f.write(self.binary)
         # Do icd24
         if edge_correction == "1":
+            #print "icdf24_v103ec_test"
             subprocess.check_output(["bin/icdf24_v103ec_test",
                                      self.scales,
                                      normalized,
                                      "bin/wtcoeffs"])
         else:
+            #print "icdf24_v103_test"
             subprocess.check_output(["bin/icdf24_v103_test",
                                     self.scales,
                                     normalized,
@@ -190,7 +192,7 @@ class Event:
                     filename=export_path,
                     auto_open=False)
 
-    def plot(self, export_path):
+    def plot_png(self, export_path):
         # Check if file exist
         export_path = export_path + self.get_export_file_name() + ".png"
         if os.path.exists(export_path):
@@ -209,7 +211,41 @@ class Event:
         plt.clf()
         plt.close()
 
-    def to_sac_and_mseed(self, export_path, station_number, force_without_loc):
+    def to_mseed(self, export_path, station_number, force_without_loc):
+        # Check if file exist
+        export_path_msd = export_path + self.get_export_file_name() + ".mseed"
+        if os.path.exists(export_path_msd):
+            return
+
+        # Check if the station location have been calculated
+        if self.station_loc is None and not force_without_loc:
+            print self.get_export_file_name() + ": Skip mseed generation, wait the next ascent to compute location"
+            return
+
+        # Get stream object
+        stream = self.get_stream(export_path, station_number, force_without_loc)
+
+        # Save stream object
+        stream.write(export_path_msd, format='MSEED')
+
+    def to_sac(self, export_path, station_number, force_without_loc):
+        # Check if file exist
+        export_path_sac = export_path + self.get_export_file_name() + ".sac"
+        if os.path.exists(export_path_sac):
+            return
+
+        # Check if the station location have been calculated
+        if self.station_loc is None and not force_without_loc:
+            print self.get_export_file_name() + ": Skip sac generation, wait the next ascent to compute location"
+            return
+
+        # Get stream object
+        stream = self.get_stream(export_path, station_number, force_without_loc)
+
+        # Save stream object
+        stream.write(export_path_sac, format='SAC')
+
+    def get_stream(self, export_path, station_number, force_without_loc):
         # Check if file exist
         export_path_sac = export_path + self.get_export_file_name() + ".sac"
         export_path_msd = export_path + self.get_export_file_name() + ".mseed"
@@ -243,6 +279,4 @@ class Event:
         trace.data = self.data
         stream = Stream(traces=[trace])
 
-        # Save stream object
-        stream.write(export_path_sac, format='SAC')
-        stream.write(export_path_msd, format='MSEED')
+        return stream
