@@ -1,0 +1,81 @@
+947119110:[MONITR,0197]reboot code 0x0000, src/monitor.c@520
+947119110:[MAIN  ,0007]buoy 452.020-R-0060
+947119110:[MAIN  ,0055]soft pilotage 452.012.300_V2.18-20200518
+947119110:[MAIN  ,0011]date 2000-01-06T00:38:30
+947119116:[MAIN  ,0006]battery 14983mV,    8174uA
+947119119:[MAIN  ,0024]internal pressure 100661Pa
+947119120:[PRESS ,0038]P    -50mbar,T -3981mdegC
+947119121:[MRMAID,0182]thread started
+947119122:[MRMAID,0186]no wake-up
+947119123:[MRMAID,0188]acq already stopped
+947119123:[MRMAID,0052]Mermaid $BOARD:452116600-60;
+947119124:[MRMAID,0052]Mermaid $SOFT:2.1338;
+947119124:[TESTMD,0053]Enter in test mode? yes/no
+947119124:[TESTMD,0252]0060>
+947119126:[TESTMD,0050]"yes"
+947119126:[TESTMD,0249]
+Command list
+pext    : Get external pressure
+pint    : Get internal vacuum
+ui      : Get voltage/current
+act     : Test actuators
+fillb   : Pump until filling the bladder
+bpopen  : Open bypass
+bpclose : Close bypass
+date    : Get date
+gps     : GPS synchronization
+iridium : Iridium transfer
+mstart  : Start mermaid acq
+mstop   : Stop mermaid acq
+mdata   : Get mermaid datas
+mchecksd  : Start mermaid acq
+mdump  : Send data REQUEST command with date and duration
+s41dumpa : Get averaged CTD datas
+s41dumpr : Get raw CTD datas
+ls      : List files
+cp      : Copy file or directory content on the desktop
+rm      : Remove a file
+h       : Print command list
+q       : Quit
+
+Advanced
+pumps X : pompe Xs (lent)
+pumpf X : pompe Xs (rapide)
+evh     : ouvre l'electrovalve 30s
+bypass  : ouvre le bypass 30s
+dvmine  : deverminage de la carte
+nominal : mode nominal pour mesure de conso
+cychydr : test du circuit hydraulique
+mkdir   : creer un repertoire
+mv      : deplacer un fichier
+ps      : liste les processus
+
+Set params
+stage   : Stage settings
+buoy    : Buoy settings
+p2t     : Pressure sensor settings
+log     : Verb cfg
+mermaid : Mermaid cfg
+upload  : On/Off Irid transfer
+sys  : system param settings
+
+
+947119126:[TESTMD,0252]0060>
+947120263:[TESTMD,0050]"pumps300"
+947120271:[PUMP  ,0016]pump during 300000ms
+947120573:[TESTMD,0252]0060>
+947120655:[TESTMD,0050]"pumps300"
+947120663:[PUMP  ,0016]pump during 300000ms
+947120965:[TESTMD,0252]0060>
+947121031:[TESTMD,0050]"pumps300"
+947121039:[PUMP  ,0016]pump during 300000ms
+947121340:[TESTMD,0252]0060>
+947121417:[TESTMD,0050]"pumpf300"
+947121425:[PUMP  ,0016]pump during 300000ms
+947121726:[TESTMD,0252]0060>
+947122011:[TESTMD,0050]"pumpf300"
+947122019:[PUMP  ,0016]pump during 300000ms
+947122321:[TESTMD,0252]0060>
+947122394:[TESTMD,0050]"pumpf300"
+947122402:[PUMP  ,0016]pump during 300000ms
+947122703:[TESTMD,0252]0060>

@@ -1,5 +1,7 @@
 import os
 import random
+import sys
+from decimal import Decimal
 
 
 def generate(dest_path, mfloat_name, dives):
@@ -38,6 +40,42 @@ def generate(dest_path, mfloat_name, dives):
     kml_string += kmlend()
     with open(dest_path + "position.kml", 'w') as f:
         f.write(kml_string)
+
+
+def generate_from_file(input_path,dest_path, name):
+    markers = {}
+    with open(input_path, 'r') as f:
+        Lines = f.readlines()
+    kml_string = str()
+    kml_string += kmlbeg()
+    kml_string += docbeg(name)
+    kml_string += linestyle(name)
+    kml_string += markerstyle()
+
+    kml_string += folderbeg("GPS points")
+    string = ""
+    for line in Lines:
+        elements = line.split(',')
+        pos = str(Decimal(elements[6])+(Decimal(elements[7])/Decimal("60.0"))) + "," + str(Decimal(elements[3])+(Decimal(elements[4])/Decimal("60.0"))) + ",0"
+        string += """
+        <Placemark>
+            <name>""" + elements[0] +' '+ elements[1] + """</name>
+            <visibility>1</visibility>
+            <styleUrl> #markerStyle2 </styleUrl>
+            <Point>
+                <coordinates> """ + pos + """ </coordinates>
+            </Point>
+        </Placemark>"""
+    kml_string += string
+    kml_string += folderend()
+
+    # kmlfile += look_at_auto(mermaid, 0)
+
+    kml_string += docend()
+    kml_string += kmlend()
+    with open(dest_path + "position.kml", 'w') as f:
+        f.write(kml_string)
+
 
 
 def kmlbeg():
@@ -311,6 +349,10 @@ def interpolated_point_marker(dives):
             </Placemark>"""
 
     return string
+
+
+if __name__ == "__main__":
+    generate_from_file(sys.argv[1],sys.argv[2],sys.argv[3])
 
 
 def last_pos_marker(dives):

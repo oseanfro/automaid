@@ -1,0 +1,108 @@
+1593612452:[MONITR,0197]reboot code 0x0000, src/monitor.c@520
+1593612452:[MAIN  ,0007]buoy 452.120-R-0069
+1593612452:[MAIN  ,0055]soft pilotage 452.012.300_V2.20-20200612
+1593612452:[MAIN  ,0011]date 2020-07-01T14:07:32
+1593612458:[MAIN  ,0006]battery 15471mV,    8174uA
+1593612461:[MAIN  ,0024]internal pressure 80408Pa
+1593612462:[PRESS ,0038]P    -30mbar,T+25676mdegC
+1593612462:[MRMAID,0182]thread started
+1593612464:[MRMAID,0186]no wake-up
+1593612465:[MRMAID,0188]acq already stopped
+1593612465:[MRMAID,0052]Mermaid $BOARD:452116600-69;
+1593612466:[MRMAID,0052]Mermaid $SOFT:2.1344;
+1593612466:[TESTMD,0053]Enter in test mode? yes/no
+1593612466:[TESTMD,0252]0069>
+1593612468:[TESTMD,0050]"yes"
+1593612468:[TESTMD,0249]
+Command list
+pext    : Get external pressure
+pint    : Get internal vacuum
+ui      : Get voltage/current
+act     : Test actuators
+fillb   : Pump until filling the bladder
+bpopen  : Open bypass
+bpclose : Close bypass
+date    : Get date
+gps     : GPS synchronization
+iridium : Iridium transfer
+mstart  : Start mermaid acq
+mstop   : Stop mermaid acq
+mdata   : Get mermaid datas
+mchecksd  : Start mermaid acq
+mdump  : Send data REQUEST command with date and duration
+s41dumpa : Get averaged CTD datas
+s41dumpr : Get raw CTD datas
+ls      : List files
+cp      : Copy file or directory content on the desktop
+rm      : Remove a file
+h       : Print command list
+q       : Quit
+
+Advanced
+pumps X : pompe Xs (lent)
+pumpf X : pompe Xs (rapide)
+evh     : ouvre l'electrovalve 30s
+bypass  : ouvre le bypass 30s
+dvmine  : deverminage de la carte
+nominal : mode nominal pour mesure de conso
+cychydr : test du circuit hydraulique
+mkdir   : creer un repertoire
+mv      : deplacer un fichier
+ps      : liste les processus
+
+Set params
+stage   : Stage settings
+buoy    : Buoy settings
+p2t     : Pressure sensor settings
+log     : Verb cfg
+mermaid : Mermaid cfg
+upload  : On/Off Irid transfer
+sys  : system param settings
+
+
+1593612468:[TESTMD,0252]0069>
+1593612473:[TESTMD,0050]"gps"
+1593612481:[SURF  ,0022]GPS fix...
+1593612529:[SURF  ,0015]10 PPS detected...
+1593612531:[MRMAID,0052]Mermaid $GPSACK:+50,+6,+0,+14,+6,+12,-152252;
+1593612541:[MRMAID,0052]Mermaid $GPSOFF:3686287;
+1593612543:[GPSFIX,0179]-1s diff
+1593612544:[SURF  ,0222]2020-07-01T14:09:04
+1593612544:[SURF  ,0082]Latitude : N43deg06.486mn, Longitude :E006deg02.287mn
+1593612544:[SURF  ,0223]fix3D,6satellites
+1593612544:[SURF  ,0084]GPS fix GPGSA : hdop1.380,vdop2.550
+1593612559:[TESTMD,0252]0069>
+1593612561:[TESTMD,0050]"gps"
+1593612573:[SURF  ,0022]GPS fix...
+1593612593:[SURF  ,0015]10 PPS detected...
+1593612594:[MRMAID,0052]Mermaid $GPSACK:+0,+0,+0,+0,+0,+0,-30;
+1593612604:[MRMAID,0052]Mermaid $GPSOFF:3686287;
+1593612607:[GPSFIX,0179]+0s diff
+1593612607:[SURF  ,0222]2020-07-01T14:10:07
+1593612607:[SURF  ,0082]Latitude : N43deg06.487mn, Longitude :E006deg02.287mn
+1593612607:[SURF  ,0223]fix3D,6satellites
+1593612607:[SURF  ,0084]GPS fix GPGSA : hdop1.150,vdop1.990
+1593612622:[TESTMD,0252]0069>
+1593612624:[TESTMD,0050]"act"
+1593612624:[SURFIN,0020]filling external bladder
+1593612632:[PUMP  ,0016]pump during 300000ms
+1593612640:[SURFIN,0019]external bladder full
+1593612645:[VALVE ,0034]valve opening 30000ms
+1593612680:[SURFIN,0020]filling external bladder
+1593612688:[PUMP  ,0016]pump during 300000ms
+1593612700:[SURFIN,0019]external bladder full
+1593612700:[TESTMD,0045]pump run 10s
+1593612705:[BYPASS,0035]bypass opening 30000ms
+1593612750:[SURFIN,0020]filling external bladder
+1593612758:[PUMP  ,0016]pump during 300000ms
+1593612847:[SURFIN,0019]external bladder full
+1593612847:[TESTMD,0045]pump run 87s
+1593612852:[TESTMD,0066]test done
+1593612852:[TESTMD,0252]0069>
+1593612864:[TESTMD,0050]"iridium"
+1593612873:[SURF  ,0025]Iridium...
+1593613289:[SURF  ,0009]connected in 415s, signal quality 1
+1593613360:<WARN>[SURF  ,0071]timeout
+1593613360:<WARN>[SURF  ,0056]peer mute
+1593613365:[SURF  ,0014]disconnected after 491s
+1593613370:[TESTMD,0252]0069>

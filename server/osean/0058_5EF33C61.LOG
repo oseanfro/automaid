@@ -1,0 +1,82 @@
+1592999009:[MONITR,0197]reboot code 0x0000, src/monitor.c@520
+1592999009:[MAIN  ,0007]buoy 452.120-R-0058
+1592999009:[MAIN  ,0055]soft pilotage 452.012.300_V2.20-20200612
+1592999009:[MAIN  ,0011]date 2020-06-24T11:43:29
+1592999015:[MAIN  ,0006]battery 15510mV,    7808uA
+1592999018:[MAIN  ,0024]internal pressure 79343Pa
+1592999019:[PRESS ,0038]P    +70mbar,T-13748mdegC
+1592999020:[MRMAID,0182]thread started
+1592999021:[MRMAID,0186]no wake-up
+1592999022:[MRMAID,0188]acq already stopped
+1592999022:[MRMAID,0052]Mermaid $BOARD:452116600-58;
+1592999023:[MRMAID,0052]Mermaid $SOFT:2.1344;
+1592999023:[TESTMD,0053]Enter in test mode? yes/no
+1592999023:[TESTMD,0252]0058>
+1592999028:[TESTMD,0050]"yes"
+1592999028:[TESTMD,0249]
+Command list
+pext    : Get external pressure
+pint    : Get internal vacuum
+ui      : Get voltage/current
+act     : Test actuators
+fillb   : Pump until filling the bladder
+bpopen  : Open bypass
+bpclose : Close bypass
+date    : Get date
+gps     : GPS synchronization
+iridium : Iridium transfer
+mstart  : Start mermaid acq
+mstop   : Stop mermaid acq
+mdata   : Get mermaid datas
+mchecksd  : Start mermaid acq
+mdump  : Send data REQUEST command with date and duration
+s41dumpa : Get averaged CTD datas
+s41dumpr : Get raw CTD datas
+ls      : List files
+cp      : Copy file or directory content on the desktop
+rm      : Remove a file
+h       : Print command list
+q       : Quit
+
+Advanced
+pumps X : pompe Xs (lent)
+pumpf X : pompe Xs (rapide)
+evh     : ouvre l'electrovalve 30s
+bypass  : ouvre le bypass 30s
+dvmine  : deverminage de la carte
+nominal : mode nominal pour mesure de conso
+cychydr : test du circuit hydraulique
+mkdir   : creer un repertoire
+mv      : deplacer un fichier
+ps      : liste les processus
+
+Set params
+stage   : Stage settings
+buoy    : Buoy settings
+p2t     : Pressure sensor settings
+log     : Verb cfg
+mermaid : Mermaid cfg
+upload  : On/Off Irid transfer
+sys  : system param settings
+
+
+1592999028:[TESTMD,0252]0058>
+1592999037:[TESTMD,0050]"pint"
+1592999040:[TESTMD,0029]79321Pa
+1592999040:[TESTMD,0252]0058>
+1592999047:[TESTMD,0050]"act"
+1592999047:[SURFIN,0020]filling external bladder
+1592999055:[PUMP  ,0016]pump during 300000ms
+1592999061:[SURFIN,0019]external bladder full
+1592999066:[VALVE ,0034]valve opening 30000ms
+1592999101:[SURFIN,0020]filling external bladder
+1592999109:[PUMP  ,0016]pump during 300000ms
+1592999121:[SURFIN,0019]external bladder full
+1592999121:[TESTMD,0045]pump run 10s
+1592999127:[BYPASS,0035]bypass opening 30000ms
+1592999171:[SURFIN,0020]filling external bladder
+1592999180:[PUMP  ,0016]pump during 300000ms
+1592999269:[SURFIN,0019]external bladder full
+1592999269:[TESTMD,0045]pump run 88s
+1592999275:[TESTMD,0066]test done
+1592999275:[TESTMD,0252]0058>

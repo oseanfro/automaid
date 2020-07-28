@@ -1,0 +1,440 @@
+1590462942:[MAIN  ,0007]buoy 452.020-P-0051
+1590462942:[MAIN  ,0055]soft pilotage 452.012.300_V2.18-20200518
+1590462942:[MAIN  ,0010]cycle 36
+1590462942:[SURF  ,0225]surface2
+1590462960:[SURF  ,0022]GPS fix...
+1590462980:[SURF  ,0015]10 PPS detected...
+1590462981:[MRMAID,0052]Mermaid $GPSACK:+0,+0,+0,+0,+0,+0,+0;
+1590462991:[MRMAID,0052]Mermaid $GPSOFF:3686320;
+1590462992:[GPSFIX,0179]-1s diff
+1590462993:[SURF  ,0222]2020-05-26T03:16:33
+1590462993:[SURF  ,0082]Latitude : N43deg40.939mn, Longitude :E007deg19.174mn
+1590462993:[SURF  ,0223]fix3D,7satellites
+1590462993:[SURF  ,0084]GPS fix GPGSA : hdop0.750,vdop0.880
+1590463003:[SURF  ,0025]Iridium...
+1590463011:[SBE41 ,0339]newoffset=-0.31db received after -57s
+1590463200:<WARN>[SURF  ,0023]failed to connect #1, code -8, net 1, qual 5, dial 1
+1590463259:[SURF  ,0009]connected in 256s, signal quality 5
+1590463330:[SURF  ,0218]prompt received, remote cmd end
+1590463330:[SURF  ,0012]17 cmd(s) received
+1590463352:[UPLOAD,0248]Upload data files...
+1590463433:[UPLOAD,0231]"0051/5ECC8319.S41" uploaded at 136bytes/s
+1590463734:[UPLOAD,0231]"0051/5ECC896C.MER" uploaded at 136bytes/s
+1590463823:[UPLOAD,0231]"0051/5ECC4026.BIN" uploaded at 122bytes/s
+1590463840:[MAIN  ,0013]3 file(s) uploaded
+1590463872:[SURF  ,0014]disconnected after 869s
+1590463877:[SURFIN,0020]filling external bladder
+1590463886:[PUMP  ,0207]battery 14831mV,   29768uA (warmup), P   +190mbar
+1590463886:[PUMP  ,0016]pump during 300000ms
+1590463896:[PUMP  ,0212]battery 14176mV, 1340780uA (steady state), P   +190mbar
+1590463898:[SURFIN,0019]external bladder full
+1590463898:[SURF  ,0227]1st complete transfer
+1590463898:[SURF  ,0226]Go dive (Minimum surface delay expired and no more file to upload)
+1590463916:[SURF  ,0022]GPS fix...
+1590463936:[SURF  ,0015]10 PPS detected...
+1590463937:[MRMAID,0052]Mermaid $GPSACK:+0,+0,+0,+0,+0,+0,-61;
+1590463947:[MRMAID,0052]Mermaid $GPSOFF:3686320;
+1590463948:[GPSFIX,0179]-1s diff
+1590463949:[SURF  ,0222]2020-05-26T03:32:29
+1590463949:[SURF  ,0082]Latitude : N43deg40.939mn, Longitude :E007deg19.172mn
+1590463949:[SURF  ,0223]fix3D,10satellites
+1590463949:[SURF  ,0084]GPS fix GPGSA : hdop0.670,vdop0.770
+1590463966:[MAIN  ,0024]internal pressure 79341Pa
+1590463967:[BYCMD ,0107]    FreeRTOS V8.2.3
+1590463967:[BYCMD ,0108]    FatFS v11a
+1590463967:[BYCMD ,0120]    bypass 10000ms 60000ms (20000ms 60000ms stored)
+1590463967:[BYCMD ,0121]    valve 60000ms 12750 (60000ms 12750 stored)
+1590463967:[BYCMD ,0122]    pump 60000ms 30% 10750 80% (60000ms 30% 10750 80% stored)
+1590463967:[BYCMD ,0123]    rate 2mbar/s (2mbar/s stored)
+1590463967:[BYCMD ,0124]    surface 500mbar (500mbar stored)
+1590463967:[BYCMD ,0125]    near 500mbar 3mbar/s (15000mbar 3mbar/s stored)
+1590463967:[BYCMD ,0126]    far 1500mbar 4mbar/s (25000mbar 4mbar/s stored)
+1590463967:[BYCMD ,0127]    ascent 8mbar/s (8mbar/s stored)
+1590463967:[BYCMD ,0128]    dead 60s (300s stored)
+1590463967:[BYCMD ,0129]    coeff 16/10 (16/10 stored)
+1590463967:[BYCMD ,0130]    stab 10 (10 stored)
+1590463967:[BYCMD ,0131]    delay 900s 3600s (900s 3600s stored)
+1590463967:[BYCMD ,0132]    mmtime 2880min (2880min stored)
+1590463967:[BYCMD ,0133]    dv_landing 100ml (100ml stored)
+1590463967:[MKDCMD,0150]    p2t37: 15x2000ms, offset 203mbar
+1590463967:[P2TCMD,0151]    p2t37: dp 50mbar, dt 1000000mdegC
+1590463968:[STAGE ,0080]Stage [0] 5000mbar (+/-500mbar) 1800s (<1800s) 
+1590463968:[STAGE ,0080]Stage [1] 5000mbar (+/-500mbar) 10800s (<12600s) MERMAID
+1590463968:[STAGE ,0091]Stage [2] surfacing 3600s (<16200s) SBE41
+1590463968:[SBE41 ,0282]SBE41 parameters : 
+      dsreplyformat=1 (webb(0)/standard(1))
+      addtimingdelays=0 (n(0)/y(1))
+      outputdensity=0 (n(0)/y(1))
+      echocmd=0 (n(0)/y(1))
+      outputrt=0 (n(0)/y(1))
+      outputpts=0 (n(0)/y(1))
+      outputsn=0 (n(0)/y(1))
+      outputpressure=1 (n(0)/y(1))
+      pcutoff=2dbar
+      tswait=0s
+      pumpfastpt=1 (n(0)/y(1))
+      samplerate=1 ('fast':1Hz(1)/'slow':0.5Hz(0))
+      top_bin_interval=10dbar
+      top_bin_size=10dbar
+      top_bin_max=100dbar
+      middle_bin_interval=50dbar
+      middle_bin_size=50dbar
+      middle_bin_max=1000dbar
+      bottom_bin_interval=100dbar
+      bottom_bin_size=100dbar
+      includetransitionbin=0
+      includenbin=0 (n(0)/y(1))
+      autobinavg=0 (n(0)/y(1))
+1590463968:[SBE41 ,0283]SBE41 pilot policy : 
+      continiousprofile=0 (n(0)/y(1)
+      speeddetection=1 (n(0)/y(1)
+      hexoutput=1 (n(0)/y(1)
+      binaverageoutput=0 (n(0)/y(1)
+      manualprofilerate=10s
+      runningpumpbeforeprofile=0s
+      speedstart=2mbar/s
+      speedcontrol=5mbar/s
+1590463968:[MAIN  ,0070]turn off bluetooth
+1590463970:[PRESS ,0038]P    -23mbar,T+20059mdegC
+1590463995:[DIVING,0141]diving from -23mbar, +0mbar/s
+1590463995:[BYPASS,0035]bypass opening 60000ms
+1590464000:[BYPASS,0104]battery 14527mV,  329278uA (bypass opening), P    -23mbar
+1590464065:[BYPASS,0106]battery 14458mV,  399794uA (bypass closing), P    -23mbar
+1590464067:[PRESS ,0038]P   -103mbar,T+20225mdegC
+1590464080:[PRESS ,0038]P    -43mbar,T+20248mdegC
+1590464095:[PRESS ,0038]P    +17mbar,T+20254mdegC
+1590464111:[PRESS ,0038]P    +77mbar,T+20273mdegC
+1590464145:[BYPASS,0035]bypass opening 10000ms
+1590464150:[BYPASS,0104]battery 14558mV,  325862uA (bypass opening), P   +107mbar
+1590464165:[BYPASS,0106]battery 14505mV,  399550uA (bypass closing), P   +107mbar
+1590464191:[BYPASS,0035]bypass opening 10000ms
+1590464196:[BYPASS,0104]battery 14592mV,  320738uA (bypass opening), P   +117mbar
+1590464211:[BYPASS,0106]battery 14526mV,  398452uA (bypass closing), P   +117mbar
+1590464238:[BYPASS,0035]bypass opening 10000ms
+1590464243:[BYPASS,0104]battery 14606mV,  321592uA (bypass opening), P    +97mbar
+1590464258:[BYPASS,0106]battery 14536mV,  397476uA (bypass closing), P    +97mbar
+1590464284:[BYPASS,0035]bypass opening 10000ms
+1590464290:[BYPASS,0104]battery 14606mV,  306830uA (bypass opening), P   +117mbar
+1590464305:[BYPASS,0106]battery 14546mV,  396622uA (bypass closing), P   +117mbar
+1590464321:[PRESS ,0038]P   +137mbar,T+20393mdegC
+1590464331:[BYPASS,0035]bypass opening 10000ms
+1590464336:[BYPASS,0104]battery 14617mV,  310490uA (bypass opening), P   +127mbar
+1590464351:[BYPASS,0106]battery 14557mV,  396012uA (bypass closing), P   +127mbar
+1590464378:[BYPASS,0035]bypass opening 10000ms
+1590464383:[BYPASS,0104]battery 14637mV,  316956uA (bypass opening), P   +117mbar
+1590464398:[BYPASS,0106]battery 14568mV,  395402uA (bypass closing), P   +117mbar
+1590464424:[BYPASS,0035]bypass opening 10000ms
+1590464430:[BYPASS,0104]battery 14635mV,  303536uA (bypass opening), P   +107mbar
+1590464445:[BYPASS,0106]battery 14580mV,  394914uA (bypass closing), P   +107mbar
+1590464471:[BYPASS,0035]bypass opening 10000ms
+1590464476:[BYPASS,0104]battery 14643mV,  303658uA (bypass opening), P   +127mbar
+1590464491:[BYPASS,0106]battery 14590mV,  394426uA (bypass closing), P   +127mbar
+1590464518:[BYPASS,0035]bypass opening 10000ms
+1590464523:[BYPASS,0104]battery 14658mV,  309148uA (bypass opening), P   +107mbar
+1590464538:[BYPASS,0106]battery 14598mV,  394060uA (bypass closing), P   +107mbar
+1590464564:[BYPASS,0035]bypass opening 10000ms
+1590464570:[BYPASS,0104]battery 14675mV,  314394uA (bypass opening), P   +137mbar
+1590464585:[BYPASS,0106]battery 14607mV,  393572uA (bypass closing), P   +137mbar
+1590464611:[BYPASS,0035]bypass opening 10000ms
+1590464616:[BYPASS,0104]battery 14680mV,  313052uA (bypass opening), P   +137mbar
+1590464631:[BYPASS,0106]battery 14615mV,  393084uA (bypass closing), P   +137mbar
+1590464658:[BYPASS,0035]bypass opening 10000ms
+1590464663:[BYPASS,0104]battery 14687mV,  313540uA (bypass opening), P   +137mbar
+1590464678:[BYPASS,0106]battery 14621mV,  392718uA (bypass closing), P   +137mbar
+1590464704:[BYPASS,0035]bypass opening 10000ms
+1590464709:[BYPASS,0104]battery 14692mV,  313418uA (bypass opening), P   +137mbar
+1590464725:[BYPASS,0106]battery 14626mV,  392230uA (bypass closing), P   +137mbar
+1590464751:[BYPASS,0035]bypass opening 10000ms
+1590464756:[BYPASS,0104]battery 14693mV,  309636uA (bypass opening), P   +127mbar
+1590464771:[BYPASS,0106]battery 14631mV,  391864uA (bypass closing), P   +127mbar
+1590464798:[BYPASS,0035]bypass opening 10000ms
+1590464803:[BYPASS,0104]battery 14697mV,  310612uA (bypass opening), P   +117mbar
+1590464818:[BYPASS,0106]battery 14635mV,  391376uA (bypass closing), P   +117mbar
+1590464844:[BYPASS,0035]bypass opening 10000ms
+1590464849:[BYPASS,0104]battery 14696mV,  306464uA (bypass opening), P   +117mbar
+1590464865:[BYPASS,0106]battery 14640mV,  391010uA (bypass closing), P   +117mbar
+1590464891:[BYPASS,0035]bypass opening 10000ms
+1590464896:[BYPASS,0104]battery 14696mV,  301706uA (bypass opening), P   +147mbar
+1590464911:[BYPASS,0106]battery 14642mV,  390644uA (bypass closing), P   +147mbar
+1590464938:[BYPASS,0035]bypass opening 10000ms
+1590464943:[BYPASS,0104]battery 14702mV,  302926uA (bypass opening), P   +157mbar
+1590464958:[BYPASS,0106]battery 14646mV,  390278uA (bypass closing), P   +157mbar
+1590464984:[BYPASS,0035]bypass opening 10000ms
+1590464989:[BYPASS,0104]battery 14703mV,  304268uA (bypass opening), P   +157mbar
+1590465004:[BYPASS,0106]battery 14650mV,  390034uA (bypass closing), P   +157mbar
+1590465031:[BYPASS,0035]bypass opening 10000ms
+1590465036:[BYPASS,0104]battery 14707mV,  305854uA (bypass opening), P   +127mbar
+1590465051:[BYPASS,0106]battery 14652mV,  389668uA (bypass closing), P   +127mbar
+1590465078:[BYPASS,0035]bypass opening 10000ms
+1590465083:[BYPASS,0104]battery 14716mV,  309026uA (bypass opening), P   +147mbar
+1590465098:[BYPASS,0106]battery 14655mV,  389302uA (bypass closing), P   +147mbar
+1590465124:[BYPASS,0035]bypass opening 10000ms
+1590465129:[BYPASS,0104]battery 14713mV,  305976uA (bypass opening), P   +137mbar
+1590465144:[BYPASS,0106]battery 14656mV,  389058uA (bypass closing), P   +137mbar
+1590465171:[BYPASS,0035]bypass opening 10000ms
+1590465176:[BYPASS,0104]battery 14720mV,  309880uA (bypass opening), P   +147mbar
+1590465191:[BYPASS,0106]battery 14658mV,  388814uA (bypass closing), P   +147mbar
+1590465218:[BYPASS,0035]bypass opening 10000ms
+1590465223:[BYPASS,0104]battery 14723mV,  311100uA (bypass opening), P   +137mbar
+1590465238:[BYPASS,0106]battery 14661mV,  388570uA (bypass closing), P   +137mbar
+1590465264:[BYPASS,0035]bypass opening 10000ms
+1590465269:[BYPASS,0104]battery 14726mV,  310246uA (bypass opening), P   +127mbar
+1590465284:[BYPASS,0106]battery 14662mV,  388326uA (bypass closing), P   +127mbar
+1590465311:[BYPASS,0035]bypass opening 10000ms
+1590465316:[BYPASS,0104]battery 14727mV,  310734uA (bypass opening), P   +147mbar
+1590465331:[BYPASS,0106]battery 14665mV,  388082uA (bypass closing), P   +147mbar
+1590465358:[BYPASS,0035]bypass opening 10000ms
+1590465363:[BYPASS,0104]battery 14727mV,  310368uA (bypass opening), P   +137mbar
+1590465378:[BYPASS,0106]battery 14666mV,  387838uA (bypass closing), P   +137mbar
+1590465404:[BYPASS,0035]bypass opening 10000ms
+1590465409:[BYPASS,0104]battery 14730mV,  311222uA (bypass opening), P   +127mbar
+1590465424:[BYPASS,0106]battery 14667mV,  387594uA (bypass closing), P   +127mbar
+1590465451:[BYPASS,0035]bypass opening 10000ms
+1590465456:[BYPASS,0104]battery 14732mV,  309514uA (bypass opening), P   +157mbar
+1590465471:[BYPASS,0106]battery 14668mV,  387472uA (bypass closing), P   +157mbar
+1590465483:[PRESS ,0038]P   +197mbar,T+20246mdegC
+1590465498:[BYPASS,0035]bypass opening 10000ms
+1590465503:[BYPASS,0104]battery 14731mV,  308416uA (bypass opening), P   +197mbar
+1590465518:[BYPASS,0106]battery 14670mV,  387228uA (bypass closing), P   +197mbar
+1590465544:[BYPASS,0035]bypass opening 10000ms
+1590465549:[BYPASS,0104]battery 14735mV,  309148uA (bypass opening), P   +157mbar
+1590465564:[BYPASS,0106]battery 14671mV,  386984uA (bypass closing), P   +157mbar
+1590465591:[BYPASS,0035]bypass opening 10000ms
+1590465596:[BYPASS,0104]battery 14732mV,  309026uA (bypass opening), P   +167mbar
+1590465611:[BYPASS,0106]battery 14672mV,  386862uA (bypass closing), P   +167mbar
+1590465638:[BYPASS,0035]bypass opening 10000ms
+1590465643:[BYPASS,0104]battery 14738mV,  307684uA (bypass opening), P   +167mbar
+1590465658:[BYPASS,0106]battery 14673mV,  386740uA (bypass closing), P   +167mbar
+1590465684:[BYPASS,0035]bypass opening 10000ms
+1590465689:[BYPASS,0104]battery 14735mV,  309392uA (bypass opening), P   +157mbar
+1590465704:[BYPASS,0106]battery 14675mV,  386374uA (bypass closing), P   +157mbar
+1590465731:[BYPASS,0035]bypass opening 10000ms
+1590465736:[BYPASS,0104]battery 14737mV,  310490uA (bypass opening), P   +167mbar
+1590465751:[BYPASS,0106]battery 14676mV,  386252uA (bypass closing), P   +167mbar
+1590465778:[BYPASS,0035]bypass opening 10000ms
+1590465783:[BYPASS,0104]battery 14737mV,  311222uA (bypass opening), P   +177mbar
+1590465798:[BYPASS,0106]battery 14677mV,  386130uA (bypass closing), P   +177mbar
+1590465824:[BYPASS,0035]bypass opening 10000ms
+1590465829:[BYPASS,0104]battery 14738mV,  309880uA (bypass opening), P   +167mbar
+1590465844:[BYPASS,0106]battery 14677mV,  386008uA (bypass closing), P   +167mbar
+1590465871:[BYPASS,0035]bypass opening 10000ms
+1590465876:[BYPASS,0104]battery 14738mV,  309514uA (bypass opening), P   +147mbar
+1590465891:[BYPASS,0106]battery 14678mV,  385886uA (bypass closing), P   +147mbar
+1590465917:[BYPASS,0035]bypass opening 10000ms
+1590465923:[BYPASS,0104]battery 14735mV,  304756uA (bypass opening), P   +157mbar
+1590465938:[BYPASS,0106]battery 14680mV,  385764uA (bypass closing), P   +157mbar
+1590465964:[BYPASS,0035]bypass opening 10000ms
+1590465969:[BYPASS,0104]battery 14738mV,  308416uA (bypass opening), P   +157mbar
+1590465984:[BYPASS,0106]battery 14680mV,  385642uA (bypass closing), P   +157mbar
+1590466011:[BYPASS,0035]bypass opening 10000ms
+1590466016:[BYPASS,0104]battery 14740mV,  309514uA (bypass opening), P   +177mbar
+1590466031:[BYPASS,0106]battery 14681mV,  385520uA (bypass closing), P   +177mbar
+1590466057:[BYPASS,0035]bypass opening 10000ms
+1590466063:[BYPASS,0104]battery 14733mV,  300608uA (bypass opening), P   +157mbar
+1590466078:[BYPASS,0106]battery 14682mV,  385398uA (bypass closing), P   +157mbar
+1590466104:[BYPASS,0035]bypass opening 10000ms
+1590466109:[BYPASS,0104]battery 14740mV,  306586uA (bypass opening), P   +157mbar
+1590466124:[BYPASS,0106]battery 14682mV,  385276uA (bypass closing), P   +157mbar
+1590466151:[BYPASS,0035]bypass opening 10000ms
+1590466156:[BYPASS,0104]battery 14736mV,  301340uA (bypass opening), P   +167mbar
+1590466171:[BYPASS,0106]battery 14683mV,  385276uA (bypass closing), P   +167mbar
+1590466197:[BYPASS,0035]bypass opening 10000ms
+1590466202:[BYPASS,0104]battery 14737mV,  302438uA (bypass opening), P   +157mbar
+1590466218:[BYPASS,0106]battery 14683mV,  385154uA (bypass closing), P   +157mbar
+1590466244:[BYPASS,0035]bypass opening 10000ms
+1590466249:[BYPASS,0104]battery 14741mV,  304878uA (bypass opening), P   +167mbar
+1590466264:[BYPASS,0106]battery 14685mV,  385032uA (bypass closing), P   +167mbar
+1590466291:[BYPASS,0035]bypass opening 10000ms
+1590466296:[BYPASS,0104]battery 14737mV,  302682uA (bypass opening), P   +157mbar
+1590466311:[BYPASS,0106]battery 14685mV,  385032uA (bypass closing), P   +157mbar
+1590466337:[BYPASS,0035]bypass opening 10000ms
+1590466342:[BYPASS,0104]battery 14737mV,  300608uA (bypass opening), P   +167mbar
+1590466357:[BYPASS,0106]battery 14686mV,  384910uA (bypass closing), P   +167mbar
+1590466384:[BYPASS,0035]bypass opening 10000ms
+1590466389:[BYPASS,0104]battery 14742mV,  304146uA (bypass opening), P   +177mbar
+1590466404:[BYPASS,0106]battery 14686mV,  384788uA (bypass closing), P   +177mbar
+1590466431:[BYPASS,0035]bypass opening 10000ms
+1590466436:[BYPASS,0104]battery 14743mV,  302316uA (bypass opening), P   +177mbar
+1590466451:[BYPASS,0106]battery 14687mV,  384788uA (bypass closing), P   +177mbar
+1590466477:[BYPASS,0035]bypass opening 10000ms
+1590466482:[BYPASS,0104]battery 14742mV,  303902uA (bypass opening), P   +157mbar
+1590466497:[BYPASS,0106]battery 14687mV,  384666uA (bypass closing), P   +157mbar
+1590466524:[BYPASS,0035]bypass opening 10000ms
+1590466529:[BYPASS,0104]battery 14741mV,  303292uA (bypass opening), P   +157mbar
+1590466544:[BYPASS,0106]battery 14687mV,  384666uA (bypass closing), P   +157mbar
+1590466571:[BYPASS,0035]bypass opening 10000ms
+1590466576:[BYPASS,0104]battery 14740mV,  301462uA (bypass opening), P   +177mbar
+1590466591:[BYPASS,0106]battery 14688mV,  384544uA (bypass closing), P   +177mbar
+1590466617:[BYPASS,0035]bypass opening 10000ms
+1590466622:[BYPASS,0104]battery 14742mV,  305488uA (bypass opening), P   +167mbar
+1590466637:[BYPASS,0106]battery 14688mV,  384544uA (bypass closing), P   +167mbar
+1590466653:[PRESS ,0038]P   +137mbar,T+20350mdegC
+1590466664:[BYPASS,0035]bypass opening 10000ms
+1590466669:[BYPASS,0104]battery 14741mV,  302194uA (bypass opening), P   +147mbar
+1590466684:[BYPASS,0106]battery 14688mV,  384422uA (bypass closing), P   +147mbar
+1590466711:[BYPASS,0035]bypass opening 10000ms
+1590466716:[BYPASS,0104]battery 14743mV,  304390uA (bypass opening), P   +147mbar
+1590466731:[BYPASS,0106]battery 14690mV,  384422uA (bypass closing), P   +147mbar
+1590466757:[BYPASS,0035]bypass opening 10000ms
+1590466762:[BYPASS,0104]battery 14745mV,  304512uA (bypass opening), P   +157mbar
+1590466777:[BYPASS,0106]battery 14690mV,  384300uA (bypass closing), P   +157mbar
+1590466804:[BYPASS,0035]bypass opening 10000ms
+1590466809:[BYPASS,0104]battery 14746mV,  303780uA (bypass opening), P   +167mbar
+1590466824:[BYPASS,0106]battery 14691mV,  384300uA (bypass closing), P   +167mbar
+1590466851:[BYPASS,0035]bypass opening 10000ms
+1590466856:[BYPASS,0104]battery 14747mV,  306464uA (bypass opening), P   +177mbar
+1590466871:[BYPASS,0106]battery 14691mV,  384300uA (bypass closing), P   +177mbar
+1590466897:[BYPASS,0035]bypass opening 10000ms
+1590466902:[BYPASS,0104]battery 14746mV,  304756uA (bypass opening), P   +167mbar
+1590466917:[BYPASS,0106]battery 14691mV,  384178uA (bypass closing), P   +167mbar
+1590466944:[BYPASS,0035]bypass opening 10000ms
+1590466949:[BYPASS,0104]battery 14742mV,  301828uA (bypass opening), P   +167mbar
+1590466964:[BYPASS,0106]battery 14692mV,  384178uA (bypass closing), P   +167mbar
+1590466991:[BYPASS,0035]bypass opening 10000ms
+1590466996:[BYPASS,0104]battery 14745mV,  302072uA (bypass opening), P   +167mbar
+1590467011:[BYPASS,0106]battery 14692mV,  384178uA (bypass closing), P   +167mbar
+1590467037:[BYPASS,0035]bypass opening 10000ms
+1590467042:[BYPASS,0104]battery 14747mV,  305610uA (bypass opening), P   +177mbar
+1590467057:[BYPASS,0106]battery 14692mV,  384056uA (bypass closing), P   +177mbar
+1590467084:[BYPASS,0035]bypass opening 10000ms
+1590467089:[BYPASS,0104]battery 14745mV,  302560uA (bypass opening), P   +167mbar
+1590467104:[BYPASS,0106]battery 14693mV,  384056uA (bypass closing), P   +167mbar
+1590467131:[BYPASS,0035]bypass opening 10000ms
+1590467136:[BYPASS,0104]battery 14743mV,  301706uA (bypass opening), P   +157mbar
+1590467151:[BYPASS,0106]battery 14693mV,  384056uA (bypass closing), P   +157mbar
+1590467177:[BYPASS,0035]bypass opening 10000ms
+1590467182:[BYPASS,0104]battery 14746mV,  302926uA (bypass opening), P   +147mbar
+1590467197:[BYPASS,0106]battery 14693mV,  384056uA (bypass closing), P   +147mbar
+1590467224:[BYPASS,0035]bypass opening 10000ms
+1590467229:[BYPASS,0104]battery 14746mV,  302194uA (bypass opening), P   +157mbar
+1590467244:[BYPASS,0106]battery 14693mV,  383934uA (bypass closing), P   +157mbar
+1590467270:[BYPASS,0035]bypass opening 10000ms
+1590467276:[BYPASS,0104]battery 14745mV,  300974uA (bypass opening), P   +167mbar
+1590467291:[BYPASS,0106]battery 14695mV,  383934uA (bypass closing), P   +167mbar
+1590467317:[BYPASS,0035]bypass opening 10000ms
+1590467322:[BYPASS,0104]battery 14748mV,  301340uA (bypass opening), P   +177mbar
+1590467337:[BYPASS,0106]battery 14695mV,  383934uA (bypass closing), P   +177mbar
+1590467362:[PRESS ,0038]P   +197mbar,T+20397mdegC
+1590467364:[BYPASS,0035]bypass opening 10000ms
+1590467369:[BYPASS,0104]battery 14748mV,  304024uA (bypass opening), P   +187mbar
+1590467384:[BYPASS,0106]battery 14695mV,  383934uA (bypass closing), P   +187mbar
+1590467410:[BYPASS,0035]bypass opening 10000ms
+1590467416:[BYPASS,0104]battery 14747mV,  301828uA (bypass opening), P   +177mbar
+1590467431:[BYPASS,0106]battery 14695mV,  383934uA (bypass closing), P   +177mbar
+1590467457:[BYPASS,0035]bypass opening 10000ms
+1590467462:[BYPASS,0104]battery 14750mV,  301584uA (bypass opening), P   +187mbar
+1590467477:[BYPASS,0106]battery 14695mV,  383812uA (bypass closing), P   +187mbar
+1590467504:[BYPASS,0035]bypass opening 10000ms
+1590467509:[BYPASS,0104]battery 14750mV,  303170uA (bypass opening), P   +187mbar
+1590467524:[BYPASS,0106]battery 14696mV,  383812uA (bypass closing), P   +187mbar
+1590467550:[BYPASS,0035]bypass opening 10000ms
+1590467556:[BYPASS,0104]battery 14748mV,  305122uA (bypass opening), P   +197mbar
+1590467571:[BYPASS,0106]battery 14696mV,  383812uA (bypass closing), P   +197mbar
+1590467597:[BYPASS,0035]bypass opening 10000ms
+1590467602:[BYPASS,0104]battery 14753mV,  304878uA (bypass opening), P   +187mbar
+1590467617:[BYPASS,0106]battery 14696mV,  383812uA (bypass closing), P   +187mbar
+1590467644:[BYPASS,0035]bypass opening 10000ms
+1590467649:[BYPASS,0104]battery 14753mV,  306220uA (bypass opening), P   +177mbar
+1590467664:[BYPASS,0106]battery 14697mV,  383690uA (bypass closing), P   +177mbar
+1590467690:[BYPASS,0035]bypass opening 10000ms
+1590467695:[BYPASS,0104]battery 14755mV,  305976uA (bypass opening), P   +187mbar
+1590467711:[BYPASS,0106]battery 14697mV,  383690uA (bypass closing), P   +187mbar
+1590467737:[BYPASS,0035]bypass opening 10000ms
+1590467742:[BYPASS,0104]battery 14752mV,  302560uA (bypass opening), P   +187mbar
+1590467757:[BYPASS,0106]battery 14697mV,  383690uA (bypass closing), P   +187mbar
+1590467784:[BYPASS,0035]bypass opening 10000ms
+1590467789:[BYPASS,0104]battery 14747mV,  302072uA (bypass opening), P   +197mbar
+1590467804:[BYPASS,0106]battery 14697mV,  383690uA (bypass closing), P   +197mbar
+1590467830:[BYPASS,0035]bypass opening 10000ms
+1590467835:[BYPASS,0104]battery 14751mV,  298778uA (bypass opening), P   +217mbar
+1590467851:[BYPASS,0106]battery 14697mV,  383690uA (bypass closing), P   +217mbar
+1590467877:[BYPASS,0035]bypass opening 10000ms
+1590467882:[BYPASS,0104]battery 14751mV,  300974uA (bypass opening), P   +207mbar
+1590467897:[BYPASS,0106]battery 14698mV,  383690uA (bypass closing), P   +207mbar
+1590467924:[BYPASS,0035]bypass opening 10000ms
+1590467929:[BYPASS,0104]battery 14750mV,  299998uA (bypass opening), P   +227mbar
+1590467944:[BYPASS,0106]battery 14698mV,  383690uA (bypass closing), P   +227mbar
+1590467970:[BYPASS,0035]bypass opening 10000ms
+1590467975:[BYPASS,0104]battery 14751mV,  299632uA (bypass opening), P   +217mbar
+1590467990:[BYPASS,0106]battery 14698mV,  383690uA (bypass closing), P   +217mbar
+1590468017:[BYPASS,0035]bypass opening 10000ms
+1590468022:[BYPASS,0104]battery 14751mV,  299876uA (bypass opening), P   +217mbar
+1590468037:[BYPASS,0106]battery 14698mV,  383690uA (bypass closing), P   +217mbar
+1590468064:[BYPASS,0035]bypass opening 10000ms
+1590468069:[BYPASS,0104]battery 14751mV,  299388uA (bypass opening), P   +217mbar
+1590468084:[BYPASS,0106]battery 14698mV,  383568uA (bypass closing), P   +217mbar
+1590468110:[BYPASS,0035]bypass opening 10000ms
+1590468115:[BYPASS,0104]battery 14751mV,  300242uA (bypass opening), P   +227mbar
+1590468130:[BYPASS,0106]battery 14700mV,  383568uA (bypass closing), P   +227mbar
+1590468157:[BYPASS,0035]bypass opening 10000ms
+1590468162:[BYPASS,0104]battery 14752mV,  299754uA (bypass opening), P   +217mbar
+1590468177:[BYPASS,0106]battery 14700mV,  383568uA (bypass closing), P   +217mbar
+1590468204:[BYPASS,0035]bypass opening 10000ms
+1590468209:[BYPASS,0104]battery 14752mV,  302072uA (bypass opening), P   +217mbar
+1590468224:[BYPASS,0106]battery 14700mV,  383568uA (bypass closing), P   +217mbar
+1590468250:[BYPASS,0035]bypass opening 10000ms
+1590468255:[BYPASS,0104]battery 14753mV,  298656uA (bypass opening), P   +237mbar
+1590468270:[BYPASS,0106]battery 14700mV,  383568uA (bypass closing), P   +237mbar
+1590468297:[BYPASS,0035]bypass opening 10000ms
+1590468302:[BYPASS,0104]battery 14755mV,  300242uA (bypass opening), P   +207mbar
+1590468317:[BYPASS,0106]battery 14700mV,  383568uA (bypass closing), P   +207mbar
+1590468344:[BYPASS,0035]bypass opening 10000ms
+1590468349:[BYPASS,0104]battery 14753mV,  301218uA (bypass opening), P   +217mbar
+1590468364:[BYPASS,0106]battery 14701mV,  383568uA (bypass closing), P   +217mbar
+1590468390:[BYPASS,0035]bypass opening 10000ms
+1590468395:[BYPASS,0104]battery 14753mV,  300242uA (bypass opening), P   +227mbar
+1590468410:[BYPASS,0106]battery 14701mV,  383568uA (bypass closing), P   +227mbar
+1590468437:[BYPASS,0035]bypass opening 10000ms
+1590468442:[BYPASS,0104]battery 14753mV,  300242uA (bypass opening), P   +207mbar
+1590468457:[BYPASS,0106]battery 14701mV,  383568uA (bypass closing), P   +207mbar
+1590468484:[BYPASS,0035]bypass opening 10000ms
+1590468489:[BYPASS,0104]battery 14753mV,  299022uA (bypass opening), P   +197mbar
+1590468504:[BYPASS,0106]battery 14701mV,  383446uA (bypass closing), P   +197mbar
+1590468530:[BYPASS,0035]bypass opening 10000ms
+1590468535:[BYPASS,0104]battery 14753mV,  298900uA (bypass opening), P   +197mbar
+1590468550:[BYPASS,0106]battery 14701mV,  383568uA (bypass closing), P   +197mbar
+1590468577:[BYPASS,0035]bypass opening 10000ms
+1590468582:[BYPASS,0104]battery 14753mV,  299876uA (bypass opening), P   +197mbar
+1590468597:[BYPASS,0106]battery 14702mV,  383446uA (bypass closing), P   +197mbar
+1590468624:[BYPASS,0035]bypass opening 10000ms
+1590468629:[BYPASS,0104]battery 14753mV,  300242uA (bypass opening), P   +197mbar
+1590468644:[BYPASS,0106]battery 14702mV,  383446uA (bypass closing), P   +197mbar
+1590468670:[BYPASS,0035]bypass opening 10000ms
+1590468675:[BYPASS,0104]battery 14756mV,  298534uA (bypass opening), P   +187mbar
+1590468690:[BYPASS,0106]battery 14702mV,  383446uA (bypass closing), P   +187mbar
+1590468717:[BYPASS,0035]bypass opening 10000ms
+1590468722:[BYPASS,0104]battery 14755mV,  299388uA (bypass opening), P   +197mbar
+1590468737:[BYPASS,0106]battery 14702mV,  383446uA (bypass closing), P   +197mbar
+1590468763:[BYPASS,0035]bypass opening 10000ms
+1590468769:[BYPASS,0104]battery 14755mV,  298778uA (bypass opening), P   +177mbar
+1590468784:[BYPASS,0106]battery 14702mV,  383446uA (bypass closing), P   +177mbar
+1590468810:[BYPASS,0035]bypass opening 10000ms
+1590468815:[BYPASS,0104]battery 14755mV,  300242uA (bypass opening), P   +187mbar
+1590468830:[BYPASS,0106]battery 14703mV,  383446uA (bypass closing), P   +187mbar
+1590468857:[BYPASS,0035]bypass opening 10000ms
+1590468862:[BYPASS,0104]battery 14755mV,  298900uA (bypass opening), P   +187mbar
+1590468877:[BYPASS,0106]battery 14703mV,  383446uA (bypass closing), P   +187mbar
+1590468903:[BYPASS,0035]bypass opening 10000ms
+1590468909:[BYPASS,0104]battery 14756mV,  299266uA (bypass opening), P   +187mbar
+1590468924:[BYPASS,0106]battery 14703mV,  383446uA (bypass closing), P   +187mbar
+1590468950:[BYPASS,0035]bypass opening 10000ms
+1590468955:[BYPASS,0104]battery 14756mV,  299022uA (bypass opening), P   +177mbar
+1590468970:[BYPASS,0106]battery 14703mV,  383446uA (bypass closing), P   +177mbar
+1590468997:[BYPASS,0035]bypass opening 10000ms
+1590469002:[BYPASS,0104]battery 14756mV,  299754uA (bypass opening), P   +187mbar
+1590469017:[BYPASS,0106]battery 14703mV,  383446uA (bypass closing), P   +187mbar
+1590469043:[BYPASS,0035]bypass opening 10000ms
+1590469048:[BYPASS,0104]battery 14758mV,  302438uA (bypass opening), P   +197mbar
+1590469064:[BYPASS,0106]battery 14703mV,  383446uA (bypass closing), P   +197mbar
+1590469090:[BYPASS,0035]bypass opening 10000ms
+1590469095:[BYPASS,0104]battery 14760mV,  302926uA (bypass opening), P   +197mbar
+1590469110:[BYPASS,0106]battery 14703mV,  383446uA (bypass closing), P   +197mbar
+1590469137:[BYPASS,0035]bypass opening 10000ms
+1590469142:[BYPASS,0104]battery 14762mV,  304024uA (bypass opening), P   +207mbar
+1590469157:[BYPASS,0106]battery 14705mV,  383446uA (bypass closing), P   +207mbar
+1590469183:[BYPASS,0035]bypass opening 10000ms
+1590469188:[BYPASS,0104]battery 14758mV,  300120uA (bypass opening), P   +227mbar
+1590469204:[BYPASS,0106]battery 14705mV,  383446uA (bypass closing), P   +227mbar
+1590469230:<ERR>[DIVING,0229]still at 197mbar (-1mbar/s) after 110 bypass done in 128 loop rounds
+1590469230:<ERR>[SOS   ,0199]TRIGGERED BY src/diving.c@111
+1590469230:<ERR>[SOS   ,0153]REBOOT

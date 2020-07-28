@@ -1,0 +1,101 @@
+947216599:[MONITR,0197]reboot code 0x0000, src/monitor.c@520
+947216599:[MAIN  ,0007]buoy 452.120-R-0064
+947216599:[MAIN  ,0055]soft pilotage 452.012.300_V2.20-20200612
+947216599:[MAIN  ,0011]date 2000-01-07T03:43:19
+947216605:[MAIN  ,0006]battery 14985mV,    7930uA
+947216608:[MAIN  ,0024]internal pressure 101326Pa
+947216609:[PRESS ,0038]P    -10mbar,T-14411mdegC
+947216609:[MRMAID,0182]thread started
+947216611:[MRMAID,0186]no wake-up
+947216612:[MRMAID,0188]acq already stopped
+947216612:[MRMAID,0052]Mermaid $BOARD:452116600-64;
+947216613:[MRMAID,0052]Mermaid $SOFT:2.1338;
+947216613:[TESTMD,0053]Enter in test mode? yes/no
+947216613:[TESTMD,0252]0064>
+947216615:[TESTMD,0050]"yes"
+947216615:[TESTMD,0249]
+Command list
+pext    : Get external pressure
+pint    : Get internal vacuum
+ui      : Get voltage/current
+act     : Test actuators
+fillb   : Pump until filling the bladder
+bpopen  : Open bypass
+bpclose : Close bypass
+date    : Get date
+gps     : GPS synchronization
+iridium : Iridium transfer
+mstart  : Start mermaid acq
+mstop   : Stop mermaid acq
+mdata   : Get mermaid datas
+mchecksd  : Start mermaid acq
+mdump  : Send data REQUEST command with date and duration
+s41dumpa : Get averaged CTD datas
+s41dumpr : Get raw CTD datas
+ls      : List files
+cp      : Copy file or directory content on the desktop
+rm      : Remove a file
+h       : Print command list
+q       : Quit
+
+Advanced
+pumps X : pompe Xs (lent)
+pumpf X : pompe Xs (rapide)
+evh     : ouvre l'electrovalve 30s
+bypass  : ouvre le bypass 30s
+dvmine  : deverminage de la carte
+nominal : mode nominal pour mesure de conso
+cychydr : test du circuit hydraulique
+mkdir   : creer un repertoire
+mv      : deplacer un fichier
+ps      : liste les processus
+
+Set params
+stage   : Stage settings
+buoy    : Buoy settings
+p2t     : Pressure sensor settings
+log     : Verb cfg
+mermaid : Mermaid cfg
+upload  : On/Off Irid transfer
+sys  : system param settings
+
+
+947216615:[TESTMD,0252]0064>
+947216622:[TESTMD,0050]"bpopen"
+947216630:[TESTMD,0252]0064>
+947216797:[TESTMD,0050]"bpclose"
+947216805:[TESTMD,0252]0064>
+947216928:[TESTMD,0050]"bpclose"
+947216936:[TESTMD,0252]0064>
+947217284:[TESTMD,0050]"pumpf300"
+947217292:[PUMP  ,0016]pump during 300000ms
+947217593:[TESTMD,0252]0064>
+947217623:[TESTMD,0050]"pumpf300"
+947217632:[PUMP  ,0016]pump during 300000ms
+947217933:[TESTMD,0252]0064>
+947218247:[TESTMD,0050]"pumpf300"
+947218255:[PUMP  ,0016]pump during 300000ms
+947218557:[TESTMD,0252]0064>
+947218586:[TESTMD,0050]"pumps300"
+947218594:[PUMP  ,0016]pump during 300000ms
+947218895:[TESTMD,0252]0064>
+947218930:[TESTMD,0050]"pumps300"
+947218938:[PUMP  ,0016]pump during 300000ms
+947219240:[TESTMD,0252]0064>
+947219271:[TESTMD,0050]"pumps300"
+947219280:[PUMP  ,0016]pump during 300000ms
+947219581:[TESTMD,0252]0064>
+947220298:[TESTMD,0050]"fillb"
+947220298:[SURFIN,0020]filling external bladder
+947220306:[PUMP  ,0016]pump during 300000ms
+947220563:[SURFIN,0019]external bladder full
+947220564:[TESTMD,0252]0064>
+947220567:[TESTMD,0050]"bpopen"
+947220575:[TESTMD,0252]0064>
+947220584:[TESTMD,0050]"bpclose"
+947220592:[TESTMD,0252]0064>
+947220596:[TESTMD,0050]"fillb"
+947220596:[SURFIN,0020]filling external bladder
+947220604:[PUMP  ,0016]pump during 300000ms
+947220631:[SURFIN,0019]external bladder full
+947220631:[TESTMD,0252]0064>

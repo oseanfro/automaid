@@ -1,0 +1,140 @@
+1593092207:[MONITR,0197]reboot code 0x0000, src/monitor.c@520
+1593092207:[MAIN  ,0007]buoy 452.120-R-0059
+1593092207:[MAIN  ,0055]soft pilotage 452.012.300_V2.20-20200612
+1593092207:[MAIN  ,0011]date 2020-06-25T13:36:47
+1593092213:[MAIN  ,0006]battery 15491mV,    7808uA
+1593092216:[MAIN  ,0024]internal pressure 79008Pa
+1593092217:[PRESS ,0038]P    +70mbar,T+10851mdegC
+1593092218:[MRMAID,0182]thread started
+1593092219:[MRMAID,0186]no wake-up
+1593092220:[MRMAID,0188]acq already stopped
+1593092220:[MRMAID,0052]Mermaid $BOARD:452116600-59;
+1593092221:[MRMAID,0052]Mermaid $SOFT:2.1344;
+1593092221:[TESTMD,0053]Enter in test mode? yes/no
+1593092221:[TESTMD,0252]0059>
+1593092251:[TESTMD,0050]"yes"
+1593092251:[TESTMD,0249]
+Command list
+pext    : Get external pressure
+pint    : Get internal vacuum
+ui      : Get voltage/current
+act     : Test actuators
+fillb   : Pump until filling the bladder
+bpopen  : Open bypass
+bpclose : Close bypass
+date    : Get date
+gps     : GPS synchronization
+iridium : Iridium transfer
+mstart  : Start mermaid acq
+mstop   : Stop mermaid acq
+mdata   : Get mermaid datas
+mchecksd  : Start mermaid acq
+mdump  : Send data REQUEST command with date and duration
+s41dumpa : Get averaged CTD datas
+s41dumpr : Get raw CTD datas
+ls      : List files
+cp      : Copy file or directory content on the desktop
+rm      : Remove a file
+h       : Print command list
+q       : Quit
+
+Advanced
+pumps X : pompe Xs (lent)
+pumpf X : pompe Xs (rapide)
+evh     : ouvre l'electrovalve 30s
+bypass  : ouvre le bypass 30s
+dvmine  : deverminage de la carte
+nominal : mode nominal pour mesure de conso
+cychydr : test du circuit hydraulique
+mkdir   : creer un repertoire
+mv      : deplacer un fichier
+ps      : liste les processus
+
+Set params
+stage   : Stage settings
+buoy    : Buoy settings
+p2t     : Pressure sensor settings
+log     : Verb cfg
+mermaid : Mermaid cfg
+upload  : On/Off Irid transfer
+sys  : system param settings
+
+
+1593092251:[TESTMD,0252]0059>
+1593092391:[TESTMD,0050]"gps"
+1593092399:[SURF  ,0022]GPS fix...
+1593092399:<WARN>[GPSFIX,0123]GPRMC ms=90 #1
+1593092450:<WARN>[GPSFIX,0121]GPRMC #1
+1593092474:[SURF  ,0015]10 PPS detected...
+1593092475:[MRMAID,0052]Mermaid $GPSACK:+50,+5,+24,+13,+36,+4,-745605;
+1593092485:[MRMAID,0052]Mermaid $GPSOFF:3686311;
+1593092487:[GPSFIX,0179]-7s diff
+1593092494:[SURF  ,0222]2020-06-25T13:41:34
+1593092494:[SURF  ,0082]Latitude : N43deg06.484mn, Longitude :E006deg02.287mn
+1593092494:[SURF  ,0223]fix3D,6satellites
+1593092494:[SURF  ,0084]GPS fix GPGSA : hdop1.460,vdop2.710
+1593092509:[TESTMD,0252]0059>
+1593092512:[TESTMD,0050]"gps"
+1593092521:[SURF  ,0022]GPS fix...
+1593092541:[SURF  ,0015]10 PPS detected...
+1593092542:[MRMAID,0052]Mermaid $GPSACK:+0,+0,+0,+0,+0,+0,+0;
+1593092552:[MRMAID,0052]Mermaid $GPSOFF:3686311;
+1593092554:[GPSFIX,0179]+0s diff
+1593092554:[SURF  ,0222]2020-06-25T13:42:34
+1593092554:[SURF  ,0082]Latitude : N43deg06.484mn, Longitude :E006deg02.285mn
+1593092554:[SURF  ,0223]fix3D,6satellites
+1593092554:[SURF  ,0084]GPS fix GPGSA : hdop1.100,vdop2.070
+1593092569:[TESTMD,0252]0059>
+1593092641:[TESTMD,0050]"iridium"
+1593092652:[SURF  ,0025]Iridium...
+1593092821:[SURF  ,0009]connected in 169s, signal quality 4
+1593092853:[SURF  ,0218]prompt received, remote cmd end
+1593092853:[SURF  ,0012]10 cmd(s) received
+1593092880:[UPLOAD,0248]Upload data files...
+1593092896:[UPLOAD,0231]"0059/5C332CFD.LOG" uploaded at 109bytes/s
+1593092910:[UPLOAD,0231]"0059/5C338241.LOG" uploaded at 136bytes/s
+1593092918:[UPLOAD,0231]"0059/5C6EB06B.LOG" uploaded at 85bytes/s
+1593092932:[UPLOAD,0231]"0059/5C6EB19E.LOG" uploaded at 147bytes/s
+1593092968:[UPLOAD,0231]"0059/5C6EBA42.LOG" uploaded at 175bytes/s
+1593092996:[UPLOAD,0231]"0059/5C753C56.LOG" uploaded at 161bytes/s
+1593093013:[UPLOAD,0231]"0059/5C765B98.LOG" uploaded at 146bytes/s
+1593093024:[UPLOAD,0231]"0059/5C77EA22.LOG" uploaded at 124bytes/s
+1593093043:[UPLOAD,0231]"0059/5C78FC1E.LOG" uploaded at 151bytes/s
+1593093053:[UPLOAD,0231]"0059/5C791060.LOG" uploaded at 134bytes/s
+1593093061:[UPLOAD,0231]"0059/5C7D2F5A.LOG" uploaded at 91bytes/s
+1593093094:[UPLOAD,0231]"0059/5D1365B8.LOG" uploaded at 171bytes/s
+1593093126:[UPLOAD,0231]"0059/5D138A74.LOG" uploaded at 172bytes/s
+1593093148:[UPLOAD,0231]"0059/5D15D5EA.LOG" uploaded at 156bytes/s
+1593093179:[UPLOAD,0231]"0059/5D1DBF61.LOG" uploaded at 164bytes/s
+1593093221:[UPLOAD,0231]"0059/5D2F2AD0.LOG" uploaded at 180bytes/s
+1593093239:[UPLOAD,0231]"0059/5D30299F.LOG" uploaded at 150bytes/s
+1593093446:[UPLOAD,0231]"0059/5D302EC9.LOG" uploaded at 88bytes/s
+1593093480:[UPLOAD,0231]"0059/5D304045.LOG" uploaded at 164bytes/s
+1593093498:[UPLOAD,0231]"0059/5D3045E3.LOG" uploaded at 156bytes/s
+1593093546:[UPLOAD,0231]"0059/5D306192.LOG" uploaded at 191bytes/s
+1593093571:[UPLOAD,0231]"0059/5D307EB9.LOG" uploaded at 158bytes/s
+1593093582:[UPLOAD,0231]"0059/5D308925.MER" uploaded at 122bytes/s
+1593093590:[UPLOAD,0231]"0059/5D308931.LOG" uploaded at 88bytes/s
+1593093613:[UPLOAD,0231]"0059/5D316B82.LOG" uploaded at 151bytes/s
+1593093630:[UPLOAD,0231]"0059/5D3175E6.LOG" uploaded at 156bytes/s
+1593093662:[UPLOAD,0231]"0059/5D31789D.LOG" uploaded at 174bytes/s
+1593093682:[UPLOAD,0231]"0059/5D318115.LOG" uploaded at 147bytes/s
+1593093704:[ZIO   ,0240]"NO CARRIER" received, aborting
+1593093720:[SURF  ,0014]disconnected after 1068s
+1593093725:[TESTMD,0252]0059>
+1593093815:[TESTMD,0050]"act"
+1593093816:[SURFIN,0020]filling external bladder
+1593093824:[PUMP  ,0016]pump during 300000ms
+1593093833:[SURFIN,0019]external bladder full
+1593093838:[VALVE ,0034]valve opening 30000ms
+1593093873:[SURFIN,0020]filling external bladder
+1593093881:[PUMP  ,0016]pump during 300000ms
+1593093893:[SURFIN,0019]external bladder full
+1593093893:[TESTMD,0045]pump run 10s
+1593093898:[BYPASS,0035]bypass opening 30000ms
+1593093943:[SURFIN,0020]filling external bladder
+1593093951:[PUMP  ,0016]pump during 300000ms
+1593094041:[SURFIN,0019]external bladder full
+1593094041:[TESTMD,0045]pump run 88s
+1593094046:[TESTMD,0066]test done
+1593094046:[TESTMD,0252]0059>

@@ -1,0 +1,113 @@
+1578928541:[MONITR,0197]reboot code 0x0000, src/monitor.c@516
+1578928541:[MAIN  ,0007]buoy 452.020-P-0051
+1578928541:[MAIN  ,0055]soft pilotage 452.012.300_V2.9-20200113
+1578928542:[MAIN  ,0011]date 2020-01-13T15:15:42
+1578928548:[MAIN  ,0006]battery 15383mV,   10858uA
+1578928550:[MAIN  ,0024]internal pressure 93235Pa
+1578928552:[PRESS ,0038]P-65535945mbar,T+20345mdegC
+1578928552:[MRMAID,0182]thread started
+1578928553:[MRMAID,0186]no wake-up
+1578928554:[MRMAID,0188]acq already stopped
+1578928554:[MRMAID,0052]Mermaid $BOARD:452116600-51;
+1578928555:[MRMAID,0052]Mermaid $SOFT:2.1344;
+1578928555:[TESTMD,0053]Enter in test mode? yes/no
+1578928555:[TESTMD,0252]0051>
+1578928562:[TESTMD,0050]"yes"
+1578928562:[TESTMD,0249]
+Command list
+pext    : Get external pressure
+pint    : Get internal vacuum
+ui      : Get voltage/current
+act     : Test actuators
+fillb   : Pump until filling the bladder
+bpopen  : Open bypass
+bpclose : Close bypass
+date    : Get date
+gps     : GPS synchronization
+iridium : Iridium transfer
+mstart  : Start mermaid acq
+mstop   : Stop mermaid acq
+mdata   : Get mermaid datas
+ls      : List files
+cat     : Print content of a file
+rm      : Remove a file
+h       : Print command list
+q       : Quit
+
+Advanced
+pumps X : pompe Xs (lent)
+pumpf X : pompe Xs (rapide)
+evh     : ouvre l'electrovalve 30s
+bypass  : ouvre le bypass 30s
+dvmine  : deverminage de la carte
+nominal : mode nominal pour mesure de conso
+cychydr : test du circuit hydraulique
+mkdir   : creer un repertoire
+mv      : deplacer un fichier
+ps      : liste les processus
+
+Set params
+stage   : Stage settings
+buoy    : Buoy settings
+p2t     : Pressure sensor settings
+log     : Verb cfg
+mermaid : Mermaid cfg
+upload  : On/Off Irid transfer
+sys  : system param settings
+
+
+1578928562:[TESTMD,0252]0051>
+1578928597:[TESTMD,0050]"pint"
+1578928600:[TESTMD,0029]86581Pa
+1578928600:[TESTMD,0252]0051>
+1578928604:[TESTMD,0050]"pint"
+1578928606:[TESTMD,0029]76932Pa
+1578928606:[TESTMD,0252]0051>
+1578928611:[TESTMD,0050]"pint"
+1578928613:[TESTMD,0029]67715Pa
+1578928613:[TESTMD,0252]0051>
+1578928630:[TESTMD,0050]"pint"
+1578928632:[TESTMD,0029]66146Pa
+1578928632:[TESTMD,0252]0051>
+1578928647:[TESTMD,0050]"pint"
+1578928649:[TESTMD,0029]66573Pa
+1578928649:[TESTMD,0252]0051>
+1578928651:[TESTMD,0050]"pint"
+1578928653:[TESTMD,0029]66914Pa
+1578928653:[TESTMD,0252]0051>
+1578928654:[TESTMD,0050]"pint"
+1578928656:[TESTMD,0029]67230Pa
+1578928656:[TESTMD,0252]0051>
+1578928658:[TESTMD,0050]"pint"
+1578928660:[TESTMD,0029]67511Pa
+1578928660:[TESTMD,0252]0051>
+1578928661:[TESTMD,0050]"pint"
+1578928664:[TESTMD,0029]67765Pa
+1578928664:[TESTMD,0252]0051>
+1578928665:[TESTMD,0050]"pint"
+1578928667:[TESTMD,0029]69036Pa
+1578928667:[TESTMD,0252]0051>
+1578928668:[TESTMD,0050]"pint"
+1578928670:[TESTMD,0029]70590Pa
+1578928670:[TESTMD,0252]0051>
+1578928671:[TESTMD,0050]"pint"
+1578928674:[TESTMD,0029]72205Pa
+1578928674:[TESTMD,0252]0051>
+1578928674:[TESTMD,0050]"pint"
+1578928677:[TESTMD,0029]74837Pa
+1578928677:[TESTMD,0252]0051>
+1578928678:[TESTMD,0050]"pint"
+1578928680:[TESTMD,0029]78661Pa
+1578928680:[TESTMD,0252]0051>
+1578928681:[TESTMD,0050]"pint"
+1578928683:[TESTMD,0029]80997Pa
+1578928683:[TESTMD,0252]0051>
+1578928686:[TESTMD,0050]"pint"
+1578928689:[TESTMD,0029]80761Pa
+1578928689:[TESTMD,0252]0051>
+1578928690:[TESTMD,0050]"pint"
+1578928692:[TESTMD,0029]80695Pa
+1578928692:[TESTMD,0252]0051>
+1578928693:[TESTMD,0050]"pint"
+1578928695:[TESTMD,0029]80665Pa
+1578928696:[TESTMD,0252]0051>

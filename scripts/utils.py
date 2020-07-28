@@ -1,5 +1,6 @@
 # -*-coding:Utf-8 -*
 import re
+import sys
 from obspy import UTCDateTime
 import plotly.graph_objs as graph
 
@@ -11,12 +12,7 @@ import plotly.graph_objs as graph
 # Split logs in several lines
 def split_log_lines(content):
     splitted = []
-    if "\r\n" in content:
-        splitted = content.split("\r\n")
-    elif "\r" in content:
-        splitted = content.split("\r")
-    elif "\n" in content:
-        splitted = content.split("\n")
+    splitted = re.split(r'[\r\n][\n]?',content);
     if splitted[-1] == "":
         splitted = splitted[:-1]
     return splitted
@@ -35,6 +31,19 @@ def find_timestamped_values(regexp, content):
             timestamped_values.append([v, d])
     return timestamped_values
 
+# Search timestamps for a specific keyword
+def find_timestampedUTC_values(regexp, content):
+    timestamped_values = list()
+    lines = split_log_lines(content)
+    for line in lines:
+        value_catch = re.findall(regexp, line)
+        timestamp_catch = re.findall("(\S+):", line)
+        if len(value_catch) > 0:
+            v = value_catch[0]
+            d = UTCDateTime(timestamp_catch[0])
+            timestamped_values.append([v, d])
+    return timestamped_values
+
 
 # Format log files
 def format_log(log):
@@ -46,13 +55,34 @@ def format_log(log):
             timestamp = catch[0]
             isodate = UTCDateTime(int(timestamp)).isoformat()
             datetime_log += line.replace(timestamp, isodate) + "\r\n"
+        else :
+            datetime_log += line + "\r\n"
     formatted_log = "".join(datetime_log)
     return formatted_log
+
+# verify log format
+def verify_format_log(log):
+    error_log = False
+    correct_log = ""
+    lines = split_log_lines(log)
+    for line in lines:
+        catch = re.findall("(\d+):[(\w+ *),(\d+)].*", line)
+        if len(catch) > 0:
+            if len(catch[0][0]) > 10 :
+                error_log = True
+            if len(catch[0] < 3) :
+                error_log = True
+            correct_log += line + "\r\n"
+        else :
+            correct_log += line + "\r\n"
+    if error_log:
+        return correct_log
+    return ""
 
 
 # Get date from a .LOG or a .MER file name
 def get_date_from_file_name(filename):
-    hexdate = re.findall("(.+\d+_)?([A-Z0-9]+)\.(LOG|MER)", filename)[0][1]
+    hexdate = re.findall("(.+\d+_)?([A-Z0-9]+)\.(LOG|MER|S41)", filename)[0][1]
     timestamp = int(hexdate, 16)
     return UTCDateTime(timestamp)
 
@@ -109,4 +139,3 @@ def get_time_array(length, period):
 def counts2pascal(data):
     factor = 0.178 / 1000. * 10. ** (23. / 20.) * 2. ** 24. / 5. * 2. ** 4.
     return data / factor
-

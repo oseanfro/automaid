@@ -1,0 +1,63 @@
+946687950:[MONITR,0197]reboot code 0x0000, src/monitor.c@520
+946687950:[MAIN  ,0007]buoy 452.020-R-0060
+946687950:[MAIN  ,0055]soft pilotage 452.012.300_V2.18-20200518
+946687950:[MAIN  ,0011]date 2000-01-01T00:52:30
+946687956:[MAIN  ,0006]battery 11987mV,   10004uA
+946687959:[MAIN  ,0024]internal pressure 100462Pa
+946687960:[PRESS ,0038]P  -8130mbar,T-31521mdegC
+946687960:[MRMAID,0182]thread started
+946687962:[MRMAID,0186]no wake-up
+946687963:[MRMAID,0188]acq already stopped
+946687963:[MRMAID,0052]Mermaid $BOARD:452116600-60;
+946687964:[MRMAID,0052]Mermaid $SOFT:2.1338;
+946687964:[TESTMD,0053]Enter in test mode? yes/no
+946687964:[TESTMD,0252]0060>
+946687965:[TESTMD,0050]"yes"
+946687965:[TESTMD,0249]
+Command list
+pext    : Get external pressure
+pint    : Get internal vacuum
+ui      : Get voltage/current
+act     : Test actuators
+fillb   : Pump until filling the bladder
+bpopen  : Open bypass
+bpclose : Close bypass
+date    : Get date
+gps     : GPS synchronization
+iridium : Iridium transfer
+mstart  : Start mermaid acq
+mstop   : Stop mermaid acq
+mdata   : Get mermaid datas
+mchecksd  : Start mermaid acq
+mdump  : Send data REQUEST command with date and duration
+s41dumpa : Get averaged CTD datas
+s41dumpr : Get raw CTD datas
+ls      : List files
+cp      : Copy file or directory content on the desktop
+rm      : Remove a file
+h       : Print command list
+q       : Quit
+
+Advanced
+pumps X : pompe Xs (lent)
+pumpf X : pompe Xs (rapide)
+evh     : ouvre l'electrovalve 30s
+bypass  : ouvre le bypass 30s
+dvmine  : deverminage de la carte
+nominal : mode nominal pour mesure de conso
+cychydr : test du circuit hydraulique
+mkdir   : creer un repertoire
+mv      : deplacer un fichier
+ps      : liste les processus
+
+Set params
+stage   : Stage settings
+buoy    : Buoy settings
+p2t     : Pressure sensor settings
+log     : Verb cfg
+mermaid : Mermaid cfg
+upload  : On/Off Irid transfer
+sys  : system param settings
+
+
+946687965:[TESTMD,0252]0060>

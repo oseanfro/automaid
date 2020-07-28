@@ -1,0 +1,112 @@
+1594116050:[MONITR,0197]reboot code 0x0000, src/monitor.c@520
+1594116050:[MAIN  ,0007]buoy 452.210-P-0014
+1594116050:[MAIN  ,0055]soft pilotage 452.012.300_V2.21-20200701
+1594116050:[MAIN  ,0011]date 2020-07-07T10:00:50
+1594116056:[MAIN  ,0006]battery 14542mV,   38674uA
+1594116059:[MAIN  ,0024]internal pressure 83392Pa
+1594116060:[PRESS ,0038]P    +70mbar,T-24417mdegC
+1594116061:[MRMAID,0182]thread started
+1594116062:[MRMAID,0186]no wake-up
+1594116063:[MRMAID,0188]acq already stopped
+1594116063:[MRMAID,0052]Mermaid $BOARD:452116600-02;
+1594116064:[MRMAID,0052]Mermaid $SOFT:2.1344;
+1594116064:[TESTMD,0053]Enter in test mode? yes/no
+1594116064:[TESTMD,0252]0014>
+1594116069:[TESTMD,0050]"yes"
+1594116069:[TESTMD,0249]
+Command list
+pext    : Get external pressure
+pint    : Get internal vacuum
+ui      : Get voltage/current
+act     : Test actuators
+fillb   : Pump until filling the bladder
+bpopen  : Open bypass
+bpclose : Close bypass
+date    : Get date
+gps     : GPS synchronization
+iridium : Iridium transfer
+mstart  : Start mermaid acq
+mstop   : Stop mermaid acq
+mdata   : Get mermaid datas
+mchecksd  : Start mermaid acq
+mdump  : Send data REQUEST command with date and duration
+s41dumpa : Get averaged CTD datas
+s41dumpr : Get raw CTD datas
+ls      : List files
+cp      : Copy file or directory content on the desktop
+rm      : Remove a file
+h       : Print command list
+q       : Quit
+
+Advanced
+pumps X : pompe Xs (lent)
+pumpf X : pompe Xs (rapide)
+evh     : ouvre l'electrovalve 30s
+bypass  : ouvre le bypass 30s
+dvmine  : deverminage de la carte
+nominal : mode nominal pour mesure de conso
+cychydr : test du circuit hydraulique
+mkdir   : creer un repertoire
+mv      : deplacer un fichier
+ps      : liste les processus
+
+Set params
+stage   : Stage settings
+buoy    : Buoy settings
+p2t     : Pressure sensor settings
+log     : Verb cfg
+mermaid : Mermaid cfg
+upload  : On/Off Irid transfer
+sys  : system param settings
+
+
+1594116069:[TESTMD,0252]0014>
+1594116073:[TESTMD,0050]"act"
+1594116073:[SURFIN,0020]filling external bladder
+1594116076:[SURFIN,0019]external bladder full
+1594116081:[VALVE ,0034]valve opening 30000ms
+1594116116:[SURFIN,0020]filling external bladder
+1594116124:[PUMP  ,0016]pump during 300000ms
+1594116141:[SURFIN,0019]external bladder full
+1594116141:[TESTMD,0045]pump run 15s
+1594116146:[BYPASS,0035]bypass opening 30000ms
+1594116191:[SURFIN,0020]filling external bladder
+1594116199:[PUMP  ,0016]pump during 300000ms
+1594116306:[SURFIN,0019]external bladder full
+1594116306:[TESTMD,0045]pump run 105s
+1594116311:[TESTMD,0066]test done
+1594116311:[TESTMD,0252]0014>
+1594116314:[TESTMD,0050]"gps"
+1594116321:[SURF  ,0022]GPS fix...
+1594116332:<WARN>[GPSFIX,0123]GPRMC ms=990 #1
+1594116350:<WARN>[GPSFIX,0123]GPRMC ms=10 #1
+1594116383:[SURF  ,0015]10 PPS detected...
+1594116385:[MRMAID,0052]Mermaid $GPSACK:+50,+6,+6,+10,-1,+15,-809448;
+1594116395:[MRMAID,0052]Mermaid $GPSOFF:3686336;
+1594116395:[GPSFIX,0179]-1s diff
+1594116396:[SURF  ,0222]2020-07-07T10:06:36
+1594116396:[SURF  ,0082]Latitude : N43deg41.966mn, Longitude :E007deg18.500mn
+1594116396:[SURF  ,0223]fix3D,8satellites
+1594116396:[SURF  ,0084]GPS fix GPGSA : hdop1.230,vdop1.640
+1594116411:[TESTMD,0252]0014>
+1594116412:[TESTMD,0050]"gps"
+1594116419:[SURF  ,0022]GPS fix...
+1594116423:<WARN>[GPSFIX,0123]GPRMC ms=890 #1
+1594116447:<WARN>[GPSFIX,0123]GPRMC ms=990 #1
+1594116453:<WARN>[GPSFIX,0123]GPRMC ms=10 #1
+1594116473:[SURF  ,0015]10 PPS detected...
+1594116474:[MRMAID,0052]Mermaid $GPSACK:+0,+0,+0,+0,+0,+0,+0;
+1594116484:[MRMAID,0052]Mermaid $GPSOFF:3686335;
+1594116485:[GPSFIX,0179]-1s diff
+1594116486:[SURF  ,0222]2020-07-07T10:08:06
+1594116486:[SURF  ,0082]Latitude : N43deg41.962mn, Longitude :E007deg18.502mn
+1594116486:[SURF  ,0223]fix3D,7satellites
+1594116486:[SURF  ,0084]GPS fix GPGSA : hdop2.070,vdop2.150
+1594116501:[TESTMD,0252]0014>
+1594116502:[TESTMD,0050]"iridium"
+1594116509:[SURF  ,0025]Iridium...
+1594116603:[SURF  ,0009]connected in 94s, signal quality 5
+1594116631:<WARN>[SURF  ,0071]timeout
+1594116631:<WARN>[SURF  ,0056]peer mute
+1594116641:[SURF  ,0014]disconnected after 132s
+1594116646:[TESTMD,0252]0014>

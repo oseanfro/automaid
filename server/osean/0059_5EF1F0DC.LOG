@@ -1,0 +1,78 @@
+1592914140:[MONITR,0197]reboot code 0x0000, src/monitor.c@616
+1592914140:[MAIN  ,0007]buoy 452.020-P-0059
+1592914140:[MAIN  ,0055]soft pilotage 452.012.300_V2.20-20200612
+1592914140:[MAIN  ,0011]date 2020-06-23T12:09:00
+1592914146:[MAIN  ,0006]battery 15471mV,    7930uA
+1592914149:[MAIN  ,0024]internal pressure 79472Pa
+1592914151:[PRESS ,0038]P    +80mbar,T  +461mdegC
+1592914151:[MRMAID,0182]thread started
+1592914152:[MRMAID,0186]no wake-up
+1592914153:[MRMAID,0188]acq already stopped
+1592914153:[MRMAID,0052]Mermaid $BOARD:452116600-59;
+1592914154:[MRMAID,0052]Mermaid $SOFT:2.1344;
+1592914154:[TESTMD,0053]Enter in test mode? yes/no
+1592914154:[TESTMD,0252]0059>
+1592914164:[TESTMD,0050]"yes"
+1592914164:[TESTMD,0249]
+Command list
+pext    : Get external pressure
+pint    : Get internal vacuum
+ui      : Get voltage/current
+act     : Test actuators
+fillb   : Pump until filling the bladder
+bpopen  : Open bypass
+bpclose : Close bypass
+date    : Get date
+gps     : GPS synchronization
+iridium : Iridium transfer
+mstart  : Start mermaid acq
+mstop   : Stop mermaid acq
+mdata   : Get mermaid datas
+mchecksd  : Start mermaid acq
+mdump  : Send data REQUEST command with date and duration
+s41dumpa : Get averaged CTD datas
+s41dumpr : Get raw CTD datas
+ls      : List files
+cp      : Copy file or directory content on the desktop
+rm      : Remove a file
+h       : Print command list
+q       : Quit
+
+Advanced
+pumps X : pompe Xs (lent)
+pumpf X : pompe Xs (rapide)
+evh     : ouvre l'electrovalve 30s
+bypass  : ouvre le bypass 30s
+dvmine  : deverminage de la carte
+nominal : mode nominal pour mesure de conso
+cychydr : test du circuit hydraulique
+mkdir   : creer un repertoire
+mv      : deplacer un fichier
+ps      : liste les processus
+
+Set params
+stage   : Stage settings
+buoy    : Buoy settings
+p2t     : Pressure sensor settings
+log     : Verb cfg
+mermaid : Mermaid cfg
+upload  : On/Off Irid transfer
+sys  : system param settings
+
+
+1592914164:[TESTMD,0252]0059>
+1592914183:[TESTMD,0050]"buoyyx!sn452.120-R-0058"
+1592914183:[TESTMD,0252]0058>
+1592914212:[TESTMD,0050]"buoyyx!sn452.120-R-0059"
+1592914212:[TESTMD,0252]0059>
+1592914216:[TESTMD,0050]"buoystore"
+1592914216:[TESTMD,0252]0059>
+1592914235:[TESTMD,0050]"BPOPEN"
+1592914235:[TESTMD,0008]command not supported
+1592914235:[TESTMD,0252]0059>
+1592914254:[TESTMD,0050]"bpopen"
+1592914262:[TESTMD,0252]0059>
+1592921367:[MAIN  ,0018]end of test mode
+1592921367:[MAIN  ,0048]reboot MERMAID board
+1592921369:[MAIN  ,0047]reboot float
+1592921370:[MONITR,0198]rebooting with code 0x0000, data "src/monitor.c@520001002"

@@ -1,0 +1,96 @@
+1593691340:[MONITR,0197]reboot code 0x0000, src/monitor.c@520
+1593691340:[MAIN  ,0007]buoy 452.120-R-0065
+1593691340:[MAIN  ,0055]soft pilotage 452.012.300_V2.21-20200701
+1593691340:[MAIN  ,0011]date 2020-07-02T12:02:20
+1593691346:[MAIN  ,0006]battery 15440mV,   40870uA
+1593691349:[MAIN  ,0024]internal pressure 80613Pa
+1593691350:[PRESS ,0038]P    +40mbar,T-13378mdegC
+1593691350:[MRMAID,0182]thread started
+1593691352:[MRMAID,0186]no wake-up
+1593691353:[MRMAID,0188]acq already stopped
+1593691353:[MRMAID,0052]Mermaid $BOARD:452116600-65;
+1593691354:[MRMAID,0052]Mermaid $SOFT:2.1344;
+1593691354:[TESTMD,0053]Enter in test mode? yes/no
+1593691354:[TESTMD,0252]0065>
+1593691356:[TESTMD,0050]"yes"
+1593691356:[TESTMD,0249]
+Command list
+pext    : Get external pressure
+pint    : Get internal vacuum
+ui      : Get voltage/current
+act     : Test actuators
+fillb   : Pump until filling the bladder
+bpopen  : Open bypass
+bpclose : Close bypass
+date    : Get date
+gps     : GPS synchronization
+iridium : Iridium transfer
+mstart  : Start mermaid acq
+mstop   : Stop mermaid acq
+mdata   : Get mermaid datas
+mchecksd  : Start mermaid acq
+mdump  : Send data REQUEST command with date and duration
+s41dumpa : Get averaged CTD datas
+s41dumpr : Get raw CTD datas
+ls      : List files
+cp      : Copy file or directory content on the desktop
+rm      : Remove a file
+h       : Print command list
+q       : Quit
+
+Advanced
+pumps X : pompe Xs (lent)
+pumpf X : pompe Xs (rapide)
+evh     : ouvre l'electrovalve 30s
+bypass  : ouvre le bypass 30s
+dvmine  : deverminage de la carte
+nominal : mode nominal pour mesure de conso
+cychydr : test du circuit hydraulique
+mkdir   : creer un repertoire
+mv      : deplacer un fichier
+ps      : liste les processus
+
+Set params
+stage   : Stage settings
+buoy    : Buoy settings
+p2t     : Pressure sensor settings
+log     : Verb cfg
+mermaid : Mermaid cfg
+upload  : On/Off Irid transfer
+sys  : system param settings
+
+
+1593691356:[TESTMD,0252]0065>
+1593691362:[TESTMD,0050]"gps"
+1593691369:[SURF  ,0022]GPS fix...
+1593691417:[SURF  ,0015]10 PPS detected...
+1593691419:[MRMAID,0052]Mermaid $GPSACK:+50,+6,+1,+12,+1,+2,-540832;
+1593691429:[MRMAID,0052]Mermaid $GPSOFF:3686322;
+1593691430:[GPSFIX,0179]-1s diff
+1593691431:[SURF  ,0222]2020-07-02T12:03:51
+1593691431:[SURF  ,0082]Latitude : N43deg06.483mn, Longitude :E006deg02.284mn
+1593691431:[SURF  ,0223]fix3D,7satellites
+1593691431:[SURF  ,0084]GPS fix GPGSA : hdop1.040,vdop1.440
+1593691446:[TESTMD,0252]0065>
+1593691511:[TESTMD,0050]"gps"
+1593691522:[SURF  ,0022]GPS fix...
+1593691542:[SURF  ,0015]10 PPS detected...
+1593691543:[MRMAID,0052]Mermaid $GPSACK:+0,+0,+0,+0,+0,+0,-30;
+1593691553:[MRMAID,0052]Mermaid $GPSOFF:3686322;
+1593691555:[GPSFIX,0179]-1s diff
+1593691556:[SURF  ,0222]2020-07-02T12:05:56
+1593691556:[SURF  ,0082]Latitude : N43deg06.484mn, Longitude :E006deg02.285mn
+1593691556:[SURF  ,0223]fix3D,7satellites
+1593691556:[SURF  ,0084]GPS fix GPGSA : hdop1.040,vdop1.450
+1593691571:[TESTMD,0252]0065>
+1593691585:[TESTMD,0050]"iridium"
+1593691596:[SURF  ,0025]Iridium...
+1593691691:[SURF  ,0009]connected in 95s, signal quality 5
+1593691760:[SURF  ,0218]prompt received, remote cmd end
+1593691760:[SURF  ,0012]16 cmd(s) received
+1593691781:[UPLOAD,0248]Upload data files...
+1593691811:[ZIO   ,0240]"NO CARRIER" received, aborting
+1593691811:<ERR>[UPLOAD,0131]opening upload
+1593691811:<ERR>[UPLOAD,0132]opening upload "0065"
+1593691827:[SURF  ,0014]disconnected after 231s
+1593691832:[TESTMD,0252]0065>

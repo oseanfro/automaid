@@ -1,0 +1,113 @@
+1580917273:[MONITR,0197]reboot code 0x0000, src/monitor.c@516
+1580917273:[MAIN  ,0007]buoy 452.020-P-0051
+1580917273:[MAIN  ,0055]soft pilotage 452.012.300_V2.10-20200130
+1580917273:[MAIN  ,0011]date 2020-02-05T15:41:13
+1580917279:[MAIN  ,0006]battery 15327mV,   14640uA
+1580917282:[MAIN  ,0024]internal pressure 79797Pa
+1580917283:[PRESS ,0038]P    +80mbar,T+20116mdegC
+1580917284:[MRMAID,0182]thread started
+1580917285:[MRMAID,0186]no wake-up
+1580917286:[MRMAID,0188]acq already stopped
+1580917286:[MRMAID,0052]Mermaid $BOARD:452116600-51;
+1580917287:[MRMAID,0052]Mermaid $SOFT:2.1344;
+1580917287:[TESTMD,0053]Enter in test mode? yes/no
+1580917287:[TESTMD,0252]0051>
+1580917289:[TESTMD,0050]"yes"
+1580917289:[TESTMD,0249]
+Command list
+pext    : Get external pressure
+pint    : Get internal vacuum
+ui      : Get voltage/current
+act     : Test actuators
+fillb   : Pump until filling the bladder
+bpopen  : Open bypass
+bpclose : Close bypass
+date    : Get date
+gps     : GPS synchronization
+iridium : Iridium transfer
+mstart  : Start mermaid acq
+mstop   : Stop mermaid acq
+mdata   : Get mermaid datas
+ls      : List files
+cat     : Print content of a file
+rm      : Remove a file
+h       : Print command list
+q       : Quit
+
+Advanced
+pumps X : pompe Xs (lent)
+pumpf X : pompe Xs (rapide)
+evh     : ouvre l'electrovalve 30s
+bypass  : ouvre le bypass 30s
+dvmine  : deverminage de la carte
+nominal : mode nominal pour mesure de conso
+cychydr : test du circuit hydraulique
+mkdir   : creer un repertoire
+mv      : deplacer un fichier
+ps      : liste les processus
+
+Set params
+stage   : Stage settings
+buoy    : Buoy settings
+p2t     : Pressure sensor settings
+log     : Verb cfg
+mermaid : Mermaid cfg
+upload  : On/Off Irid transfer
+sys  : system param settings
+
+
+1580917289:[TESTMD,0252]0051>
+1580917294:[TESTMD,0050]"act"
+1580917294:[SURFIN,0020]filling external bladder
+1580917302:[PUMP  ,0207]pump warmup 15117mV/53070uA
+1580917302:[PUMP  ,0016]pump during 300000ms
+1580917307:[PUMP  ,0212]pump stopped, 13010mV/1470222uA
+1580917307:[PUMP  ,0210]aborted, 29500ticks remain
+1580917309:[SURFIN,0019]external bladder full
+1580917314:[VALVE ,0034]valve opening 30000ms
+1580917344:[VALVE ,0234]closed 14333mV/600118uA
+1580917349:[SURFIN,0020]filling external bladder
+1580917357:[PUMP  ,0207]pump warmup 15095mV/52948uA
+1580917357:[PUMP  ,0016]pump during 300000ms
+1580917364:[PUMP  ,0212]pump stopped, 13873mV/1500795uA
+1580917364:[PUMP  ,0210]aborted, 29400ticks remain
+1580917366:[SURFIN,0019]external bladder full
+1580917366:[TESTMD,0045]pump run 7s
+1580917371:[BYPASS,0035]bypass opening 30000ms
+1580917376:[BYPASS,0104]bypass opening: 14641mV/360754uA
+1580917411:[BYPASS,0106]bypass closing: 14587mV/396866uA
+1580917416:[SURFIN,0020]filling external bladder
+1580917424:[PUMP  ,0207]pump warmup 15096mV/49776uA
+1580917424:[PUMP  ,0016]pump during 300000ms
+1580917507:[PUMP  ,0212]pump stopped, 13968mV/1462897uA
+1580917507:[PUMP  ,0210]aborted, 22100ticks remain
+1580917509:[SURFIN,0019]external bladder full
+1580917509:[TESTMD,0045]pump run 83s
+1580917514:[TESTMD,0066]test done
+1580917514:[TESTMD,0252]0051>
+1580917523:[TESTMD,0050]"gps"
+1580917531:[SURF  ,0022]GPS fix...
+1580917532:<WARN>[GPSFIX,0122]GPRMC no fix #0
+1580917557:<WARN>[GPSFIX,0123]GPRMC ms=500 #1
+1580917579:[SURF  ,0015]10 PPS detected...
+1580917581:[MRMAID,0052]Mermaid $GPSACK:+50,+1,+4,+15,+40,-27,-478637;
+1580917591:[MRMAID,0052]Mermaid $GPSOFF:3686319;
+1580917592:[GPSFIX,0179]-1s diff
+1580917593:[SURF  ,0222]2020-02-05T15:46:33
+1580917593:[SURF  ,0082]Latitude : N43deg06.487mn, Longitude :E006deg02.286mn
+1580917593:[SURF  ,0223]fix3D,6satellites
+1580917593:[SURF  ,0084]GPS fix GPGSA : hdop0.840,vdop1.250
+1580917608:[TESTMD,0252]0051>
+1580917610:[TESTMD,0050]"gps"
+1580917619:[SURF  ,0022]GPS fix...
+1580917640:[SURF  ,0015]10 PPS detected...
+1580917641:[MRMAID,0052]Mermaid $GPSACK:+0,+0,+0,+0,+0,+0,+0;
+1580917651:[MRMAID,0052]Mermaid $GPSOFF:3686319;
+1580917653:[GPSFIX,0179]-1s diff
+1580917654:[SURF  ,0222]2020-02-05T15:47:34
+1580917654:[SURF  ,0082]Latitude : N43deg06.485mn, Longitude :E006deg02.286mn
+1580917654:[SURF  ,0223]fix3D,6satellites
+1580917654:[SURF  ,0084]GPS fix GPGSA : hdop0.850,vdop1.250
+1580917669:[TESTMD,0252]0051>
+1580917673:[TESTMD,0050]"iridium"
+1580917684:[SURF  ,0025]Iridium...

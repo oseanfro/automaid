@@ -1,0 +1,76 @@
+947828436:[MONITR,0197]reboot code 0x0000, src/monitor.c@520
+947828436:[MAIN  ,0007]buoy 452.120-R-0069
+947828436:[MAIN  ,0055]soft pilotage 452.012.300_V2.20-20200612
+947828436:[MAIN  ,0011]date 2000-01-14T05:40:36
+947828442:[MAIN  ,0006]battery 15497mV,    8174uA
+947828445:[MAIN  ,0024]internal pressure 80109Pa
+947828446:[PRESS ,0038]P    -30mbar,T+23085mdegC
+947828446:[MRMAID,0182]thread started
+947828448:[MRMAID,0186]no wake-up
+947828449:[MRMAID,0188]acq already stopped
+947828449:[MRMAID,0052]Mermaid $BOARD:452116600-69;
+947828450:[MRMAID,0052]Mermaid $SOFT:2.1344;
+947828450:[TESTMD,0053]Enter in test mode? yes/no
+947828450:[TESTMD,0252]0069>
+947828464:[TESTMD,0050]"yes"
+947828464:[TESTMD,0249]
+Command list
+pext    : Get external pressure
+pint    : Get internal vacuum
+ui      : Get voltage/current
+act     : Test actuators
+fillb   : Pump until filling the bladder
+bpopen  : Open bypass
+bpclose : Close bypass
+date    : Get date
+gps     : GPS synchronization
+iridium : Iridium transfer
+mstart  : Start mermaid acq
+mstop   : Stop mermaid acq
+mdata   : Get mermaid datas
+mchecksd  : Start mermaid acq
+mdump  : Send data REQUEST command with date and duration
+s41dumpa : Get averaged CTD datas
+s41dumpr : Get raw CTD datas
+ls      : List files
+cp      : Copy file or directory content on the desktop
+rm      : Remove a file
+h       : Print command list
+q       : Quit
+
+Advanced
+pumps X : pompe Xs (lent)
+pumpf X : pompe Xs (rapide)
+evh     : ouvre l'electrovalve 30s
+bypass  : ouvre le bypass 30s
+dvmine  : deverminage de la carte
+nominal : mode nominal pour mesure de conso
+cychydr : test du circuit hydraulique
+mkdir   : creer un repertoire
+mv      : deplacer un fichier
+ps      : liste les processus
+
+Set params
+stage   : Stage settings
+buoy    : Buoy settings
+p2t     : Pressure sensor settings
+log     : Verb cfg
+mermaid : Mermaid cfg
+upload  : On/Off Irid transfer
+sys  : system param settings
+
+
+947828464:[TESTMD,0252]0069>
+947828471:[TESTMD,0050]"gps"
+947828479:[SURF  ,0022]GPS fix...
+947828530:[SURF  ,0015]10 PPS detected...
+947828532:[MRMAID,0052]Mermaid $GPSACK:+50,+6,+0,+14,-1,-37,-760711;
+947828542:[MRMAID,0052]Mermaid $GPSOFF:3686288;
+947828544:[GPSFIX,0179]-645783591s diff
+1593612135:[SURF  ,0222]2020-07-01T14:02:15
+1593612135:[SURF  ,0082]Latitude : N43deg06.489mn, Longitude :E006deg02.291mn
+1593612135:[SURF  ,0223]fix3D,4satellites
+1593612135:[SURF  ,0084]GPS fix GPGSA : hdop1.710,vdop2.840
+1593612135:<ERR>[MONITR,0096]last loop touch at 947828469s, duration max 2400s exceeded
+1593612135:<ERR>[SOS   ,0199]TRIGGERED BY src/monitor.c@260
+1593612135:<ERR>[SOS   ,0153]REBOOT

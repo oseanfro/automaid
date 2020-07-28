@@ -1,0 +1,81 @@
+1595429335:[MONITR,0197]reboot code 0x0000, src/monitor.c@520
+1595429335:[MAIN  ,0007]buoy 452.020-P-0064
+1595429335:[MAIN  ,0055]soft pilotage 452.012.300_V2.22-20200709
+1595429335:[MAIN  ,0011]date 2020-07-22T14:48:55
+1595429341:[MAIN  ,0006]battery 15136mV,   10736uA
+1595429344:[MAIN  ,0024]internal pressure 101216Pa
+1595429345:[PRESS ,0038]P -96320mbar,T+24968mdegC
+1595429345:[MRMAID,0182]thread started
+1595429347:[MRMAID,0186]no wake-up
+1595429347:[MRMAID,0188]acq already stopped
+1595429348:[MRMAID,0052]Mermaid $BOARD:452116600-64;
+1595429349:[MRMAID,0052]Mermaid $SOFT:2.1344;
+1595429349:[TESTMD,0053]Enter in test mode? yes/no
+1595429349:[TESTMD,0252]0064>
+1595429358:[TESTMD,0050]"yes"
+1595429358:[TESTMD,0249]
+Command list
+pext    : Get external pressure
+pint    : Get internal vacuum
+ui      : Get voltage/current
+act     : Test actuators
+fillb   : Pump until filling the bladder
+bpopen  : Open bypass
+bpclose : Close bypass
+date    : Get date
+gps     : GPS synchronization
+iridium : Iridium transfer
+mstart  : Start mermaid acq
+mstop   : Stop mermaid acq
+mdata   : Get mermaid datas
+mchecksd  : Start mermaid acq
+mdump  : Send data REQUEST command with date and duration
+s41dumpa : Get averaged CTD datas
+s41dumpr : Get raw CTD datas
+ls      : List files
+cp      : Copy file or directory content on the desktop
+rm      : Remove a file
+h       : Print command list
+q       : Quit
+
+Advanced
+pumps X : pompe Xs (lent)
+pumpf X : pompe Xs (rapide)
+evh     : ouvre l'electrovalve 30s
+bypass  : ouvre le bypass 30s
+dvmine  : deverminage de la carte
+nominal : mode nominal pour mesure de conso
+cychydr : test du circuit hydraulique
+mkdir   : creer un repertoire
+mv      : deplacer un fichier
+ps      : liste les processus
+
+Set params
+stage   : Stage settings
+buoy    : Buoy settings
+p2t     : Pressure sensor settings
+log     : Verb cfg
+mermaid : Mermaid cfg
+upload  : On/Off Irid transfer
+sys  : system param settings
+
+
+1595429358:[TESTMD,0252]0064>
+1595429366:[TESTMD,0050]"iridiu"
+1595429366:[TESTMD,0008]command not supported
+1595429366:[TESTMD,0252]0064>
+1595429369:[TESTMD,0050]"iridium"
+1595429377:[SURF  ,0025]Iridium...
+1595429497:<ERR>[MODEM ,0347]ping error
+1595429497:<WARN>[SURF  ,0023]failed to connect #1, code -1, net -1, qual -1, dial -1
+1595429622:<ERR>[MODEM ,0347]ping error
+1595429622:<WARN>[SURF  ,0023]failed to connect #2, code -1, net -1, qual -1, dial -1
+1595429747:<ERR>[MODEM ,0347]ping error
+1595429747:<WARN>[SURF  ,0023]failed to connect #3, code -1, net -1, qual -1, dial -1
+1595429872:<ERR>[MODEM ,0347]ping error
+1595429872:<WARN>[SURF  ,0023]failed to connect #4, code -1, net -1, qual -1, dial -1
+1595429996:<ERR>[MODEM ,0347]ping error
+1595429996:<WARN>[SURF  ,0023]failed to connect #5, code -1, net -1, qual -1, dial -1
+1595430001:<ERR>[SURF  ,0117]no connection after 624s
+1595430007:[TESTMD,0252]0064>
+1595430436:[TESTMD,0050]"iridium"

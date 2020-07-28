@@ -1,0 +1,111 @@
+1593517457:[MONITR,0197]reboot code 0x0000, src/monitor.c@520
+1593517457:[MAIN  ,0007]buoy 452.120-R-0060
+1593517457:[MAIN  ,0055]soft pilotage 452.012.300_V2.20-20200612
+1593517457:[MAIN  ,0011]date 2020-06-30T11:44:17
+1593517463:[MAIN  ,0006]battery 15505mV,    8418uA
+1593517466:[MAIN  ,0024]internal pressure 81605Pa
+1593517467:[PRESS ,0038]P    +50mbar,T -7838mdegC
+1593517468:[MRMAID,0182]thread started
+1593517469:[MRMAID,0186]no wake-up
+1593517470:[MRMAID,0188]acq already stopped
+1593517470:[MRMAID,0052]Mermaid $BOARD:452116600-60;
+1593517471:[MRMAID,0052]Mermaid $SOFT:2.1344;
+1593517471:[TESTMD,0053]Enter in test mode? yes/no
+1593517471:[TESTMD,0252]0060>
+1593517482:[TESTMD,0050]"yes"
+1593517482:[TESTMD,0249]
+Command list
+pext    : Get external pressure
+pint    : Get internal vacuum
+ui      : Get voltage/current
+act     : Test actuators
+fillb   : Pump until filling the bladder
+bpopen  : Open bypass
+bpclose : Close bypass
+date    : Get date
+gps     : GPS synchronization
+iridium : Iridium transfer
+mstart  : Start mermaid acq
+mstop   : Stop mermaid acq
+mdata   : Get mermaid datas
+mchecksd  : Start mermaid acq
+mdump  : Send data REQUEST command with date and duration
+s41dumpa : Get averaged CTD datas
+s41dumpr : Get raw CTD datas
+ls      : List files
+cp      : Copy file or directory content on the desktop
+rm      : Remove a file
+h       : Print command list
+q       : Quit
+
+Advanced
+pumps X : pompe Xs (lent)
+pumpf X : pompe Xs (rapide)
+evh     : ouvre l'electrovalve 30s
+bypass  : ouvre le bypass 30s
+dvmine  : deverminage de la carte
+nominal : mode nominal pour mesure de conso
+cychydr : test du circuit hydraulique
+mkdir   : creer un repertoire
+mv      : deplacer un fichier
+ps      : liste les processus
+
+Set params
+stage   : Stage settings
+buoy    : Buoy settings
+p2t     : Pressure sensor settings
+log     : Verb cfg
+mermaid : Mermaid cfg
+upload  : On/Off Irid transfer
+sys  : system param settings
+
+
+1593517482:[TESTMD,0252]0060>
+1593517486:[TESTMD,0050]"act"
+1593517486:[SURFIN,0020]filling external bladder
+1593517490:[SURFIN,0019]external bladder full
+1593517495:[VALVE ,0034]valve opening 30000ms
+1593517530:[SURFIN,0020]filling external bladder
+1593517538:[PUMP  ,0016]pump during 300000ms
+1593517552:[SURFIN,0019]external bladder full
+1593517552:[TESTMD,0045]pump run 12s
+1593517557:[BYPASS,0035]bypass opening 30000ms
+1593517602:[SURFIN,0020]filling external bladder
+1593517610:[PUMP  ,0016]pump during 300000ms
+1593517708:[SURFIN,0019]external bladder full
+1593517708:[TESTMD,0045]pump run 96s
+1593517713:[TESTMD,0066]test done
+1593517713:[TESTMD,0252]0060>
+1593517720:[TESTMD,0050]"gps"
+1593517728:[SURF  ,0022]GPS fix...
+1593517729:<WARN>[GPSFIX,0123]GPRMC ms=980 #1
+1593517759:[SURF  ,0015]10 PPS detected...
+1593517760:[MRMAID,0052]Mermaid $GPSACK:+50,+5,+29,+11,+43,+0,-27709;
+1593517770:[MRMAID,0052]Mermaid $GPSOFF:3686324;
+1593517772:[GPSFIX,0179]-1s diff
+1593517773:[SURF  ,0222]2020-06-30T11:49:33
+1593517773:[SURF  ,0082]Latitude : N43deg41.978mn, Longitude :E007deg18.518mn
+1593517773:[SURF  ,0223]fix3D,7satellites
+1593517773:[SURF  ,0084]GPS fix GPGSA : hdop1.120,vdop2.200
+1593517788:[TESTMD,0252]0060>
+1593517789:[TESTMD,0050]"gps"
+1593517801:[SURF  ,0022]GPS fix...
+1593517821:[SURF  ,0015]10 PPS detected...
+1593517822:[MRMAID,0052]Mermaid $GPSACK:+0,+0,+0,+0,+0,+0,+0;
+1593517832:[MRMAID,0052]Mermaid $GPSOFF:3686324;
+1593517835:[GPSFIX,0179]+0s diff
+1593517835:[SURF  ,0222]2020-06-30T11:50:35
+1593517835:[SURF  ,0082]Latitude : N43deg41.977mn, Longitude :E007deg18.517mn
+1593517835:[SURF  ,0223]fix3D,7satellites
+1593517835:[SURF  ,0084]GPS fix GPGSA : hdop0.950,vdop1.890
+1593517850:[TESTMD,0252]0060>
+1593517851:[TESTMD,0050]"iridium"
+1593517862:[SURF  ,0025]Iridium...
+1593517903:[SURF  ,0009]connected in 41s, signal quality 5
+1593517984:[SURF  ,0218]prompt received, remote cmd end
+1593517984:[SURF  ,0012]16 cmd(s) received
+1593518005:[UPLOAD,0248]Upload data files...
+1593518034:[UPLOAD,0231]"0060/5EF4B531.BIN" uploaded at 116bytes/s
+1593518053:[MAIN  ,0013]1 file(s) uploaded
+1593518086:[SURF  ,0014]disconnected after 224s
+1593518091:[TESTMD,0252]0060>

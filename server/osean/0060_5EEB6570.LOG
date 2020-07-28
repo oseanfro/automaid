@@ -1,0 +1,68 @@
+1592485232:[MONITR,0197]reboot code 0x0000, src/monitor.c@520
+1592485232:[MAIN  ,0007]buoy 452.020-P-0060
+1592485232:[MAIN  ,0055]soft pilotage 452.012.300_V2.20-20200612
+1592485232:[MAIN  ,0011]date 2020-06-18T13:00:32
+1592485238:[MAIN  ,0006]battery 14855mV,   10858uA
+1592485241:[MAIN  ,0024]internal pressure 100941Pa
+1592485243:[PRESS ,0038]P     +0mbar,T+10000mdegC
+1592485243:[MRMAID,0182]thread started
+1592485244:[MRMAID,0186]no wake-up
+1592485245:[MRMAID,0188]acq already stopped
+1592485245:[MRMAID,0052]Mermaid $BOARD:452116600-60;
+1592485246:[MRMAID,0052]Mermaid $SOFT:2.1344;
+1592485246:[TESTMD,0053]Enter in test mode? yes/no
+1592485246:[TESTMD,0252]0060>
+1592485250:[TESTMD,0050]"yes"
+1592485250:[TESTMD,0249]
+Command list
+pext    : Get external pressure
+pint    : Get internal vacuum
+ui      : Get voltage/current
+act     : Test actuators
+fillb   : Pump until filling the bladder
+bpopen  : Open bypass
+bpclose : Close bypass
+date    : Get date
+gps     : GPS synchronization
+iridium : Iridium transfer
+mstart  : Start mermaid acq
+mstop   : Stop mermaid acq
+mdata   : Get mermaid datas
+mchecksd  : Start mermaid acq
+mdump  : Send data REQUEST command with date and duration
+s41dumpa : Get averaged CTD datas
+s41dumpr : Get raw CTD datas
+ls      : List files
+cp      : Copy file or directory content on the desktop
+rm      : Remove a file
+h       : Print command list
+q       : Quit
+
+Advanced
+pumps X : pompe Xs (lent)
+pumpf X : pompe Xs (rapide)
+evh     : ouvre l'electrovalve 30s
+bypass  : ouvre le bypass 30s
+dvmine  : deverminage de la carte
+nominal : mode nominal pour mesure de conso
+cychydr : test du circuit hydraulique
+mkdir   : creer un repertoire
+mv      : deplacer un fichier
+ps      : liste les processus
+
+Set params
+stage   : Stage settings
+buoy    : Buoy settings
+p2t     : Pressure sensor settings
+log     : Verb cfg
+mermaid : Mermaid cfg
+upload  : On/Off Irid transfer
+sys  : system param settings
+
+
+1592485250:[TESTMD,0252]0060>
+1592485253:[TESTMD,0050]"q"
+1592485253:[MAIN  ,0018]end of test mode
+1592485253:[MAIN  ,0048]reboot MERMAID board
+1592485256:[MAIN  ,0047]reboot float
+1592485257:[MONITR,0198]rebooting with code 0x0000, data "src/monitor.c@520001002"

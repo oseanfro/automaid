@@ -1,0 +1,8 @@
+1592217879:<ERR>[MONITR,0154]reboot code 0x0050, src/buoy.c@555
+1592217879:[SOS   ,0017]emergency call
+1592217887:[PUMP  ,0016]pump during 900000ms
+1592219186:[SOS   ,0017]emergency call
+1592219194:[PUMP  ,0016]pump during 900000ms
+1592220497:[SOS   ,0017]emergency call
+1592220505:[PUMP  ,0016]pump during 900000ms
+1592221505:[MONITR,0198]rebooting with code 0x0000, data "src/monitor.c@520006"

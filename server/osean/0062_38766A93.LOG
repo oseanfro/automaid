@@ -1,0 +1,123 @@
+947284627:[MONITR,0197]reboot code 0x0000, src/monitor.c@520
+947284627:[MAIN  ,0007]buoy 452.120-R-0062
+947284627:[MAIN  ,0055]soft pilotage 452.012.300_V2.20-20200612
+947284627:[MAIN  ,0011]date 2000-01-07T22:37:07
+947284633:[MAIN  ,0006]battery 15528mV,    7564uA
+947284636:[MAIN  ,0024]internal pressure 82800Pa
+947284637:[PRESS ,0038]P    +70mbar,T  +710mdegC
+947284637:[MRMAID,0182]thread started
+947284639:[MRMAID,0186]no wake-up
+947284640:[MRMAID,0188]acq already stopped
+947284640:[MRMAID,0052]Mermaid $BOARD:452116600-62;
+947284641:[MRMAID,0052]Mermaid $SOFT:2.1338;
+947284641:[TESTMD,0053]Enter in test mode? yes/no
+947284641:[TESTMD,0252]0062>
+947284646:[TESTMD,0050]"yes"
+947284646:[TESTMD,0249]
+Command list
+pext    : Get external pressure
+pint    : Get internal vacuum
+ui      : Get voltage/current
+act     : Test actuators
+fillb   : Pump until filling the bladder
+bpopen  : Open bypass
+bpclose : Close bypass
+date    : Get date
+gps     : GPS synchronization
+iridium : Iridium transfer
+mstart  : Start mermaid acq
+mstop   : Stop mermaid acq
+mdata   : Get mermaid datas
+mchecksd  : Start mermaid acq
+mdump  : Send data REQUEST command with date and duration
+s41dumpa : Get averaged CTD datas
+s41dumpr : Get raw CTD datas
+ls      : List files
+cp      : Copy file or directory content on the desktop
+rm      : Remove a file
+h       : Print command list
+q       : Quit
+
+Advanced
+pumps X : pompe Xs (lent)
+pumpf X : pompe Xs (rapide)
+evh     : ouvre l'electrovalve 30s
+bypass  : ouvre le bypass 30s
+dvmine  : deverminage de la carte
+nominal : mode nominal pour mesure de conso
+cychydr : test du circuit hydraulique
+mkdir   : creer un repertoire
+mv      : deplacer un fichier
+ps      : liste les processus
+
+Set params
+stage   : Stage settings
+buoy    : Buoy settings
+p2t     : Pressure sensor settings
+log     : Verb cfg
+mermaid : Mermaid cfg
+upload  : On/Off Irid transfer
+sys  : system param settings
+
+
+947284646:[TESTMD,0252]0062>
+947284656:[TESTMD,0050]"bpopen"
+947284664:[TESTMD,0252]0062>
+947284687:[TESTMD,0050]"bpclose"
+947284695:[TESTMD,0252]0062>
+947284699:[TESTMD,0050]"fillb"
+947284699:[SURFIN,0020]filling external bladder
+947284707:[PUMP  ,0016]pump during 300000ms
+947284783:[SURFIN,0019]external bladder full
+947284783:[TESTMD,0252]0062>
+947284816:[TESTMD,0050]"pint"
+947284818:[TESTMD,0029]84623Pa
+947284818:[TESTMD,0252]0062>
+947284837:[TESTMD,0050]"pint"
+947284839:[TESTMD,0029]68902Pa
+947284839:[TESTMD,0252]0062>
+947284877:[TESTMD,0050]"pint"
+947284879:[TESTMD,0029]83110Pa
+947284879:[TESTMD,0252]0062>
+947284935:[TESTMD,0050]"pint"
+947284937:[TESTMD,0029]96249Pa
+947284937:[TESTMD,0252]0062>
+947285009:[TESTMD,0050]"pint"
+947285011:[TESTMD,0029]77488Pa
+947285011:[TESTMD,0252]0062>
+947285034:[TESTMD,0050]"pint"
+947285036:[TESTMD,0029]80288Pa
+947285036:[TESTMD,0252]0062>
+947285047:[TESTMD,0050]"pint"
+947285049:[TESTMD,0029]80338Pa
+947285049:[TESTMD,0252]0062>
+947285051:[TESTMD,0050]"pint"
+947285054:[TESTMD,0029]80312Pa
+947285054:[TESTMD,0252]0062>
+947285055:[TESTMD,0050]"pint"
+947285058:[TESTMD,0029]80328Pa
+947285058:[TESTMD,0252]0062>
+947285059:[TESTMD,0050]"pint"
+947285061:[TESTMD,0029]80352Pa
+947285061:[TESTMD,0252]0062>
+947285063:[TESTMD,0050]"pint"
+947285065:[TESTMD,0029]80340Pa
+947285065:[TESTMD,0252]0062>
+947285068:[TESTMD,0050]"pint"
+947285070:[TESTMD,0029]80331Pa
+947285070:[TESTMD,0252]0062>
+947285086:[TESTMD,0050]"act"
+947285086:[SURFIN,0020]filling external bladder
+947285089:[SURFIN,0019]external bladder full
+947285094:[VALVE ,0034]valve opening 30000ms
+947285129:[SURFIN,0020]filling external bladder
+947285137:[PUMP  ,0016]pump during 300000ms
+947285153:[SURFIN,0019]external bladder full
+947285153:[TESTMD,0045]pump run 14s
+947285158:[BYPASS,0035]bypass opening 30000ms
+947285203:[SURFIN,0020]filling external bladder
+947285211:[PUMP  ,0016]pump during 300000ms
+947285305:[SURFIN,0019]external bladder full
+947285305:[TESTMD,0045]pump run 92s
+947285310:[TESTMD,0066]test done
+947285310:[TESTMD,0252]0062>

@@ -1,0 +1,85 @@
+1593431742:[MONITR,0197]reboot code 0x0000, src/monitor.c@520
+1593431742:[MAIN  ,0007]buoy 452.120-R-0064
+1593431742:[MAIN  ,0055]soft pilotage 452.012.300_V2.20-20200612
+1593431742:[MAIN  ,0011]date 2020-06-29T11:55:42
+1593431748:[MAIN  ,0006]battery 15510mV,    7930uA
+1593431751:[MAIN  ,0024]internal pressure 80834Pa
+1593431752:[PRESS ,0038]P   +150mbar,T -8932mdegC
+1593431753:[MRMAID,0182]thread started
+1593431754:[MRMAID,0186]no wake-up
+1593431755:[MRMAID,0188]acq already stopped
+1593431755:[MRMAID,0052]Mermaid $BOARD:452116600-64;
+1593431756:[MRMAID,0052]Mermaid $SOFT:2.1344;
+1593431756:[TESTMD,0053]Enter in test mode? yes/no
+1593431756:[TESTMD,0252]0064>
+1593431759:[TESTMD,0050]"yes"
+1593431759:[TESTMD,0249]
+Command list
+pext    : Get external pressure
+pint    : Get internal vacuum
+ui      : Get voltage/current
+act     : Test actuators
+fillb   : Pump until filling the bladder
+bpopen  : Open bypass
+bpclose : Close bypass
+date    : Get date
+gps     : GPS synchronization
+iridium : Iridium transfer
+mstart  : Start mermaid acq
+mstop   : Stop mermaid acq
+mdata   : Get mermaid datas
+mchecksd  : Start mermaid acq
+mdump  : Send data REQUEST command with date and duration
+s41dumpa : Get averaged CTD datas
+s41dumpr : Get raw CTD datas
+ls      : List files
+cp      : Copy file or directory content on the desktop
+rm      : Remove a file
+h       : Print command list
+q       : Quit
+
+Advanced
+pumps X : pompe Xs (lent)
+pumpf X : pompe Xs (rapide)
+evh     : ouvre l'electrovalve 30s
+bypass  : ouvre le bypass 30s
+dvmine  : deverminage de la carte
+nominal : mode nominal pour mesure de conso
+cychydr : test du circuit hydraulique
+mkdir   : creer un repertoire
+mv      : deplacer un fichier
+ps      : liste les processus
+
+Set params
+stage   : Stage settings
+buoy    : Buoy settings
+p2t     : Pressure sensor settings
+log     : Verb cfg
+mermaid : Mermaid cfg
+upload  : On/Off Irid transfer
+sys  : system param settings
+
+
+1593431759:[TESTMD,0252]0064>
+1593431769:[TESTMD,0050]"gps"
+1593431777:[SURF  ,0022]GPS fix...
+1593431809:[SURF  ,0015]10 PPS detected...
+1593431811:[MRMAID,0052]Mermaid $GPSACK:+50,+5,+28,+11,+54,+38,-619384;
+1593431821:[MRMAID,0052]Mermaid $GPSOFF:3686318;
+1593431823:[GPSFIX,0179]-1s diff
+1593431824:[SURF  ,0222]2020-06-29T11:57:04
+1593431824:[SURF  ,0082]Latitude : N43deg06.485mn, Longitude :E006deg02.280mn
+1593431824:[SURF  ,0223]fix3D,6satellites
+1593431824:[SURF  ,0084]GPS fix GPGSA : hdop1.770,vdop3.900
+1593431839:[TESTMD,0252]0064>
+1593431842:[TESTMD,0050]"gps"
+1593431852:[SURF  ,0022]GPS fix...
+1593431872:[SURF  ,0015]10 PPS detected...
+1593431873:[MRMAID,0052]Mermaid $GPSACK:+0,+0,+0,+0,+0,+0,-30;
+1593431883:[MRMAID,0052]Mermaid $GPSOFF:3686318;
+1593431886:[GPSFIX,0179]+0s diff
+1593431886:[SURF  ,0222]2020-06-29T11:58:06
+1593431886:[SURF  ,0082]Latitude : N43deg06.484mn, Longitude :E006deg02.284mn
+1593431886:[SURF  ,0223]fix3D,6satellites
+1593431886:[SURF  ,0084]GPS fix GPGSA : hdop1.750,vdop3.440
+1593431901:[TESTMD,0252]0064>

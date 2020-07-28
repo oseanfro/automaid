@@ -1,0 +1,146 @@
+1593095473:[MONITR,0197]reboot code 0x0000, src/monitor.c@520
+1593095473:[MAIN  ,0007]buoy 452.120-R-0060
+1593095473:[MAIN  ,0055]soft pilotage 452.012.300_V2.20-20200612
+1593095473:[MAIN  ,0011]date 2020-06-25T14:31:13
+1593095479:[MAIN  ,0006]battery 15386mV,    8296uA
+1593095482:[MAIN  ,0024]internal pressure 80653Pa
+1593095483:[PRESS ,0038]P    +60mbar,T -3981mdegC
+1593095484:[MRMAID,0182]thread started
+1593095485:[MRMAID,0186]no wake-up
+1593095486:[MRMAID,0188]acq already stopped
+1593095486:[MRMAID,0052]Mermaid $BOARD:452116600-60;
+1593095487:[MRMAID,0052]Mermaid $SOFT:2.1344;
+1593095487:[TESTMD,0053]Enter in test mode? yes/no
+1593095487:[TESTMD,0252]0060>
+1593095490:[TESTMD,0050]"yes"
+1593095490:[TESTMD,0249]
+Command list
+pext    : Get external pressure
+pint    : Get internal vacuum
+ui      : Get voltage/current
+act     : Test actuators
+fillb   : Pump until filling the bladder
+bpopen  : Open bypass
+bpclose : Close bypass
+date    : Get date
+gps     : GPS synchronization
+iridium : Iridium transfer
+mstart  : Start mermaid acq
+mstop   : Stop mermaid acq
+mdata   : Get mermaid datas
+mchecksd  : Start mermaid acq
+mdump  : Send data REQUEST command with date and duration
+s41dumpa : Get averaged CTD datas
+s41dumpr : Get raw CTD datas
+ls      : List files
+cp      : Copy file or directory content on the desktop
+rm      : Remove a file
+h       : Print command list
+q       : Quit
+
+Advanced
+pumps X : pompe Xs (lent)
+pumpf X : pompe Xs (rapide)
+evh     : ouvre l'electrovalve 30s
+bypass  : ouvre le bypass 30s
+dvmine  : deverminage de la carte
+nominal : mode nominal pour mesure de conso
+cychydr : test du circuit hydraulique
+mkdir   : creer un repertoire
+mv      : deplacer un fichier
+ps      : liste les processus
+
+Set params
+stage   : Stage settings
+buoy    : Buoy settings
+p2t     : Pressure sensor settings
+log     : Verb cfg
+mermaid : Mermaid cfg
+upload  : On/Off Irid transfer
+sys  : system param settings
+
+
+1593095490:[TESTMD,0252]0060>
+1593095523:[TESTMD,0050]"gps"
+1593095531:[SURF  ,0022]GPS fix...
+1593095594:[SURF  ,0015]10 PPS detected...
+1593095595:[MRMAID,0052]Mermaid $GPSACK:+50,+5,+24,+14,+31,-43,-707366;
+1593095605:[MRMAID,0052]Mermaid $GPSOFF:3686327;
+1593095607:[GPSFIX,0179]-1s diff
+1593095608:[SURF  ,0222]2020-06-25T14:33:28
+1593095608:[SURF  ,0082]Latitude : N43deg06.479mn, Longitude :E006deg02.287mn
+1593095608:[SURF  ,0223]fix3D,4satellites
+1593095608:[SURF  ,0084]GPS fix GPGSA : hdop1.840,vdop2.500
+1593095623:[TESTMD,0252]0060>
+1593095645:[TESTMD,0050]"gps"
+1593095655:[SURF  ,0022]GPS fix...
+1593095675:[SURF  ,0015]10 PPS detected...
+1593095676:[MRMAID,0052]Mermaid $GPSACK:+0,+0,+0,+0,+0,+0,+0;
+1593095686:[MRMAID,0052]Mermaid $GPSOFF:3686327;
+1593095689:[GPSFIX,0179]+0s diff
+1593095689:[SURF  ,0222]2020-06-25T14:34:49
+1593095689:[SURF  ,0082]Latitude : N43deg06.482mn, Longitude :E006deg02.293mn
+1593095689:[SURF  ,0223]fix3D,4satellites
+1593095689:[SURF  ,0084]GPS fix GPGSA : hdop1.830,vdop2.500
+1593095704:[TESTMD,0252]0060>
+1593095800:[TESTMD,0050]"act"
+1593095800:[SURFIN,0020]filling external bladder
+1593095804:[SURFIN,0019]external bladder full
+1593095809:[VALVE ,0034]valve opening 30000ms
+1593095844:[SURFIN,0020]filling external bladder
+1593095852:[PUMP  ,0016]pump during 300000ms
+1593095868:[SURFIN,0019]external bladder full
+1593095868:[TESTMD,0045]pump run 14s
+1593095873:[BYPASS,0035]bypass opening 30000ms
+1593095918:[SURFIN,0020]filling external bladder
+1593095926:[PUMP  ,0016]pump during 300000ms
+1593096019:[SURFIN,0019]external bladder full
+1593096019:[TESTMD,0045]pump run 91s
+1593096024:[TESTMD,0066]test done
+1593096024:[TESTMD,0252]0060>
+1593096174:[TESTMD,0050]"iridium"
+1593096183:[SURF  ,0025]Iridium...
+1593096256:<WARN>[SURF  ,0023]failed to connect #1, code -5, net 4, qual -1, dial -1
+1593096336:<WARN>[SURF  ,0023]failed to connect #2, code -5, net 4, qual -1, dial -1
+1593096417:<WARN>[SURF  ,0023]failed to connect #3, code -5, net 4, qual -1, dial -1
+1593096686:<WARN>[SURF  ,0023]failed to connect #4, code -8, net 1, qual 3, dial 1
+1593096912:<WARN>[SURF  ,0023]failed to connect #5, code -8, net 1, qual 4, dial 1
+1593096917:<ERR>[SURF  ,0117]no connection after 733s
+1593096922:[TESTMD,0252]0060>
+1593097030:[TESTMD,0050]"iridium"
+1593097030:[TESTMD,0008]command not supported
+1593097030:[TESTMD,0252]0060>
+1593097054:[TESTMD,0050]"iridium"
+1593097068:[SURF  ,0025]Iridium...
+1593097113:[SURF  ,0009]connected in 45s, signal quality 5
+1593097205:[SURF  ,0218]prompt received, remote cmd end
+1593097205:[SURF  ,0012]17 cmd(s) received
+1593097229:[UPLOAD,0248]Upload data files...
+1593097256:[UPLOAD,0231]"0060/386D439A.LOG" uploaded at 49bytes/s
+1593097279:[UPLOAD,0231]"0060/386D60BB.LOG" uploaded at 102bytes/s
+1593097330:[UPLOAD,0231]"0060/387112A1.LOG" uploaded at 34bytes/s
+1593097342:[UPLOAD,0231]"0060/3871181F.LOG" uploaded at 108bytes/s
+1593097355:[UPLOAD,0231]"0060/5EDA1AD2.LOG" uploaded at 96bytes/s
+1593097367:[UPLOAD,0231]"0060/5EDA1BDC.LOG" uploaded at 148bytes/s
+1593097390:[UPLOAD,0231]"0060/5EE0D3EA.LOG" uploaded at 132bytes/s
+1593097412:[UPLOAD,0231]"0060/5EE0D889.LOG" uploaded at 141bytes/s
+1593097432:[UPLOAD,0231]"0060/5EE0DB8F.LOG" uploaded at 120bytes/s
+1593097441:[UPLOAD,0231]"0060/5EE0E0AD.LOG" uploaded at 122bytes/s
+1593097454:[UPLOAD,0231]"0060/5EE0F12E.LOG" uploaded at 151bytes/s
+1593097464:[UPLOAD,0231]"0060/386D43E3.BIN" uploaded at 90bytes/s
+1593097471:[UPLOAD,0231]"0060/386D4F0D.BIN" uploaded at 70bytes/s
+1593097478:[UPLOAD,0231]"0060/386D4FCE.BIN" uploaded at 79bytes/s
+1593097485:[UPLOAD,0231]"0060/386D6239.BIN" uploaded at 85bytes/s
+1593097499:[UPLOAD,0231]"0060/3873E406.BIN" uploaded at 68bytes/s
+1593097509:[UPLOAD,0231]"0060/3874CDBD.BIN" uploaded at 97bytes/s
+1593097541:[UPLOAD,0231]"0060/38753744.BIN" uploaded at 38bytes/s
+1593097554:[UPLOAD,0231]"0060/3877AFED.BIN" uploaded at 101bytes/s
+1593097563:[UPLOAD,0231]"0060/3877B32E.BIN" uploaded at 96bytes/s
+1593097575:[UPLOAD,0231]"0060/387CFC3C.BIN" uploaded at 57bytes/s
+1593097588:[UPLOAD,0231]"0060/387E2906.BIN" uploaded at 92bytes/s
+1593097602:[UPLOAD,0231]"0060/387E6D9E.BIN" uploaded at 100bytes/s
+1593097616:[UPLOAD,0231]"0060/387FB6EA.BIN" uploaded at 90bytes/s
+1593097623:[UPLOAD,0231]"0060/5EF4B322.BIN" uploaded at 23bytes/s
+1593097639:[MAIN  ,0013]25 file(s) uploaded
+1593097673:[SURF  ,0014]disconnected after 605s
+1593097678:[TESTMD,0252]0060>

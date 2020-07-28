@@ -1,0 +1,67 @@
+947205956:[MONITR,0197]reboot code 0x0000, src/monitor.c@520
+947205956:[MAIN  ,0007]buoy 452.020-R-0060
+947205956:[MAIN  ,0055]soft pilotage 452.012.300_V2.18-20200518
+947205956:[MAIN  ,0011]date 2000-01-07T00:45:56
+947205962:[MAIN  ,0006]battery 15395mV,    7930uA
+947205965:[MAIN  ,0024]internal pressure 100720Pa
+947205966:[PRESS ,0038]P    +60mbar,T-31521mdegC
+947205967:[MRMAID,0182]thread started
+947205968:[MRMAID,0186]no wake-up
+947205969:[MRMAID,0188]acq already stopped
+947205969:[MRMAID,0052]Mermaid $BOARD:452116600-60;
+947205970:[MRMAID,0052]Mermaid $SOFT:2.1338;
+947205970:[TESTMD,0053]Enter in test mode? yes/no
+947205970:[TESTMD,0252]0060>
+947205972:[TESTMD,0050]"yes"
+947205972:[TESTMD,0249]
+Command list
+pext    : Get external pressure
+pint    : Get internal vacuum
+ui      : Get voltage/current
+act     : Test actuators
+fillb   : Pump until filling the bladder
+bpopen  : Open bypass
+bpclose : Close bypass
+date    : Get date
+gps     : GPS synchronization
+iridium : Iridium transfer
+mstart  : Start mermaid acq
+mstop   : Stop mermaid acq
+mdata   : Get mermaid datas
+mchecksd  : Start mermaid acq
+mdump  : Send data REQUEST command with date and duration
+s41dumpa : Get averaged CTD datas
+s41dumpr : Get raw CTD datas
+ls      : List files
+cp      : Copy file or directory content on the desktop
+rm      : Remove a file
+h       : Print command list
+q       : Quit
+
+Advanced
+pumps X : pompe Xs (lent)
+pumpf X : pompe Xs (rapide)
+evh     : ouvre l'electrovalve 30s
+bypass  : ouvre le bypass 30s
+dvmine  : deverminage de la carte
+nominal : mode nominal pour mesure de conso
+cychydr : test du circuit hydraulique
+mkdir   : creer un repertoire
+mv      : deplacer un fichier
+ps      : liste les processus
+
+Set params
+stage   : Stage settings
+buoy    : Buoy settings
+p2t     : Pressure sensor settings
+log     : Verb cfg
+mermaid : Mermaid cfg
+upload  : On/Off Irid transfer
+sys  : system param settings
+
+
+947205972:[TESTMD,0252]0060>
+947205985:[TESTMD,0050]"fillb"
+947205985:[SURFIN,0020]filling external bladder
+947205988:[SURFIN,0019]external bladder full
+947205988:[TESTMD,0252]0060>

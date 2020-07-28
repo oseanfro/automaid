@@ -1,0 +1,74 @@
+947368750:[MONITR,0197]reboot code 0x0000, src/monitor.c@520
+947368750:[MAIN  ,0007]buoy 452.020-R-0060
+947368750:[MAIN  ,0055]soft pilotage 452.012.300_V2.18-20200518
+947368750:[MAIN  ,0011]date 2000-01-08T21:59:10
+947368756:[MAIN  ,0006]battery 15157mV,    8052uA
+947368759:[MAIN  ,0024]internal pressure 100896Pa
+947368760:[PRESS ,0038]P  -8130mbar,T+13098mdegC
+947368761:[MRMAID,0182]thread started
+947368762:[MRMAID,0186]no wake-up
+947368763:[MRMAID,0188]acq already stopped
+947368763:[MRMAID,0052]Mermaid $BOARD:452116600-60;
+947368764:[MRMAID,0052]Mermaid $SOFT:2.1338;
+947368764:[TESTMD,0053]Enter in test mode? yes/no
+947368764:[TESTMD,0252]0060>
+947368767:[TESTMD,0050]"yes"
+947368767:[TESTMD,0249]
+Command list
+pext    : Get external pressure
+pint    : Get internal vacuum
+ui      : Get voltage/current
+act     : Test actuators
+fillb   : Pump until filling the bladder
+bpopen  : Open bypass
+bpclose : Close bypass
+date    : Get date
+gps     : GPS synchronization
+iridium : Iridium transfer
+mstart  : Start mermaid acq
+mstop   : Stop mermaid acq
+mdata   : Get mermaid datas
+mchecksd  : Start mermaid acq
+mdump  : Send data REQUEST command with date and duration
+s41dumpa : Get averaged CTD datas
+s41dumpr : Get raw CTD datas
+ls      : List files
+cp      : Copy file or directory content on the desktop
+rm      : Remove a file
+h       : Print command list
+q       : Quit
+
+Advanced
+pumps X : pompe Xs (lent)
+pumpf X : pompe Xs (rapide)
+evh     : ouvre l'electrovalve 30s
+bypass  : ouvre le bypass 30s
+dvmine  : deverminage de la carte
+nominal : mode nominal pour mesure de conso
+cychydr : test du circuit hydraulique
+mkdir   : creer un repertoire
+mv      : deplacer un fichier
+ps      : liste les processus
+
+Set params
+stage   : Stage settings
+buoy    : Buoy settings
+p2t     : Pressure sensor settings
+log     : Verb cfg
+mermaid : Mermaid cfg
+upload  : On/Off Irid transfer
+sys  : system param settings
+
+
+947368767:[TESTMD,0252]0060>
+947368860:[TESTMD,0050]"mstart"
+947368861:[MRMAID,0002]acq started
+947368871:[TESTMD,0252]0060>
+947369082:[TESTMD,0050]"mstop"
+947369082:[MRMAID,0003]acq stopped
+947369142:[TESTMD,0252]0060>
+947369144:[TESTMD,0050]"mstart"
+947369145:[MRMAID,0002]acq started
+947369154:[TESTMD,0252]0060>
+947369205:[TESTMD,0050]"ps"
+947369206:[TESTMD,0252]0060>

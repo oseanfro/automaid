@@ -1,0 +1,69 @@
+947300876:[MONITR,0197]reboot code 0x0000, src/monitor.c@520
+947300877:[MAIN  ,0007]buoy 452.120-R-0062
+947300877:[MAIN  ,0055]soft pilotage 452.012.300_V2.20-20200612
+947300877:[MAIN  ,0011]date 2000-01-08T03:07:57
+947300883:[MAIN  ,0006]battery 15521mV,    9760uA
+947300885:[MAIN  ,0024]internal pressure 80869Pa
+947300887:[PRESS ,0038]P    +60mbar,T+16920mdegC
+947300887:[MRMAID,0182]thread started
+947300888:[MRMAID,0183]dropping spurious '0xFFFFFFFFFFFFFFBF'
+947300888:[MRMAID,0185]1 spurious byte(s) received
+947300888:[MRMAID,0183]dropping spurious '0xFFFFFFFFFFFFFFB7'
+947300888:[MRMAID,0185]1 spurious byte(s) received
+947300889:[MRMAID,0183]dropping spurious '0x5F'
+947300889:[MRMAID,0185]1 spurious byte(s) received
+947300889:[MRMAID,0183]dropping spurious '0x77'
+947300889:[MRMAID,0185]1 spurious byte(s) received
+947300890:[MRMAID,0183]dropping spurious '0x57'
+947300890:[MRMAID,0185]1 spurious byte(s) received
+947300890:[TESTMD,0053]Enter in test mode? yes/no
+947300890:[TESTMD,0252]0062>
+947300899:[TESTMD,0050]"yes"
+947300899:[TESTMD,0249]
+Command list
+pext    : Get external pressure
+pint    : Get internal vacuum
+ui      : Get voltage/current
+act     : Test actuators
+fillb   : Pump until filling the bladder
+bpopen  : Open bypass
+bpclose : Close bypass
+date    : Get date
+gps     : GPS synchronization
+iridium : Iridium transfer
+mstart  : Start mermaid acq
+mstop   : Stop mermaid acq
+mdata   : Get mermaid datas
+mchecksd  : Start mermaid acq
+mdump  : Send data REQUEST command with date and duration
+s41dumpa : Get averaged CTD datas
+s41dumpr : Get raw CTD datas
+ls      : List files
+cp      : Copy file or directory content on the desktop
+rm      : Remove a file
+h       : Print command list
+q       : Quit
+
+Advanced
+pumps X : pompe Xs (lent)
+pumpf X : pompe Xs (rapide)
+evh     : ouvre l'electrovalve 30s
+bypass  : ouvre le bypass 30s
+dvmine  : deverminage de la carte
+nominal : mode nominal pour mesure de conso
+cychydr : test du circuit hydraulique
+mkdir   : creer un repertoire
+mv      : deplacer un fichier
+ps      : liste les processus
+
+Set params
+stage   : Stage settings
+buoy    : Buoy settings
+p2t     : Pressure sensor settings
+log     : Verb cfg
+mermaid : Mermaid cfg
+upload  : On/Off Irid transfer
+sys  : system param settings
+
+
+947300899:[TESTMD,0252]0062>

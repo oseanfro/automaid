@@ -87,28 +87,27 @@ class Event:
     def find_measured_sampling_frequency(self):
         # Get the frequency recorded in the .MER environment header
         fs_catch = re.findall("TRUE_SAMPLE_FREQ FS_Hz=(\d+\.\d+)", self.environment)
-        self.measured_fs = float(fs_catch[0])
+        if (fs_catch):
+            self.measured_fs = float(fs_catch[0])
+        else:
+            self.measured_fs = 40
+        print self.measured_fs
 
         # Divide frequency by number of scales
         int_scl = int(self.scales)
         if int_scl >= 0:
             self.decimated_fs = self.measured_fs / (2. ** (6 - int_scl))
         else:
-            # This is raw data sampled at 40Hz
             self.decimated_fs = self.measured_fs
+        # Else: This is raw data sampled at 40Hz
 
     def correct_date(self):
         # Calculate the date of the first sample
         if self.requested:
             # For a requested event
-            rec_file_date = re.findall("FNAME=(\d{4}-\d{2}-\d{2}T\d{2}_\d{2}_\d{2})", self.header)
-            rec_file_date = UTCDateTime.strptime(rec_file_date[0], "%Y-%m-%dT%H_%M_%S")
-
-            rec_file_ms = re.findall("FNAME=\d{4}-\d{2}-\d{2}T\d{2}_\d{2}_\d{2}\.?(\d{6}?)", self.header)
-            if len(rec_file_ms) > 0:
-                rec_file_date += float("0." + rec_file_ms[0])
-
+            rec_file_date = re.findall("FNAME=(\d{4}-\d{2}-\d{2}T\d{2}_\d{2}_\d{2}\.\d{6})", self.header)
             sample_offset = re.findall("SMP_OFFSET=(\d+)", self.header)
+            rec_file_date = UTCDateTime.strptime(rec_file_date[0], "%Y-%m-%dT%H_%M_%S.%f")
             sample_offset = float(sample_offset[0])
             self.date = rec_file_date + sample_offset/self.measured_fs
         else:
@@ -139,13 +138,13 @@ class Event:
             f.write(self.binary)
         # Do icd24
         if edge_correction == "1":
-            #print "icdf24_v103ec_test"
+            print "icdf24_v103ec_test"
             subprocess.check_output(["bin/icdf24_v103ec_test",
                                      self.scales,
                                      normalized,
                                      "bin/wtcoeffs"])
         else:
-            #print "icdf24_v103_test"
+            print "icdf24_v103_test"
             subprocess.check_output(["bin/icdf24_v103_test",
                                     self.scales,
                                     normalized,
@@ -199,7 +198,7 @@ class Event:
                     filename=export_path,
                     auto_open=False)
 
-    def plot_png(self, export_path):
+    def plot(self, export_path):
         # Check if file exist
         export_path = export_path + self.get_export_file_name() + ".png"
         if os.path.exists(export_path):
@@ -218,41 +217,7 @@ class Event:
         plt.clf()
         plt.close()
 
-    def to_mseed(self, export_path, station_number, force_without_loc):
-        # Check if file exist
-        export_path_msd = export_path + self.get_export_file_name() + ".mseed"
-        if os.path.exists(export_path_msd):
-            return
-
-        # Check if the station location have been calculated
-        if self.station_loc is None and not force_without_loc:
-            print self.get_export_file_name() + ": Skip mseed generation, wait the next ascent to compute location"
-            return
-
-        # Get stream object
-        stream = self.get_stream(export_path, station_number, force_without_loc)
-
-        # Save stream object
-        stream.write(export_path_msd, format='MSEED')
-
-    def to_sac(self, export_path, station_number, force_without_loc):
-        # Check if file exist
-        export_path_sac = export_path + self.get_export_file_name() + ".sac"
-        if os.path.exists(export_path_sac):
-            return
-
-        # Check if the station location have been calculated
-        if self.station_loc is None and not force_without_loc:
-            print self.get_export_file_name() + ": Skip sac generation, wait the next ascent to compute location"
-            return
-
-        # Get stream object
-        stream = self.get_stream(export_path, station_number, force_without_loc)
-
-        # Save stream object
-        stream.write(export_path_sac, format='SAC')
-
-    def get_stream(self, export_path, station_number, force_without_loc):
+    def to_sac_and_mseed(self, export_path, station_number, force_without_loc):
         # Check if file exist
         export_path_sac = export_path + self.get_export_file_name() + ".sac"
         export_path_msd = export_path + self.get_export_file_name() + ".mseed"
@@ -286,4 +251,6 @@ class Event:
         trace.data = self.data
         stream = Stream(traces=[trace])
 
-        return stream
+        # Save stream object
+        stream.write(export_path_sac, format='SAC')
+        stream.write(export_path_msd, format='MSEED')

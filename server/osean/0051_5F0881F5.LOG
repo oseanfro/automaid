@@ -1,0 +1,707 @@
+1594393077:[MAIN  ,0007]buoy 452.020-P-0051
+1594393077:[MAIN  ,0055]soft pilotage 452.012.300_V2.20-20200612
+1594393077:[MAIN  ,0010]cycle 2
+1594393077:[SURF  ,0225]surface2
+1594393091:[SURF  ,0022]GPS fix...
+1594393111:[SURF  ,0015]10 PPS detected...
+1594393112:[MRMAID,0052]Mermaid $GPSACK:+0,+0,+0,+0,+0,+0,+0;
+1594393122:[MRMAID,0052]Mermaid $GPSOFF:3686320;
+1594393123:[GPSFIX,0179]-1s diff
+1594393124:[SURF  ,0222]2020-07-10T14:58:44
+1594393124:[SURF  ,0082]Latitude : N43deg26.236mn, Longitude :E007deg49.211mn
+1594393124:[SURF  ,0223]fix3D,9satellites
+1594393124:[SURF  ,0084]GPS fix GPGSA : hdop0.670,vdop0.890
+1594393134:[SURF  ,0025]Iridium...
+1594393141:[SBE41 ,0339]newoffset=-0.52db received after -57s
+1594393176:[SURF  ,0009]connected in 42s, signal quality 5
+1594393222:[SURF  ,0218]prompt received, remote cmd end
+1594393222:[SURF  ,0012]7 cmd(s) received
+1594393242:[UPLOAD,0248]Upload data files...
+1594393514:[ZIO   ,0236]5 consecutive CAN received, aborting
+1594393530:[SURF  ,0014]disconnected after 396s
+1594393536:[SURFIN,0020]filling external bladder
+1594393544:[PUMP  ,0207]battery 14786mV,   29646uA (warmup), P   +210mbar
+1594393544:[PUMP  ,0016]pump during 300000ms
+1594393555:[PUMP  ,0212]battery 13998mV, 1459364uA (steady state), P   +210mbar
+1594393557:[SURFIN,0019]external bladder full
+1594393557:[SURF  ,0069]transfer interrupted , retry
+1594393574:[SURF  ,0022]GPS fix...
+1594393594:[SURF  ,0015]10 PPS detected...
+1594393595:[MRMAID,0052]Mermaid $GPSACK:+0,+0,+0,+0,+0,+0,-30;
+1594393605:[MRMAID,0052]Mermaid $GPSOFF:3686320;
+1594393606:[GPSFIX,0179]-1s diff
+1594393607:[SURF  ,0222]2020-07-10T15:06:47
+1594393607:[SURF  ,0082]Latitude : N43deg26.212mn, Longitude :E007deg49.205mn
+1594393607:[SURF  ,0223]fix3D,10satellites
+1594393607:[SURF  ,0084]GPS fix GPGSA : hdop0.670,vdop0.880
+1594393617:[SURF  ,0025]Iridium...
+1594393665:[SURF  ,0009]connected in 48s, signal quality 5
+1594393713:[SURF  ,0218]prompt received, remote cmd end
+1594393713:[SURF  ,0012]7 cmd(s) received
+1594393734:[UPLOAD,0248]Upload data files...
+1594394545:[ZIO   ,0238]5 consecutive 'U' received, aborting
+1594394566:[SURF  ,0014]disconnected after 949s
+1594394571:[SURFIN,0020]filling external bladder
+1594394579:[PUMP  ,0207]battery 14806mV,   30256uA (warmup), P   +210mbar
+1594394579:[PUMP  ,0016]pump during 300000ms
+1594394587:[PUMP  ,0212]battery 14020mV, 1394704uA (steady state), P   +210mbar
+1594394589:[SURFIN,0019]external bladder full
+1594394589:[SURF  ,0069]transfer interrupted , retry
+1594394605:[SURF  ,0022]GPS fix...
+1594394626:[SURF  ,0015]10 PPS detected...
+1594394627:[MRMAID,0052]Mermaid $GPSACK:+0,+0,+0,+0,+0,+1,-999877;
+1594394637:[MRMAID,0052]Mermaid $GPSOFF:3686319;
+1594394638:[GPSFIX,0179]-1s diff
+1594394639:[SURF  ,0222]2020-07-10T15:23:59
+1594394639:[SURF  ,0082]Latitude : N43deg26.152mn, Longitude :E007deg49.196mn
+1594394639:[SURF  ,0223]fix3D,9satellites
+1594394639:[SURF  ,0084]GPS fix GPGSA : hdop0.740,vdop0.980
+1594394649:[SURF  ,0025]Iridium...
+1594394696:[SURF  ,0009]connected in 47s, signal quality 4
+1594394756:[SURF  ,0218]prompt received, remote cmd end
+1594394756:[SURF  ,0012]12 cmd(s) received
+1594394777:[UPLOAD,0248]Upload data files...
+1594395382:[ZIO   ,0239]25 consecutive 'a' received, aborting
+1594395402:[SURF  ,0014]disconnected after 753s
+1594395407:[SURFIN,0020]filling external bladder
+1594395415:[PUMP  ,0207]battery 14907mV,   31964uA (warmup), P   +210mbar
+1594395415:[PUMP  ,0016]pump during 300000ms
+1594395424:[PUMP  ,0212]battery 14036mV, 1402756uA (steady state), P   +210mbar
+1594395426:[SURFIN,0019]external bladder full
+1594395426:[SURF  ,0069]transfer interrupted , retry
+1594395442:[SURF  ,0022]GPS fix...
+1594395463:[SURF  ,0015]10 PPS detected...
+1594395464:[MRMAID,0052]Mermaid $GPSACK:+0,+0,+0,+0,+0,+1,-999969;
+1594395474:[MRMAID,0052]Mermaid $GPSOFF:3686319;
+1594395475:[GPSFIX,0179]-1s diff
+1594395476:[SURF  ,0222]2020-07-10T15:37:56
+1594395476:[SURF  ,0082]Latitude : N43deg26.095mn, Longitude :E007deg49.197mn
+1594395476:[SURF  ,0223]fix3D,9satellites
+1594395476:[SURF  ,0084]GPS fix GPGSA : hdop0.730,vdop0.960
+1594395486:[SURF  ,0025]Iridium...
+1594395526:[SURF  ,0009]connected in 40s, signal quality 5
+1594395579:[SURF  ,0218]prompt received, remote cmd end
+1594395579:[SURF  ,0012]11 cmd(s) received
+1594395602:[UPLOAD,0248]Upload data files...
+1594395851:[ZIO   ,0239]25 consecutive 'a' received, aborting
+1594395872:[SURF  ,0014]disconnected after 386s
+1594395877:[SURFIN,0020]filling external bladder
+1594395885:[PUMP  ,0207]battery 14906mV,   31476uA (warmup), P   +210mbar
+1594395885:[PUMP  ,0016]pump during 300000ms
+1594395893:[PUMP  ,0212]battery 14042mV, 1393606uA (steady state), P   +210mbar
+1594395895:[SURFIN,0019]external bladder full
+1594395895:[SURF  ,0069]transfer interrupted , retry
+1594395909:[SURF  ,0022]GPS fix...
+1594395930:[SURF  ,0015]10 PPS detected...
+1594395931:[MRMAID,0052]Mermaid $GPSACK:+0,+0,+0,+0,+0,+1,-999938;
+1594395941:[MRMAID,0052]Mermaid $GPSOFF:3686318;
+1594395943:[GPSFIX,0179]+0s diff
+1594395943:[SURF  ,0222]2020-07-10T15:45:43
+1594395943:[SURF  ,0082]Latitude : N43deg26.065mn, Longitude :E007deg49.204mn
+1594395943:[SURF  ,0223]fix3D,9satellites
+1594395943:[SURF  ,0084]GPS fix GPGSA : hdop0.730,vdop0.950
+1594395953:[SURF  ,0025]Iridium...
+1594396001:[SURF  ,0009]connected in 48s, signal quality 5
+1594396052:[SURF  ,0218]prompt received, remote cmd end
+1594396052:[SURF  ,0012]11 cmd(s) received
+1594396073:[UPLOAD,0248]Upload data files...
+1594396632:[UPLOAD,0231]"0051/5F080D03.S41" uploaded at 101bytes/s
+1594396705:[UPLOAD,0231]"0051/5F0881CE.MER" uploaded at 149bytes/s
+1594396990:[SURF  ,0014]disconnected after 1037s
+1594396995:[SURFIN,0020]filling external bladder
+1594397003:[PUMP  ,0207]battery 14905mV,   30988uA (warmup), P   +210mbar
+1594397003:[PUMP  ,0016]pump during 300000ms
+1594397009:[PUMP  ,0212]battery 14062mV, 1380552uA (steady state), P   +210mbar
+1594397011:[SURFIN,0019]external bladder full
+1594397011:[SURF  ,0069]transfer interrupted , retry
+1594397026:[SURF  ,0022]GPS fix...
+1594397046:[SURF  ,0015]10 PPS detected...
+1594397047:[MRMAID,0052]Mermaid $GPSACK:+0,+0,+0,+0,+0,+0,-91;
+1594397057:[MRMAID,0052]Mermaid $GPSOFF:3686318;
+1594397058:[GPSFIX,0179]-1s diff
+1594397059:[SURF  ,0222]2020-07-10T16:04:19
+1594397059:[SURF  ,0082]Latitude : N43deg25.999mn, Longitude :E007deg49.235mn
+1594397059:[SURF  ,0223]fix3D,10satellites
+1594397059:[SURF  ,0084]GPS fix GPGSA : hdop0.690,vdop0.810
+1594397069:[SURF  ,0025]Iridium...
+1594397100:[SURF  ,0009]connected in 31s, signal quality 5
+1594397161:[SURF  ,0218]prompt received, remote cmd end
+1594397161:[SURF  ,0012]11 cmd(s) received
+1594397182:[UPLOAD,0248]Upload data files...
+1594397217:[UPLOAD,0231]"0051/5F057134.BIN" uploaded at 114bytes/s
+1594397233:[MAIN  ,0013]1 file(s) uploaded
+1594397264:[SURF  ,0014]disconnected after 195s
+1594397269:[SURFIN,0020]filling external bladder
+1594397272:[SURFIN,0019]external bladder full
+1594397272:[SURF  ,0227]1st complete transfer
+1594397272:[SURF  ,0226]Go dive (Minimum surface delay expired and no more file to upload)
+1594397287:[SURF  ,0022]GPS fix...
+1594397308:[SURF  ,0015]10 PPS detected...
+1594397309:[MRMAID,0052]Mermaid $GPSACK:+0,+0,+0,+0,+0,+0,+0;
+1594397319:[MRMAID,0052]Mermaid $GPSOFF:3686318;
+1594397320:[GPSFIX,0179]-1s diff
+1594397321:[SURF  ,0222]2020-07-10T16:08:41
+1594397321:[SURF  ,0082]Latitude : N43deg25.983mn, Longitude :E007deg49.249mn
+1594397321:[SURF  ,0223]fix3D,10satellites
+1594397321:[SURF  ,0084]GPS fix GPGSA : hdop0.710,vdop0.810
+1594397338:[MAIN  ,0024]internal pressure 80125Pa
+1594397339:[BYCMD ,0107]    FreeRTOS V8.2.3
+1594397339:[BYCMD ,0108]    FatFS v11a
+1594397339:[BYCMD ,0120]    bypass 20000ms 120000ms (20000ms 120000ms stored)
+1594397339:[BYCMD ,0121]    valve 60000ms 12750 (60000ms 12750 stored)
+1594397339:[BYCMD ,0122]    pump 60000ms 30% 10750 80% (60000ms 30% 10750 80% stored)
+1594397339:[BYCMD ,0123]    rate 2mbar/s (2mbar/s stored)
+1594397339:[BYCMD ,0124]    surface 500mbar (500mbar stored)
+1594397339:[BYCMD ,0125]    near 0mbar 8mbar/s (0mbar 8mbar/s stored)
+1594397339:[BYCMD ,0126]    far 200891mbar 8mbar/s (200891mbar 8mbar/s stored)
+1594397339:[BYCMD ,0127]    ascent 8mbar/s (8mbar/s stored)
+1594397339:[BYCMD ,0128]    dead 300s (300s stored)
+1594397339:[BYCMD ,0129]    coeff 16/10 (16/10 stored)
+1594397339:[BYCMD ,0130]    stab 10 (10 stored)
+1594397339:[BYCMD ,0131]    delay 900s 7200s (900s 7200s stored)
+1594397339:[BYCMD ,0132]    mmtime 43200min (43200min stored)
+1594397339:[BYCMD ,0133]    dv_landing 100ml (100ml stored)
+1594397339:[MKDCMD,0150]    p2t37: 15x2000ms, offset 215mbar
+1594397339:[P2TCMD,0151]    p2t37: dp 500mbar, dt 1000000mdegC
+1594397340:[STAGE ,0080]Stage [0] 150000mbar (+/-5000mbar) 49980s (<49980s) 
+1594397340:[STAGE ,0080]Stage [1] 150000mbar (+/-5000mbar) 312000s (<361980s) MERMAID
+1594397340:[STAGE ,0080]Stage [2] 200000mbar (+/-5000mbar) 16680s (<378660s) 
+1594397340:[STAGE ,0091]Stage [3] surfacing 32160s (<410820s) SBE41
+1594397340:[SBE41 ,0282]SBE41 parameters : 
+      dsreplyformat=1 (webb(0)/standard(1))
+      addtimingdelays=0 (n(0)/y(1))
+      outputdensity=0 (n(0)/y(1))
+      echocmd=0 (n(0)/y(1))
+      outputrt=0 (n(0)/y(1))
+      outputpts=0 (n(0)/y(1))
+      outputsn=0 (n(0)/y(1))
+      outputpressure=1 (n(0)/y(1))
+      pcutoff=2dbar
+      tswait=0s
+      pumpfastpt=1 (n(0)/y(1))
+      samplerate=1 ('fast':1Hz(1)/'slow':0.5Hz(0))
+      top_bin_interval=10dbar
+      top_bin_size=10dbar
+      top_bin_max=100dbar
+      middle_bin_interval=50dbar
+      middle_bin_size=50dbar
+      middle_bin_max=1000dbar
+      bottom_bin_interval=100dbar
+      bottom_bin_size=100dbar
+      includetransitionbin=0
+      includenbin=0 (n(0)/y(1))
+      autobinavg=0 (n(0)/y(1))
+1594397340:[SBE41 ,0283]SBE41 pilot policy : 
+      continiousprofile=0 (n(0)/y(1)
+      speeddetection=1 (n(0)/y(1)
+      hexoutput=1 (n(0)/y(1)
+      binaverageoutput=0 (n(0)/y(1)
+      manualprofilerate=10s
+      runningpumpbeforeprofile=0s
+      speedstart=2mbar/s
+      speedcontrol=9mbar/s
+1594397340:[MAIN  ,0070]turn off bluetooth
+1594397367:[DIVING,0141]diving from -15mbar, +0mbar/s
+1594397367:[BYPASS,0035]bypass opening 120000ms
+1594397372:[BYPASS,0104]battery 14532mV,  315492uA (bypass opening), P    -15mbar
+1594397497:[BYPASS,0106]battery 14465mV,  394060uA (bypass closing), P    -15mbar
+1594397524:[BYPASS,0035]bypass opening 20000ms
+1594397529:[BYPASS,0104]battery 14570mV,  330254uA (bypass opening), P   -115mbar
+1594397554:[BYPASS,0106]battery 14487mV,  393206uA (bypass closing), P   -115mbar
+1594397580:[BYPASS,0035]bypass opening 20000ms
+1594397585:[BYPASS,0104]battery 14578mV,  327814uA (bypass opening), P   -105mbar
+1594397610:[BYPASS,0106]battery 14496mV,  392352uA (bypass closing), P   -105mbar
+1594397670:[PRESS ,0038]P   +445mbar,T+24224mdegC
+1594397680:[DIVING,0028]515mbar reached (+7mbar/s), 3 bypass done
+1594397681:[MAIN  ,0056]stage[0]
+1594397683:[MAIN  ,0024]internal pressure 82643Pa
+1594397684:[BUOY  ,0037]P   +555mbar
+1594397684:[STAGE ,0080]Stage [0] 150000mbar (+/-5000mbar) 49980s (<1594447660s) 
+1594397986:[PRESS ,0038]P  +1995mbar,T+23544mdegC
+1594398011:[BUOY  ,0087]from +3mbar/s to +8mbar/s
+1594398011:[BUOY  ,0090]need to transfer -88mL (valve during 24933ms)
+1594398011:[VALVE ,0034]valve opening 24933ms
+1594398036:[VALVE ,0234]battery 14187mV,  609146uA, P  +2075mbar
+1594398311:[PRESS ,0038]P  +4195mbar,T+20811mdegC
+1594398636:[PRESS ,0038]P  +6545mbar,T+18322mdegC
+1594398961:[PRESS ,0038]P  +8755mbar,T+16698mdegC
+1594399286:[PRESS ,0038]P +11045mbar,T+15738mdegC
+1594399611:[PRESS ,0038]P +13365mbar,T+15169mdegC
+1594399635:[BUOY  ,0087]from +6mbar/s to +8mbar/s
+1594399635:[BUOY  ,0090]need to transfer -44mL (valve during 4836ms)
+1594399635:[VALVE ,0034]valve opening 4836ms
+1594399640:[VALVE ,0234]battery 14035mV,  606950uA, P +13525mbar
+1594399936:[PRESS ,0038]P +16035mbar,T+14847mdegC
+1594399960:[BUOY  ,0087]from +9mbar/s to +8mbar/s
+1594399960:[BUOY  ,0089]need to transfer +28mL (pump during 33885ms)
+1594399969:[PUMP  ,0207]battery 15217mV,   38186uA (warmup), P +16255mbar
+1594399969:[PUMP  ,0016]pump during 33885ms
+1594400002:[PUMP  ,0212]battery 14445mV,  525698uA (steady state), P +16255mbar
+1594400264:[PRESS ,0038]P +18495mbar,T+14716mdegC
+1594400589:[PRESS ,0038]P +20865mbar,T+14540mdegC
+1594400914:[PRESS ,0038]P +23225mbar,T+14427mdegC
+1594401239:[PRESS ,0038]P +25585mbar,T+14331mdegC
+1594401564:[PRESS ,0038]P +27935mbar,T+14248mdegC
+1594401889:[PRESS ,0038]P +30265mbar,T+14189mdegC
+1594402213:[PRESS ,0038]P +32625mbar,T+14158mdegC
+1594402538:[PRESS ,0038]P +34975mbar,T+14138mdegC
+1594402863:[PRESS ,0038]P +37355mbar,T+14107mdegC
+1594403188:[PRESS ,0038]P +39605mbar,T+14077mdegC
+1594403213:[BUOY  ,0087]from +6mbar/s to +8mbar/s
+1594403213:[BUOY  ,0090]need to transfer -44mL (valve during 2819ms)
+1594403213:[VALVE ,0034]valve opening 2819ms
+1594403216:[VALVE ,0234]battery 13760mV,  604998uA, P +39765mbar
+1594403513:[PRESS ,0038]P +42325mbar,T+14042mdegC
+1594403838:[PRESS ,0038]P +45065mbar,T+14002mdegC
+1594404163:[PRESS ,0038]P +47735mbar,T+13961mdegC
+1594404488:[PRESS ,0038]P +50425mbar,T+13923mdegC
+1594404513:[BUOY  ,0087]from +9mbar/s to +8mbar/s
+1594404513:[BUOY  ,0089]need to transfer +28mL (pump during 33797ms)
+1594404521:[PUMP  ,0207]battery 15198mV,   40138uA (warmup), P +50645mbar
+1594404521:[PUMP  ,0016]pump during 33797ms
+1594404554:[PUMP  ,0212]battery 14295mV,  690276uA (steady state), P +50645mbar
+1594404816:[PRESS ,0038]P +52985mbar,T+13927mdegC
+1594405141:[PRESS ,0038]P +55495mbar,T+13881mdegC
+1594405466:[PRESS ,0038]P +57985mbar,T+13836mdegC
+1594405791:[PRESS ,0038]P +60525mbar,T+13795mdegC
+1594406116:[PRESS ,0038]P +62935mbar,T+13763mdegC
+1594406441:[PRESS ,0038]P +65305mbar,T+13738mdegC
+1594406766:[PRESS ,0038]P +67615mbar,T+13715mdegC
+1594407091:[PRESS ,0038]P +69905mbar,T+13692mdegC
+1594407416:[PRESS ,0038]P +72165mbar,T+13672mdegC
+1594407741:[PRESS ,0038]P +74465mbar,T+13652mdegC
+1594408065:[PRESS ,0038]P +76715mbar,T+13631mdegC
+1594408390:[PRESS ,0038]P +78885mbar,T+13611mdegC
+1594408415:[BUOY  ,0087]from +6mbar/s to +8mbar/s
+1594408415:[BUOY  ,0090]need to transfer -44mL (valve during 1996ms)
+1594408415:[VALVE ,0034]valve opening 1996ms
+1594408417:[VALVE ,0234]battery 13596mV,  621468uA, P +79035mbar
+1594408716:[PRESS ,0038]P +81355mbar,T+13591mdegC
+1594409040:[PRESS ,0038]P +83825mbar,T+13574mdegC
+1594409365:[PRESS ,0038]P +86295mbar,T+13559mdegC
+1594409690:[PRESS ,0038]P +88735mbar,T+13544mdegC
+1594410015:[PRESS ,0038]P +91185mbar,T+13530mdegC
+1594410340:[PRESS ,0038]P +93585mbar,T+13516mdegC
+1594410665:[PRESS ,0038]P +95995mbar,T+13503mdegC
+1594410990:[PRESS ,0038]P +98395mbar,T+13490mdegC
+1594411315:[PRESS ,0038]P+100825mbar,T+13477mdegC
+1594411640:[PRESS ,0038]P+103275mbar,T+13466mdegC
+1594411965:[PRESS ,0038]P+105635mbar,T+13454mdegC
+1594412290:[PRESS ,0038]P+108015mbar,T+13445mdegC
+1594412614:[PRESS ,0038]P+110365mbar,T+13436mdegC
+1594412939:[PRESS ,0038]P+112705mbar,T+13427mdegC
+1594413264:[PRESS ,0038]P+115035mbar,T+13419mdegC
+1594413589:[PRESS ,0038]P+117345mbar,T+13409mdegC
+1594413914:[PRESS ,0038]P+119655mbar,T+13402mdegC
+1594414239:[PRESS ,0038]P+121955mbar,T+13394mdegC
+1594414564:[PRESS ,0038]P+124205mbar,T+13386mdegC
+1594414889:[PRESS ,0038]P+126435mbar,T+13379mdegC
+1594415214:[PRESS ,0038]P+128645mbar,T+13371mdegC
+1594415539:[PRESS ,0038]P+130805mbar,T+13366mdegC
+1594415864:[PRESS ,0038]P+132945mbar,T+13359mdegC
+1594416189:[PRESS ,0038]P+135115mbar,T+13353mdegC
+1594416513:[PRESS ,0038]P+137265mbar,T+13348mdegC
+1594416538:[BUOY  ,0087]from +6mbar/s to +8mbar/s
+1594416538:[BUOY  ,0090]need to transfer -44mL (valve during 1516ms)
+1594416538:[VALVE ,0034]valve opening 1516ms
+1594416540:[VALVE ,0234]battery 13153mV,  584136uA, P+137415mbar
+1594416839:[PRESS ,0038]P+139675mbar,T+13343mdegC
+1594417163:[PRESS ,0038]P+142095mbar,T+13337mdegC
+1594417488:[PRESS ,0038]P+144495mbar,T+13331mdegC
+1594417813:[PRESS ,0038]P+146865mbar,T+13328mdegC
+1594417838:[STAGE ,0213]147055mbar reached at 1594417838s, ref 150000mbar +/-5000mbar
+1594417838:[BUOY  ,0087]from +7mbar/s to +0mbar/s
+1594417838:[BUOY  ,0089]need to transfer +78mL (pump during 94203ms)
+1594417846:[PUMP  ,0207]battery 15115mV,   39772uA (warmup), P+147055mbar
+1594417846:[PUMP  ,0016]pump during 60000ms
+1594417905:[PUMP  ,0212]battery 13638mV, 1284416uA (steady state), P+147055mbar
+1594418142:[PRESS ,0038]P+148935mbar,T+13356mdegC
+1594418166:[BUOY  ,0087]from +6mbar/s to +0mbar/s
+1594418166:[BUOY  ,0089]need to transfer +58mL (pump during 70048ms)
+1594418175:[PUMP  ,0207]battery 15012mV,   39040uA (warmup), P+149075mbar
+1594418175:[PUMP  ,0016]pump during 60000ms
+1594418234:[PUMP  ,0212]battery 14116mV, 1283562uA (steady state), P+149075mbar
+1594418470:[PRESS ,0038]P+150445mbar,T+13391mdegC
+1594418495:[BUOY  ,0087]from +4mbar/s to +0mbar/s
+1594418495:[BUOY  ,0089]need to transfer +26mL (pump during 32363ms)
+1594418503:[PUMP  ,0207]battery 14938mV,   38064uA (warmup), P+150535mbar
+1594418503:[PUMP  ,0016]pump during 32363ms
+1594418535:[PUMP  ,0212]battery 14080mV, 1299666uA (steady state), P+150535mbar
+1594418798:[PRESS ,0038]P+151445mbar,T+13403mdegC
+1594418823:[BUOY  ,0087]from +3mbar/s to +0mbar/s
+1594418823:[BUOY  ,0089]need to transfer +14mL (pump during 17426ms)
+1594418831:[PUMP  ,0207]battery 14963mV,   37820uA (warmup), P+151505mbar
+1594418831:[PUMP  ,0016]pump during 17426ms
+1594418848:[PUMP  ,0212]battery 14101mV, 1299910uA (steady state), P+151505mbar
+1594419126:[PRESS ,0038]P+152065mbar,T+13407mdegC
+1594419151:[BUOY  ,0087]from +2mbar/s to +0mbar/s
+1594419151:[BUOY  ,0089]need to transfer +6mL (pump during 7419ms)
+1594419159:[PUMP  ,0207]battery 15003mV,   37820uA (warmup), P+152105mbar
+1594419159:[PUMP  ,0016]pump during 7419ms
+1594419167:[PUMP  ,0212]battery 14131mV, 1309304uA (steady state), P+152105mbar
+1594419480:[BUOY  ,0087]from +1mbar/s to +0mbar/s
+1594419480:[BUOY  ,0089]need to transfer +2mL (pump during 2450ms)
+1594419488:[PUMP  ,0207]battery 15047mV,   38186uA (warmup), P+152435mbar
+1594419488:[PUMP  ,0016]pump during 2450ms
+1594422209:[PRESS ,0038]P+152665mbar,T+13335mdegC
+1594424010:[PRESS ,0038]P+153175mbar,T+13315mdegC
+1594426711:[PRESS ,0038]P+153705mbar,T+13296mdegC
+1594430013:[PRESS ,0038]P+154215mbar,T+13282mdegC
+1594434515:[PRESS ,0038]P+154755mbar,T+13267mdegC
+1594439317:<WARN>[BUOY  ,0094]stage[0] should ASCENT, stuck at 155015mbar for the #1 time
+1594439317:[BUOY  ,0087]from +0mbar/s to -8mbar/s
+1594439317:[BUOY  ,0089]need to transfer +102mL (pump during 123188ms)
+1594439326:[PUMP  ,0207]battery 15081mV,   38918uA (warmup), P+155015mbar
+1594439326:[PUMP  ,0016]pump during 60000ms
+1594439385:[PUMP  ,0212]battery 13671mV, 1307718uA (steady state), P+155015mbar
+1594439621:[PRESS ,0038]P+153865mbar,T+13265mdegC
+1594439646:[BUOY  ,0087]from -5mbar/s to +0mbar/s
+1594439646:[BUOY  ,0090]need to transfer -40mL (valve during 1301ms)
+1594439646:[VALVE ,0034]valve opening 1301ms
+1594439647:[VALVE ,0234]battery 14118mV,  638670uA, P+153735mbar
+1594439946:[PRESS ,0038]P+153265mbar,T+13267mdegC
+1594440571:[PRESS ,0038]P+152615mbar,T+13266mdegC
+1594441472:[PRESS ,0038]P+151985mbar,T+13259mdegC
+1594447475:[PRESS ,0038]P+152495mbar,T+13240mdegC
+1594447775:[MAIN  ,0140]stage[0] complete -15441s after mission start
+1594447775:[MAIN  ,0056]stage[1]
+1594447777:[MAIN  ,0024]internal pressure 80698Pa
+1594447778:[MRMAID,0002]acq started
+1594447788:[BUOY  ,0037]P+152535mbar
+1594447788:[STAGE ,0080]Stage [1] 150000mbar (+/-5000mbar) 312000s (<1594759660s) MERMAID
+1594447790:[STAGE ,0213]152525mbar reached at 1594447790s, ref 150000mbar +/-5000mbar
+1594452581:[MRMAID,0027]1529dbar, 13degC
+1594453193:[PRESS ,0038]P+153005mbar,T+13233mdegC
+1594466999:[PRESS ,0038]P+153515mbar,T+13229mdegC
+1594480506:[PRESS ,0038]P+154025mbar,T+13228mdegC
+1594497614:[PRESS ,0038]P+154545mbar,T+13225mdegC
+1594511421:<WARN>[BUOY  ,0094]stage[1] should ASCENT, stuck at 155005mbar for the #1 time
+1594511421:[BUOY  ,0087]from +0mbar/s to -8mbar/s
+1594511421:[BUOY  ,0089]need to transfer +102mL (pump during 123487ms)
+1594511421:[MRMAID,0003]acq stopped
+1594511422:[MRMAID,0052]Mermaid $MEASFS,2544545,63591.336731,40.014020;
+1594511430:[PUMP  ,0207]battery 14910mV,   51362uA (warmup), P+155005mbar
+1594511430:[PUMP  ,0016]pump during 60000ms
+1594511489:[PUMP  ,0212]battery 13305mV, 1304058uA (steady state), P+155005mbar
+1594511493:[MRMAID,0002]acq started
+1594511735:[PRESS ,0038]P+153945mbar,T+13229mdegC
+1594511759:[BUOY  ,0087]from -4mbar/s to +0mbar/s
+1594511760:[BUOY  ,0090]need to transfer -26mL (valve during 846ms)
+1594511760:[MRMAID,0003]acq stopped
+1594511760:[VALVE ,0034]valve opening 846ms
+1594511761:[VALVE ,0234]battery 14097mV,  637450uA, P+153845mbar
+1594511762:[MRMAID,0002]acq started
+1594512070:[PRESS ,0038]P+153115mbar,T+13236mdegC
+1594512395:[PRESS ,0038]P+152405mbar,T+13239mdegC
+1594512695:[PRESS ,0038]P+151775mbar,T+13240mdegC
+1594512995:[PRESS ,0038]P+151135mbar,T+13236mdegC
+1594513295:[PRESS ,0038]P+150525mbar,T+13236mdegC
+1594513595:[PRESS ,0038]P+149935mbar,T+13233mdegC
+1594513596:[BUOY  ,0087]from -2mbar/s to +0mbar/s
+1594513596:[BUOY  ,0090]need to transfer -6mL (valve during 198ms)
+1594513596:[MRMAID,0052]Mermaid $STOPAC$MEASFS,71263,1780.950805,40.014019;
+1594513596:[VALVE ,0034]valve opening 198ms
+1594513597:[MRMAID,0183]dropping spurious '0x4B'
+1594513597:[MRMAID,0183]dropping spurious '0x3A'
+1594513597:[MRMAID,0183]dropping spurious '0x2B'
+1594513597:[MRMAID,0183]dropping spurious '0x31'
+1594513597:[MRMAID,0183]dropping spurious '0x3B'
+1594513597:[MRMAID,0185]5 spurious byte(s) received
+1594513608:[MRMAID,0002]acq started
+1594580273:[PRESS ,0038]P+150455mbar,T+13225mdegC
+1594589903:[MRMAID,0027]1509dbar, 13degC
+1594590178:[PRESS ,0038]P+151035mbar,T+13223mdegC
+1594592363:[MRMAID,0027]1512dbar, 13degC
+1594608787:[PRESS ,0038]P+150525mbar,T+13227mdegC
+1594613890:[PRESS ,0038]P+151035mbar,T+13223mdegC
+1594658912:[PRESS ,0038]P+151565mbar,T+13222mdegC
+1594682496:[MRMAID,0027]1516dbar, 13degC
+1594683396:[MRMAID,0027]1517dbar, 13degC
+1594687490:[MRMAID,0027]1518dbar, 13degC
+1594693319:[MRMAID,0027]1519dbar, 13degC
+1594711137:[PRESS ,0038]P+152085mbar,T+13223mdegC
+1594740605:[MRMAID,0027]1523dbar, 13degC
+1594759761:[MAIN  ,0140]stage[1] complete -31135s after mission start
+1594759761:[MRMAID,0003]acq stopped
+1594759765:[MRMAID,0052]Mermaid $MEASFS,9847553,246102.565125,40.014020;
+1594759821:[MAIN  ,0056]stage[2]
+1594759823:[MAIN  ,0024]internal pressure 80604Pa
+1594759824:[BUOY  ,0037]P+152525mbar
+1594759824:[STAGE ,0080]Stage [2] 200000mbar (+/-5000mbar) 16680s (<1594776340s) 
+1594759826:<WARN>[BUOY  ,0094]stage[2] should DESCENT, stuck at 152515mbar for the #1 time
+1594759826:[BUOY  ,0087]from +0mbar/s to +8mbar/s
+1594759826:[BUOY  ,0090]need to transfer -102mL (valve during 3335ms)
+1594759826:[VALVE ,0034]valve opening 3335ms
+1594759829:[VALVE ,0234]battery 12443mV,  533384uA, P+152515mbar
+1594760126:[PRESS ,0038]P+154215mbar,T+13224mdegC
+1594760151:[BUOY  ,0087]from +6mbar/s to +8mbar/s
+1594760151:[BUOY  ,0090]need to transfer -44mL (valve during 1431ms)
+1594760151:[VALVE ,0034]valve opening 1431ms
+1594760153:[VALVE ,0234]battery 13551mV,  619028uA, P+154365mbar
+1594760451:[PRESS ,0038]P+156465mbar,T+13227mdegC
+1594760776:[PRESS ,0038]P+158735mbar,T+13227mdegC
+1594761101:[PRESS ,0038]P+160965mbar,T+13229mdegC
+1594761426:[PRESS ,0038]P+163155mbar,T+13229mdegC
+1594761751:[PRESS ,0038]P+165355mbar,T+13230mdegC
+1594762076:[PRESS ,0038]P+167525mbar,T+13231mdegC
+1594762401:[PRESS ,0038]P+169665mbar,T+13233mdegC
+1594762726:[PRESS ,0038]P+171805mbar,T+13233mdegC
+1594763051:[PRESS ,0038]P+173945mbar,T+13233mdegC
+1594763376:[PRESS ,0038]P+176025mbar,T+13233mdegC
+1594763400:[BUOY  ,0087]from +6mbar/s to +8mbar/s
+1594763400:[BUOY  ,0090]need to transfer -44mL (valve during 1339ms)
+1594763400:[VALVE ,0034]valve opening 1339ms
+1594763402:[VALVE ,0234]battery 13320mV,  635498uA, P+176165mbar
+1594763701:[PRESS ,0038]P+178395mbar,T+13239mdegC
+1594764026:[PRESS ,0038]P+180795mbar,T+13240mdegC
+1594764351:[PRESS ,0038]P+183165mbar,T+13240mdegC
+1594764675:[PRESS ,0038]P+185505mbar,T+13242mdegC
+1594765000:[PRESS ,0038]P+187845mbar,T+13244mdegC
+1594765325:[PRESS ,0038]P+190105mbar,T+13246mdegC
+1594765650:[PRESS ,0038]P+192365mbar,T+13247mdegC
+1594765975:[PRESS ,0038]P+194615mbar,T+13250mdegC
+1594766300:[PRESS ,0038]P+196835mbar,T+13251mdegC
+1594766325:[STAGE ,0213]197015mbar reached at 1594766325s, ref 200000mbar +/-5000mbar
+1594766325:[BUOY  ,0087]from +7mbar/s to +0mbar/s
+1594766325:[BUOY  ,0089]need to transfer +78mL (pump during 94317ms)
+1594766333:[PUMP  ,0207]battery 15031mV,   36966uA (warmup), P+197015mbar
+1594766333:[PUMP  ,0016]pump during 60000ms
+1594766392:[PUMP  ,0212]battery 12910mV, 1559160uA (steady state), P+197015mbar
+1594766628:[PRESS ,0038]P+198765mbar,T+13263mdegC
+1594766653:[BUOY  ,0087]from +6mbar/s to +0mbar/s
+1594766653:[BUOY  ,0089]need to transfer +58mL (pump during 71605ms)
+1594766661:[PUMP  ,0207]battery 14977mV,   38674uA (warmup), P+198895mbar
+1594766661:[PUMP  ,0016]pump during 60000ms
+1594766720:[PUMP  ,0212]battery 13911mV, 1606862uA (steady state), P+198895mbar
+1594766957:[PRESS ,0038]P+200175mbar,T+13283mdegC
+1594766981:[BUOY  ,0087]from +5mbar/s to +0mbar/s
+1594766981:[BUOY  ,0089]need to transfer +40mL (pump during 49383ms)
+1594766990:[PUMP  ,0207]battery 14893mV,   37698uA (warmup), P+200275mbar
+1594766990:[PUMP  ,0016]pump during 49383ms
+1594767039:[PUMP  ,0212]battery 13930mV, 1575874uA (steady state), P+200275mbar
+1594767285:[PRESS ,0038]P+200965mbar,T+13305mdegC
+1594767310:[BUOY  ,0087]from +2mbar/s to +0mbar/s
+1594767310:[BUOY  ,0089]need to transfer +6mL (pump during 7522ms)
+1594767318:[PUMP  ,0207]battery 14892mV,   37210uA (warmup), P+201005mbar
+1594767318:[PUMP  ,0016]pump during 7522ms
+1594767325:[PUMP  ,0212]battery 13948mV, 1584902uA (steady state), P+201005mbar
+1594767634:[PRESS ,0038]P+201475mbar,T+13317mdegC
+1594767638:[BUOY  ,0087]from +1mbar/s to +0mbar/s
+1594767638:[BUOY  ,0089]need to transfer +2mL (pump during 2507ms)
+1594767646:[PUMP  ,0207]battery 14973mV,   38186uA (warmup), P+201485mbar
+1594767646:[PUMP  ,0016]pump during 2507ms
+1594767966:[BUOY  ,0087]from +1mbar/s to +0mbar/s
+1594767966:[BUOY  ,0089]need to transfer +2mL (pump during 2459ms)
+1594767974:[PUMP  ,0207]battery 15026mV,   38918uA (warmup), P+201885mbar
+1594767974:[PUMP  ,0016]pump during 2459ms
+1594768270:[PRESS ,0038]P+202185mbar,T+13318mdegC
+1594768294:[BUOY  ,0087]from +1mbar/s to +0mbar/s
+1594768294:[BUOY  ,0089]need to transfer +2mL (pump during 2445ms)
+1594768303:[PUMP  ,0207]battery 15060mV,   39162uA (warmup), P+202205mbar
+1594768303:[PUMP  ,0016]pump during 2445ms
+1594768623:[BUOY  ,0087]from +1mbar/s to +0mbar/s
+1594768623:[BUOY  ,0089]need to transfer +2mL (pump during 2445ms)
+1594768631:[PUMP  ,0207]battery 15083mV,   39284uA (warmup), P+202435mbar
+1594768631:[PUMP  ,0016]pump during 2445ms
+1594768951:[BUOY  ,0087]from +1mbar/s to +0mbar/s
+1594768951:[BUOY  ,0089]need to transfer +2mL (pump during 2436ms)
+1594768959:[PUMP  ,0207]battery 15101mV,   39284uA (warmup), P+202565mbar
+1594768959:[PUMP  ,0016]pump during 2436ms
+1594776482:[MAIN  ,0140]stage[2] complete -14414s after mission start
+1594776482:[MAIN  ,0056]stage[3]
+1594776485:[MAIN  ,0024]internal pressure 80840Pa
+1594776489:[SBE41 ,0282]SBE41 parameters : 
+      dsreplyformat=1 (webb(0)/standard(1))
+      addtimingdelays=0 (n(0)/y(1))
+      outputdensity=0 (n(0)/y(1))
+      echocmd=0 (n(0)/y(1))
+      outputrt=0 (n(0)/y(1))
+      outputpts=0 (n(0)/y(1))
+      outputsn=0 (n(0)/y(1))
+      outputpressure=1 (n(0)/y(1))
+      pcutoff=2dbar
+      tswait=0s
+      pumpfastpt=1 (n(0)/y(1))
+      samplerate=1 ('fast':1Hz(1)/'slow':0.5Hz(0))
+      top_bin_interval=10dbar
+      top_bin_size=10dbar
+      top_bin_max=100dbar
+      middle_bin_interval=50dbar
+      middle_bin_size=50dbar
+      middle_bin_max=1000dbar
+      bottom_bin_interval=100dbar
+      bottom_bin_size=100dbar
+      includetransitionbin=0
+      includenbin=0 (n(0)/y(1))
+      autobinavg=0 (n(0)/y(1))
+1594776490:[BUOY  ,0037]P+202675mbar
+1594776490:[STAGE ,0091]Stage [3] surfacing 32160s (<1594808500s) SBE41
+1594776492:<WARN>[BUOY  ,0094]stage[3] should ASCENT, stuck at 202665mbar for the #1 time
+1594776492:[BUOY  ,0087]from +0mbar/s to -9mbar/s
+1594776492:[BUOY  ,0089]need to transfer +130mL (pump during 157005ms)
+1594776501:[PUMP  ,0207]battery 15068mV,   43676uA (warmup), P+202665mbar
+1594776501:[PUMP  ,0016]pump during 60000ms
+1594776560:[PUMP  ,0212]battery 13940mV, 1586732uA (steady state), P+202665mbar
+1594776796:[PRESS ,0038]P+201625mbar,T+13273mdegC
+1594776821:[BUOY  ,0087]from -4mbar/s to -9mbar/s
+1594776821:[BUOY  ,0089]need to transfer +104mL (pump during 128395ms)
+1594776821:[SBE41 ,0337]Speed start detected
+1594776829:[PUMP  ,0207]battery 14768mV,  106384uA (warmup), P+201505mbar
+1594776829:[PUMP  ,0016]pump during 60000ms
+1594776888:[PUMP  ,0212]battery 14031mV, 1606008uA (steady state), P+201505mbar
+1594777124:[PRESS ,0038]P+199725mbar,T+13291mdegC
+1594777149:[BUOY  ,0087]from -6mbar/s to -9mbar/s
+1594777149:[BUOY  ,0089]need to transfer +72mL (pump during 88889ms)
+1594777157:[PUMP  ,0207]battery 14828mV,   58194uA (warmup), P+199575mbar
+1594777157:[PUMP  ,0016]pump during 60000ms
+1594777216:[PUMP  ,0212]battery 13965mV, 1623820uA (steady state), P+199575mbar
+1594777452:[PRESS ,0038]P+197455mbar,T+13312mdegC
+1594777477:[BUOY  ,0087]from -7mbar/s to -9mbar/s
+1594777477:[BUOY  ,0089]need to transfer +52mL (pump during 65823ms)
+1594777485:[PUMP  ,0207]battery 14823mV,   55022uA (warmup), P+197255mbar
+1594777485:[PUMP  ,0016]pump during 60000ms
+1594777544:[PUMP  ,0212]battery 13967mV, 1590270uA (steady state), P+197255mbar
+1594777781:[PRESS ,0038]P+194765mbar,T+13330mdegC
+1594778106:[PRESS ,0038]P+192025mbar,T+13331mdegC
+1594778431:[PRESS ,0038]P+189365mbar,T+13323mdegC
+1594778755:[PRESS ,0038]P+186725mbar,T+13312mdegC
+1594779080:[PRESS ,0038]P+184045mbar,T+13299mdegC
+1594779405:[PRESS ,0038]P+181465mbar,T+13287mdegC
+1594779730:[PRESS ,0038]P+178935mbar,T+13277mdegC
+1594780055:[PRESS ,0038]P+176375mbar,T+13268mdegC
+1594780080:[BUOY  ,0087]from -7mbar/s to -9mbar/s
+1594780080:[BUOY  ,0089]need to transfer +52mL (pump during 64039ms)
+1594780088:[PUMP  ,0207]battery 14963mV,   61976uA (warmup), P+176195mbar
+1594780088:[PUMP  ,0016]pump during 60000ms
+1594780147:[PUMP  ,0212]battery 14141mV, 1465220uA (steady state), P+176195mbar
+1594780383:[PRESS ,0038]P+173585mbar,T+13272mdegC
+1594780708:[PRESS ,0038]P+170795mbar,T+13271mdegC
+1594781033:[PRESS ,0038]P+168035mbar,T+13268mdegC
+1594781358:[PRESS ,0038]P+165275mbar,T+13264mdegC
+1594781683:[PRESS ,0038]P+162515mbar,T+13258mdegC
+1594782008:[PRESS ,0038]P+159785mbar,T+13252mdegC
+1594782333:[PRESS ,0038]P+157105mbar,T+13246mdegC
+1594782658:[PRESS ,0038]P+154465mbar,T+13242mdegC
+1594782983:[PRESS ,0038]P+151835mbar,T+13239mdegC
+1594783308:[PRESS ,0038]P+149205mbar,T+13235mdegC
+1594783633:[PRESS ,0038]P+146705mbar,T+13231mdegC
+1594783957:[PRESS ,0038]P+144235mbar,T+13230mdegC
+1594783982:[BUOY  ,0087]from -7mbar/s to -9mbar/s
+1594783982:[BUOY  ,0089]need to transfer +52mL (pump during 63961ms)
+1594783990:[PUMP  ,0207]battery 14933mV,   62830uA (warmup), P+144045mbar
+1594783990:[PUMP  ,0016]pump during 60000ms
+1594784049:[PUMP  ,0212]battery 14188mV, 1243546uA (steady state), P+144045mbar
+1594784286:[PRESS ,0038]P+141445mbar,T+13240mdegC
+1594784611:[PRESS ,0038]P+138655mbar,T+13244mdegC
+1594784936:[PRESS ,0038]P+135895mbar,T+13248mdegC
+1594785260:[PRESS ,0038]P+133175mbar,T+13246mdegC
+1594785585:[PRESS ,0038]P+130415mbar,T+13246mdegC
+1594785910:[PRESS ,0038]P+127695mbar,T+13246mdegC
+1594786235:[PRESS ,0038]P+125025mbar,T+13245mdegC
+1594786560:[PRESS ,0038]P+122385mbar,T+13246mdegC
+1594786885:[PRESS ,0038]P+119785mbar,T+13247mdegC
+1594787210:[PRESS ,0038]P+117175mbar,T+13248mdegC
+1594787535:[PRESS ,0038]P+114585mbar,T+13249mdegC
+1594787860:[PRESS ,0038]P+112065mbar,T+13253mdegC
+1594788185:[PRESS ,0038]P+109575mbar,T+13256mdegC
+1594788209:[BUOY  ,0087]from -7mbar/s to -9mbar/s
+1594788210:[BUOY  ,0089]need to transfer +52mL (pump during 64039ms)
+1594788218:[PUMP  ,0207]battery 14913mV,   63440uA (warmup), P+109385mbar
+1594788218:[PUMP  ,0016]pump during 60000ms
+1594788277:[PUMP  ,0212]battery 14217mV, 1062132uA (steady state), P+109385mbar
+1594788513:[PRESS ,0038]P+106705mbar,T+13269mdegC
+1594788838:[PRESS ,0038]P+103815mbar,T+13280mdegC
+1594789163:[PRESS ,0038]P+100905mbar,T+13290mdegC
+1594789488:[PRESS ,0038]P +98015mbar,T+13299mdegC
+1594789813:[PRESS ,0038]P +95065mbar,T+13307mdegC
+1594790138:[PRESS ,0038]P +92195mbar,T+13312mdegC
+1594790462:[PRESS ,0038]P +89305mbar,T+13315mdegC
+1594790787:[PRESS ,0038]P +86555mbar,T+13318mdegC
+1594791112:[PRESS ,0038]P +83765mbar,T+13327mdegC
+1594791437:[PRESS ,0038]P +80995mbar,T+13335mdegC
+1594791762:[PRESS ,0038]P +78325mbar,T+13343mdegC
+1594792087:[PRESS ,0038]P +75635mbar,T+13355mdegC
+1594792412:[PRESS ,0038]P +72975mbar,T+13369mdegC
+1594792737:[PRESS ,0038]P +70335mbar,T+13380mdegC
+1594793062:[PRESS ,0038]P +67725mbar,T+13391mdegC
+1594793387:[PRESS ,0038]P +65125mbar,T+13404mdegC
+1594793712:[PRESS ,0038]P +62595mbar,T+13417mdegC
+1594794037:[PRESS ,0038]P +60065mbar,T+13430mdegC
+1594794362:[PRESS ,0038]P +57515mbar,T+13446mdegC
+1594794687:[PRESS ,0038]P +54905mbar,T+13463mdegC
+1594794712:[BUOY  ,0087]from -7mbar/s to -9mbar/s
+1594794712:[BUOY  ,0089]need to transfer +52mL (pump during 64039ms)
+1594794720:[PUMP  ,0207]battery 14887mV,   63684uA (warmup), P +54725mbar
+1594794720:[PUMP  ,0016]pump during 60000ms
+1594794779:[PUMP  ,0212]battery 14271mV,  749080uA (steady state), P +54725mbar
+1594795016:[PRESS ,0038]P +51975mbar,T+13482mdegC
+1594795341:[PRESS ,0038]P +48955mbar,T+13515mdegC
+1594795666:[PRESS ,0038]P +45995mbar,T+13540mdegC
+1594795990:[PRESS ,0038]P +43145mbar,T+13566mdegC
+1594796315:[PRESS ,0038]P +40295mbar,T+13589mdegC
+1594796640:[PRESS ,0038]P +37385mbar,T+13614mdegC
+1594796965:[PRESS ,0038]P +34555mbar,T+13646mdegC
+1594797290:[PRESS ,0038]P +31745mbar,T+13679mdegC
+1594797615:[PRESS ,0038]P +28985mbar,T+13710mdegC
+1594797940:[PRESS ,0038]P +26275mbar,T+13731mdegC
+1594798265:[PRESS ,0038]P +23645mbar,T+13735mdegC
+1594798590:[PRESS ,0038]P +21165mbar,T+13739mdegC
+1594798915:[PRESS ,0038]P +18785mbar,T+13754mdegC
+1594798939:[BUOY  ,0087]from -7mbar/s to -9mbar/s
+1594798940:[BUOY  ,0089]need to transfer +52mL (pump during 64039ms)
+1594798948:[PUMP  ,0207]battery 14900mV,   61732uA (warmup), P +18605mbar
+1594798948:[PUMP  ,0016]pump during 60000ms
+1594799007:[PUMP  ,0212]battery 14327mV,  583038uA (steady state), P +18605mbar
+1594799243:[PRESS ,0038]P +15875mbar,T+13750mdegC
+1594799568:[PRESS ,0038]P +13005mbar,T+13752mdegC
+1594799893:[PRESS ,0038]P +10145mbar,T+13746mdegC
+1594800218:[PRESS ,0038]P  +7225mbar,T+13727mdegC
+1594800543:[PRESS ,0038]P  +4615mbar,T+13720mdegC
+1594800567:[BUOY  ,0087]from -7mbar/s to -9mbar/s
+1594800567:[BUOY  ,0089]need to transfer +52mL (pump during 64118ms)
+1594800576:[PUMP  ,0207]battery 14916mV,   61244uA (warmup), P  +4425mbar
+1594800576:[PUMP  ,0016]pump during 60000ms
+1594800635:[PUMP  ,0212]battery 14371mV,  520452uA (steady state), P  +4425mbar
+1594800871:[PRESS ,0038]P  +2085mbar,T+13829mdegC
+1594800896:[BUOY  ,0087]from -7mbar/s to -9mbar/s
+1594800896:[BUOY  ,0089]need to transfer +52mL (pump during 64118ms)
+1594800904:[PUMP  ,0207]battery 14907mV,   62220uA (warmup), P  +1915mbar
+1594800904:[PUMP  ,0016]pump during 60000ms
+1594800963:[PUMP  ,0212]battery 14371mV,  512522uA (steady state), P  +1915mbar
+1594801199:[PRESS ,0038]P   +405mbar,T+15157mdegC
+1594801224:[STAGE ,0214]245mbar (500) reached at 1594801224s, ascending from 202675mbar
+1594801224:[STAGE ,0342]The float reached the surface : OK
+1594801224:[MAIN  ,0140]stage[3] complete 10328s after mission start
+1594801230:[SBE41 ,0343]SBE41 dump : 24400 stored samples in hexa format
+1594802146:[SBE41 ,0338]Dump finished
+1594802146:[SBE41 ,0318]219600 bytes in 0051/5F0E5BAA.S41
+1594802147:[MRMAID,0188]acq already stopped
+1594802207:[MSSION,0192]mission stopped, 4 stage(s) done
+1594802207:[MAIN  ,0065]surfacing
+1594802209:[SURFIN,0036]P    -85mbar
+1594802212:[SURFIN,0020]filling external bladder
+1594802221:[PUMP  ,0207]battery 15043mV,   43920uA (warmup), P    -95mbar
+1594802221:[PUMP  ,0016]pump during 300000ms
+1594802519:[PUMP  ,0212]battery 14128mV, 1493158uA (steady state), P    -95mbar
+1594802530:[PUMP  ,0207]battery 14448mV,   26108uA (warmup), P    -95mbar
+1594802530:[PUMP  ,0016]pump during 300000ms
+1594802546:[PUMP  ,0212]battery 13915mV, 1452166uA (steady state), P    -95mbar
+1594802548:[SURFIN,0019]external bladder full
+1594802611:[MAIN  ,0272]Vbat 14707mV (min 14445mV)
+1594802613:[MAIN  ,0024]internal pressure 79024Pa
+1594802613:[MAIN  ,0043]Pext 220mbar (rng 20mbar)
+1594802613:[MAIN  ,0064]surface
+1594802624:[SURF  ,0022]GPS fix...
+1594802625:<WARN>[GPSFIX,0123]GPRMC ms=490 #1
+1594802665:[SURF  ,0015]10 PPS detected...
+1594802667:[MRMAID,0052]Mermaid $GPSACK:+0,+0,+0,+0,+0,+0,-407836;
+1594802677:[MRMAID,0052]Mermaid $GPSOFF:3686321;
+1594802678:[GPSFIX,0179]-4s diff
+1594802682:[SURF  ,0222]2020-07-15T08:44:42
+1594802682:[SURF  ,0082]Latitude : N43deg25.532mn, Longitude :E007deg46.143mn
+1594802682:[SURF  ,0223]fix3D,9satellites
+1594802682:[SURF  ,0084]GPS fix GPGSA : hdop0.650,vdop0.940
+1594802692:[SURF  ,0274]last almanac : 4667081
+1594802753:[MRMAID,0026]19797 bytes in 0051/5F0EC209.MER
+1594802759:[MAIN  ,0320]New pressure offset: 220mbar
+1594802759:[LOGBIN,0078]*** switching to 0051/5F0EC247 ***

@@ -1,0 +1,115 @@
+1594975268:[MONITR,0197]reboot code 0x0000, src/monitor.c@520
+1594975268:[MAIN  ,0007]buoy 452.120-R-0065
+1594975268:[MAIN  ,0055]soft pilotage 452.012.300_V2.22-20200709
+1594975268:[MAIN  ,0011]date 2020-07-17T08:41:08
+1594975274:[MAIN  ,0006]battery 15458mV,   40504uA
+1594975277:[MAIN  ,0024]internal pressure 81151Pa
+1594975278:[PRESS ,0038]P   -109mbar,T-30234mdegC
+1594975278:[MRMAID,0182]thread started
+1594975280:[MRMAID,0186]no wake-up
+1594975281:[MRMAID,0188]acq already stopped
+1594975281:[MRMAID,0052]Mermaid $BOARD:452116600-65;
+1594975282:[MRMAID,0052]Mermaid $SOFT:2.1344;
+1594975282:[TESTMD,0053]Enter in test mode? yes/no
+1594975282:[TESTMD,0252]0065>
+1594975300:[TESTMD,0050]"yes"
+1594975300:[TESTMD,0249]
+Command list
+pext    : Get external pressure
+pint    : Get internal vacuum
+ui      : Get voltage/current
+act     : Test actuators
+fillb   : Pump until filling the bladder
+bpopen  : Open bypass
+bpclose : Close bypass
+date    : Get date
+gps     : GPS synchronization
+iridium : Iridium transfer
+mstart  : Start mermaid acq
+mstop   : Stop mermaid acq
+mdata   : Get mermaid datas
+mchecksd  : Start mermaid acq
+mdump  : Send data REQUEST command with date and duration
+s41dumpa : Get averaged CTD datas
+s41dumpr : Get raw CTD datas
+ls      : List files
+cp      : Copy file or directory content on the desktop
+rm      : Remove a file
+h       : Print command list
+q       : Quit
+
+Advanced
+pumps X : pompe Xs (lent)
+pumpf X : pompe Xs (rapide)
+evh     : ouvre l'electrovalve 30s
+bypass  : ouvre le bypass 30s
+dvmine  : deverminage de la carte
+nominal : mode nominal pour mesure de conso
+cychydr : test du circuit hydraulique
+mkdir   : creer un repertoire
+mv      : deplacer un fichier
+ps      : liste les processus
+
+Set params
+stage   : Stage settings
+buoy    : Buoy settings
+p2t     : Pressure sensor settings
+log     : Verb cfg
+mermaid : Mermaid cfg
+upload  : On/Off Irid transfer
+sys  : system param settings
+
+
+1594975300:[TESTMD,0252]0065>
+1594975314:[TESTMD,0050]"act"
+1594975314:[SURFIN,0020]filling external bladder
+1594975322:[PUMP  ,0016]pump during 300000ms
+1594975328:[SURFIN,0019]external bladder full
+1594975333:[VALVE ,0034]valve opening 30000ms
+1594975368:[SURFIN,0020]filling external bladder
+1594975376:[PUMP  ,0016]pump during 300000ms
+1594975385:[SURFIN,0019]external bladder full
+1594975385:[TESTMD,0045]pump run 7s
+1594975391:[BYPASS,0035]bypass opening 30000ms
+1594975435:[SURFIN,0020]filling external bladder
+1594975444:[PUMP  ,0016]pump during 300000ms
+1594975534:[SURFIN,0019]external bladder full
+1594975534:[TESTMD,0045]pump run 89s
+1594975539:[TESTMD,0066]test done
+1594975539:[TESTMD,0252]0065>
+1594975544:[TESTMD,0050]"gps"
+1594975552:[SURF  ,0022]GPS fix...
+1594975630:<WARN>[GPSFIX,0123]GPRMC ms=500 #1
+1594975649:[SURF  ,0015]10 PPS detected...
+1594975651:[MRMAID,0052]Mermaid $GPSACK:+50,+6,+16,+8,+40,-1,-248260;
+1594975661:[MRMAID,0052]Mermaid $GPSOFF:3686321;
+1594975662:[GPSFIX,0179]-1s diff
+1594975663:[SURF  ,0222]2020-07-17T08:47:43
+1594975663:[SURF  ,0082]Latitude : N43deg06.496mn, Longitude :E006deg02.276mn
+1594975663:[SURF  ,0223]fix3D,6satellites
+1594975663:[SURF  ,0084]GPS fix GPGSA : hdop1.030,vdop1.180
+1594975678:[TESTMD,0252]0065>
+1594975680:[TESTMD,0050]"gps"
+1594975691:[SURF  ,0022]GPS fix...
+1594975711:[SURF  ,0015]10 PPS detected...
+1594975712:[MRMAID,0052]Mermaid $GPSACK:+0,+0,+0,+0,+0,+0,-30;
+1594975722:[MRMAID,0052]Mermaid $GPSOFF:3686321;
+1594975724:[GPSFIX,0179]-1s diff
+1594975725:[SURF  ,0222]2020-07-17T08:48:45
+1594975725:[SURF  ,0082]Latitude : N43deg06.496mn, Longitude :E006deg02.276mn
+1594975725:[SURF  ,0223]fix3D,7satellites
+1594975725:[SURF  ,0084]GPS fix GPGSA : hdop0.930,vdop1.180
+1594975740:[TESTMD,0252]0065>
+1594975742:[TESTMD,0050]"iridium"
+1594975755:[SURF  ,0025]Iridium...
+1594975803:[SURF  ,0009]connected in 48s, signal quality 4
+1594975869:[SURF  ,0218]prompt received, remote cmd end
+1594975869:[SURF  ,0012]16 cmd(s) received
+1594975896:[UPLOAD,0248]Upload data files...
+1594975908:[UPLOAD,0231]"0065/5F100454.BIN" uploaded at 92bytes/s
+1594975922:[UPLOAD,0231]"0065/5F1008A2.BIN" uploaded at 104bytes/s
+1594975937:[UPLOAD,0231]"0065/5F100D0F.BIN" uploaded at 110bytes/s
+1594975944:[UPLOAD,0231]"0065/5F115488.BIN" uploaded at 70bytes/s
+1594975960:[MAIN  ,0013]4 file(s) uploaded
+1594975992:[SURF  ,0014]disconnected after 237s
+1594975997:[TESTMD,0252]0065>

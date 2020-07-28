@@ -1,0 +1,66 @@
+20181119-17h18mn54: >>> BUOY 0030 2018-11-19T17:18:52 <<<
+20181119-17h18mn55: N43deg06.487mn, E006deg02.284mn
+20181119-17h18mn58: hdop 1.260, vdop 1.680
+20181119-17h19mn02: Vbat 15486mV (min 14490mV)
+20181119-17h19mn02: Pint 79021Pa
+20181119-17h19mn04: Pext -2147483648mbar (range -1mbar)
+20181119-17h20mn10: 21 cmd(s) received
+20181119-17h20mn17: 2 file(s) to upload
+20181119-17h21mn43: 2 file(s) uploaded
+20181119-17h21mn50: <<<<<<<<<<<<<<< Bye >>>>>>>>>>>>>>>
+
+
+20190728-23h27mn44: >>> BUOY 0030 2019-07-28T23:27:43 <<<
+20190728-23h27mn45: S17deg34.001mn, W149deg34.472mn
+20190728-23h27mn48: hdop 0.760, vdop 1.350
+20190728-23h27mn49: Vbat 15485mV (min 13627mV)
+20190728-23h27mn53: Pint 83751Pa
+20190728-23h27mn54: Pext -6092mbar (range 200mbar)
+20190728-23h28mn48: 17 cmd(s) received
+20190728-23h28mn55: 1 file(s) to upload
+20190728-23h29mn56: 1 file(s) uploaded
+20190728-23h30mn03: <<<<<<<<<<<<<<< Bye >>>>>>>>>>>>>>>
+
+
+20190728-23h35mn37: >>> BUOY 0030 2019-07-28T23:35:36 <<<
+20190728-23h35mn39: S17deg34.001mn, W149deg34.472mn
+20190728-23h35mn42: hdop 0.760, vdop 1.350
+20190728-23h35mn43: Vbat 15485mV (min 13627mV)
+20190728-23h35mn46: Pint 83751Pa
+20190728-23h35mn48: Pext -6092mbar (range 200mbar)
+20190728-23h36mn39: 16 cmd(s) received
+20190728-23h36mn46: 1 file(s) to upload
+20190728-23h37mn35: 1 file(s) uploaded
+20190728-23h37mn42: <<<<<<<<<<<<<<< Bye >>>>>>>>>>>>>>>
+
+
+20190807-18h43mn11: >>> BUOY 0030 2019-08-07T18:43:10 <<<
+20190807-18h43mn13: S06deg10.022mn, W148deg04.865mn
+20190807-18h43mn14: hdop 1.410, vdop 2.020
+20190807-18h43mn16: Vbat 15501mV (min 14021mV)
+20190807-18h43mn19: Pint 83561Pa
+20190807-18h43mn19: Pext -5052mbar (range 580mbar)
+20190807-18h45mn56: >>> BUOY 0030 2019-08-07T18:45:55 <<<
+20190807-18h45mn57: S06deg10.022mn, W148deg04.865mn
+20190807-18h46mn00: hdop 1.410, vdop 2.020
+20190807-18h46mn02: Vbat 15501mV (min 14021mV)
+20190807-18h46mn03: Pint 83561Pa
+20190807-18h46mn05: Pext -5052mbar (range 580mbar)
+20190807-18h46mn39: 7 cmd(s) received
+20190807-18h46mn46: 1 file(s) to upload
+20190807-18h48mn16: 1 file(s) uploaded
+20190807-18h48mn23: <<<<<<<<<<<<<<< Bye >>>>>>>>>>>>>>>
+
+
+20190807-18h56mn32: >>> BUOY 0030 2019-08-07T18:56:31 <<<
+20190807-18h56mn34: S06deg10.022mn, W148deg04.865mn
+20190807-18h56mn37: hdop 1.410, vdop 2.020
+20190807-18h56mn38: Vbat 15501mV (min 14021mV)
+20190807-18h56mn41: Pint 83561Pa
+20190807-18h56mn44: Pext -5052mbar (range 580mbar)
+20190807-18h57mn23: 7 cmd(s) received
+20190807-18h57mn30: 1 file(s) to upload
+20190807-18h58mn40: 1 file(s) uploaded
+20190807-18h58mn50: <<<<<<<<<<<<<<< Bye >>>>>>>>>>>>>>>
+
+

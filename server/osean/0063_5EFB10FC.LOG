@@ -1,0 +1,66 @@
+1593512188:[MONITR,0197]reboot code 0x0000, src/monitor.c@520
+1593512188:[MAIN  ,0007]buoy 452.120-R-0063
+1593512188:[MAIN  ,0055]soft pilotage 452.012.300_V2.20-20200612
+1593512188:[MAIN  ,0011]date 2020-06-30T10:16:28
+1593512194:[MAIN  ,0006]battery 15396mV,    8418uA
+1593512197:[MAIN  ,0024]internal pressure 82337Pa
+1593512198:[PRESS ,0038]P    +50mbar,T+31617mdegC
+1593512198:[MRMAID,0182]thread started
+1593512200:[MRMAID,0186]no wake-up
+1593512201:[MRMAID,0188]acq already stopped
+1593512201:[MRMAID,0052]Mermaid $BOARD:452116600-63;
+1593512202:[MRMAID,0052]Mermaid $SOFT:2.1344;
+1593512202:[TESTMD,0053]Enter in test mode? yes/no
+1593512202:[TESTMD,0252]0063>
+1593512205:[TESTMD,0050]"yes"
+1593512205:[TESTMD,0249]
+Command list
+pext    : Get external pressure
+pint    : Get internal vacuum
+ui      : Get voltage/current
+act     : Test actuators
+fillb   : Pump until filling the bladder
+bpopen  : Open bypass
+bpclose : Close bypass
+date    : Get date
+gps     : GPS synchronization
+iridium : Iridium transfer
+mstart  : Start mermaid acq
+mstop   : Stop mermaid acq
+mdata   : Get mermaid datas
+mchecksd  : Start mermaid acq
+mdump  : Send data REQUEST command with date and duration
+s41dumpa : Get averaged CTD datas
+s41dumpr : Get raw CTD datas
+ls      : List files
+cp      : Copy file or directory content on the desktop
+rm      : Remove a file
+h       : Print command list
+q       : Quit
+
+Advanced
+pumps X : pompe Xs (lent)
+pumpf X : pompe Xs (rapide)
+evh     : ouvre l'electrovalve 30s
+bypass  : ouvre le bypass 30s
+dvmine  : deverminage de la carte
+nominal : mode nominal pour mesure de conso
+cychydr : test du circuit hydraulique
+mkdir   : creer un repertoire
+mv      : deplacer un fichier
+ps      : liste les processus
+
+Set params
+stage   : Stage settings
+buoy    : Buoy settings
+p2t     : Pressure sensor settings
+log     : Verb cfg
+mermaid : Mermaid cfg
+upload  : On/Off Irid transfer
+sys  : system param settings
+
+
+1593512205:[TESTMD,0252]0063>
+1593512229:[TESTMD,0050]"iridium"
+1593512236:[SURF  ,0025]Iridium...
+1593512446:<WARN>[SURF  ,0023]failed to connect #1, code -8, net 1, qual 4, dial 1

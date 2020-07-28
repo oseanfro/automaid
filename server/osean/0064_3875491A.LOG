@@ -1,0 +1,67 @@
+947210522:[MONITR,0197]reboot code 0x0000, src/monitor.c@520
+947210522:[MAIN  ,0007]buoy 452.120-R-0064
+947210522:[MAIN  ,0055]soft pilotage 452.012.300_V2.20-20200612
+947210522:[MAIN  ,0011]date 2000-01-07T02:02:02
+947210528:[MAIN  ,0006]battery 14982mV,   40748uA
+947210531:[MAIN  ,0024]internal pressure 101280Pa
+947210532:[PRESS ,0038]P     +0mbar,T+12902mdegC
+947210532:[MRMAID,0182]thread started
+947210534:[MRMAID,0186]no wake-up
+947210535:[MRMAID,0188]acq already stopped
+947210535:[MRMAID,0052]Mermaid $BOARD:452116600-64;
+947210536:[MRMAID,0052]Mermaid $SOFT:2.1338;
+947210536:[TESTMD,0053]Enter in test mode? yes/no
+947210536:[TESTMD,0252]0064>
+947210539:[TESTMD,0050]"yes"
+947210539:[TESTMD,0249]
+Command list
+pext    : Get external pressure
+pint    : Get internal vacuum
+ui      : Get voltage/current
+act     : Test actuators
+fillb   : Pump until filling the bladder
+bpopen  : Open bypass
+bpclose : Close bypass
+date    : Get date
+gps     : GPS synchronization
+iridium : Iridium transfer
+mstart  : Start mermaid acq
+mstop   : Stop mermaid acq
+mdata   : Get mermaid datas
+mchecksd  : Start mermaid acq
+mdump  : Send data REQUEST command with date and duration
+s41dumpa : Get averaged CTD datas
+s41dumpr : Get raw CTD datas
+ls      : List files
+cp      : Copy file or directory content on the desktop
+rm      : Remove a file
+h       : Print command list
+q       : Quit
+
+Advanced
+pumps X : pompe Xs (lent)
+pumpf X : pompe Xs (rapide)
+evh     : ouvre l'electrovalve 30s
+bypass  : ouvre le bypass 30s
+dvmine  : deverminage de la carte
+nominal : mode nominal pour mesure de conso
+cychydr : test du circuit hydraulique
+mkdir   : creer un repertoire
+mv      : deplacer un fichier
+ps      : liste les processus
+
+Set params
+stage   : Stage settings
+buoy    : Buoy settings
+p2t     : Pressure sensor settings
+log     : Verb cfg
+mermaid : Mermaid cfg
+upload  : On/Off Irid transfer
+sys  : system param settings
+
+
+947210539:[TESTMD,0252]0064>
+947210655:[TESTMD,0050]"bpopen"
+947210663:[TESTMD,0252]0064>
+947211034:[TESTMD,0050]"bpclose"
+947211042:[TESTMD,0252]0064>

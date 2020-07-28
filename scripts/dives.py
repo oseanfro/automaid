@@ -1,6 +1,8 @@
 import glob
 import os
+import csv
 import re
+import profile
 import plotly.graph_objs as graph
 import plotly.offline as plotly
 import utils
@@ -22,6 +24,9 @@ class Dive:
     log_content = None
     mmd_name = None
     mmd_environment = None
+    profiles = None
+    s41_name = None
+    s41_environment = None
     events = None
     station_name = None
     station_number = None
@@ -31,13 +36,10 @@ class Dive:
     surface_reach_loc = None
     great_depth_reach_loc = None
     great_depth_leave_loc = None
-    p2t_offset_param = 0
-    p2t_offset_measurement = 0
 
-    def __init__(self, base_path, log_name, events):
+    def __init__(self, base_path, log_name, events, profiles):
         self.base_path = base_path
         self.log_name = log_name
-        print log_name
 
         # Get the date from the file name
         self.date = utils.get_date_from_file_name(log_name)
@@ -84,6 +86,10 @@ class Dive:
             self.station_name = re.findall("board (.+)", utils.split_log_lines(self.log_content)[0])
             if len(self.station_name) == 0:
                 self.station_name = re.findall("board (.+)", utils.split_log_lines(self.log_content)[1])
+            if len(self.station_name) == 0:
+                self.station_name = re.findall("buoy (.+)", utils.split_log_lines(self.log_content)[0])
+            if len(self.station_name) == 0:
+                self.station_name = re.findall("buoy (.+)", utils.split_log_lines(self.log_content)[1])
             self.station_name = self.station_name[0]
             self.station_number = self.station_name.split("-")[-1]
 
@@ -95,27 +101,53 @@ class Dive:
         # If the dive contain a Mermaid file
         self.events = list()
         if self.mmd_name:
-            # Read the Mermaid environment associated to the dive
-            with open(self.base_path + self.mmd_name, "r") as f:
-                content = f.read()
-            self.mmd_environment = re.findall("<ENVIRONMENT>.+</PARAMETERS>", content, re.DOTALL)[0]
+            try:
+                # Read the Mermaid environment associated to the dive
+                with open(self.base_path + self.mmd_name, "r") as f:
+                    content = f.read()
+            except IOError:
+                print "manque le fichier " + self.mmd_name
+                self.mmd_name = None
+            else:
+                self.mmd_environment = re.findall("<ENVIRONMENT>.+</PARAMETERS>", content, re.DOTALL)[0]
+                # Get list of events associated to the dive
+                self.events = events.get_events_between(
+                    self.date, self.end_date)
 
-            # Get list of events associated to the dive
-            self.events = events.get_events_between(self.date, self.end_date)
+                # For each event
+                for event in self.events:
+                    # 1 Set the environment information
+                    event.set_environment(self.mmd_environment)
+                    # 2 Find true sampling frequency
+                    event.find_measured_sampling_frequency()
+                    # 3 Correct events date
+                    event.correct_date()
+                    # 4 Invert wavelet transform of event
+                    event.invert_transform()
 
-            # For each event
-            for event in self.events:
-                # 1 Set the environment information
-                event.set_environment(self.mmd_environment)
-                # 2 Find true sampling frequency
-                event.find_measured_sampling_frequency()
-                # 3 Correct events date
-                event.correct_date()
-                # 4 Invert wavelet transform of event
-                event.invert_transform()
+        # Find the .S41 file of the ascent
+        catch = re.findall("bytes in (\w+/\w+\.S41)", self.log_content)
+        if len(catch) > 0:
+            self.s41_name = catch[-1].replace("/", "_")
+        # If the dive contain a Mermaid file
+        self.profiles = list()
+        if self.s41_name:
+            try:
+                # Read the Mermaid environment associated to the dive
+                with open(self.base_path + self.s41_name, "r") as f:
+                    content = f.read()
+            except IOError:
+                print "manque le fichier " + self.s41_name
+                self.s41_name = None
+            else:
+                self.s41_environment = re.findall(
+                    "<PARAMETERS>.+</PILOTS>", content, re.DOTALL)[0]
+                self.profiles = profiles.get_profiles_between(
+                    self.date, self.end_date)
 
         # Find the position of the float
-        self.gps_list = gps.get_gps_list(self.log_content, self.mmd_environment, self.mmd_name)
+        self.gps_list = gps.get_gps_list(
+            self.log_content, self.mmd_environment, self.mmd_name)
         self.gps_list_is_complete = False
         if self.is_complete_dive:
             # Check that the last GPS fix of the list correspond to the ascent position
@@ -123,22 +155,35 @@ class Dive:
             surface_date = UTCDateTime(surface_date[0][1])
             if len(self.gps_list) == 0:
                 print "WARNING: No GPS synchronization at all for \"" \
-                        + str(self.mmd_name) + "\", \"" + str(self.log_name) + "\""
+                    + str(self.mmd_name) + "\", \"" + str(self.log_name) + "\""
             elif len(self.gps_list) > 1 and self.gps_list[-1].date > surface_date:
                 self.gps_list_is_complete = True
             elif self.gps_list[-1].date > surface_date:
                 print "WARNING: No GPS synchronization before diving for \"" \
-                        + str(self.mmd_name) + "\", \"" + str(self.log_name) + "\""
+                    + str(self.mmd_name) + "\", \"" + str(self.log_name) + "\""
             else:
                 print "WARNING: No GPS synchronization after surfacing for \"" \
-                        + str(self.mmd_name) + "\", \"" + str(self.log_name) + "\""
+                    + str(self.mmd_name) + "\", \"" + str(self.log_name) + "\""
 
-        # Find the pressure offset
-        if self.is_complete_dive:
-            catch = re.findall("offset (-?\d+)mbar", self.log_content)
-            self.p2t_offset_param = int(catch[0])
-            catch = re.findall("Pext (-?\d+)mbar", self.log_content)
-            self.p2t_offset_measurement = int(catch[0])
+    def generateJSON(self):
+        json_object = {}
+        json_object["log_name"] = self.log_name
+        json_object["base_path"] = self.base_path
+        json_object["export_path"] = self.export_path
+        json_object["date"] = str(self.date)
+        json_object["end_date"] = str(self.end_date)
+        json_object["is_init"] = self.is_init
+        json_object["is_dive"] = self.is_dive
+        json_object["is_complete_dive"] = self.is_complete_dive
+        json_object["mmd_name"] = self.mmd_name
+        json_object["station_name"] = self.station_name
+        json_object["station_number"] = self.station_number
+        json_object["gps_list_is_complete"] = self.gps_list_is_complete
+        json_object["surface_leave_loc"] = self.surface_leave_loc
+        json_object["surface_reach_loc"] = self.surface_reach_loc
+        json_object["great_depth_reach_loc"] = self.great_depth_reach_loc
+        json_object["great_depth_leave_loc"] = self.great_depth_leave_loc
+        return json_object
 
     def generate_datetime_log(self):
         # Check if file exist
@@ -163,7 +208,19 @@ class Dive:
         with open(export_path, "w") as f:
             f.write(self.mmd_environment)
 
-    def generate_dive_plotly(self):
+    def generate_s41_environment_file(self):
+        # Check if there is a Mermaid file
+        if self.s41_name is None:
+            return
+        # Check if file exist
+        export_path = self.export_path + self.log_name + "." + self.s41_name + ".params"
+        if os.path.exists(export_path):
+            return
+        # Write file
+        with open(export_path, "w") as f:
+            f.write(self.s41_environment)
+
+    def generate_dive_plotly(self, csv_file):
         # Check if file exist
         export_path = self.export_path + self.log_name[:-4] + '.html'
         if os.path.exists(export_path):
@@ -172,16 +229,21 @@ class Dive:
         if not self.is_dive:
             return
         # Search pressure values
-        pressure = utils.find_timestamped_values("P\s*(\+?\-?\d+)mbar", self.log_content)
-        bypass = utils.find_timestamped_values(":\[BYPASS", self.log_content)
-        valve = utils.find_timestamped_values(":\[VALVE", self.log_content)
-        pump = utils.find_timestamped_values(":\[PUMP", self.log_content)
-        mermaid_events = utils.find_timestamped_values("[MRMAID,\d+] *\d+dbar, *-?\d+degC", self.log_content)
+        pressure = utils.find_timestamped_values(
+            "]P\s*(\+?\-?\d+)mbar", self.log_content)
+        bypass = utils.find_timestamped_values(
+            ":\[BYPASS.+\].*opening.*[0-9]+ms", self.log_content)
+        valve = utils.find_timestamped_values(
+            ":\[VALVE.+\].*opening.*[0-9]+ms", self.log_content)
+        pump = utils.find_timestamped_values(
+            ":\[PUMP.+\].*during.*[0-9]+ms", self.log_content)
+        mermaid_events = utils.find_timestamped_values(
+            "[MRMAID,\d+] *\d+dbar, *-?\d+degC", self.log_content)
         # Return if there is no data to plot
         if len(pressure) < 1:
             return
         # Add pressure values to the graph
-        p_val = [-int(p[0])/100. for p in pressure]
+        p_val = [-int(p[0]) / 100. for p in pressure]
         p_date = [p[1] for p in pressure]
         depth_line = graph.Scatter(x=p_date,
                                    y=p_val,
@@ -189,10 +251,18 @@ class Dive:
                                    line=dict(color='#474747',
                                              width=2),
                                    mode='lines+markers')
+        if csv_file:
+            p_date_format = [UTCDateTime.strftime(UTCDateTime(date), "%Y%m%dT%H%M%S") for date in p_date]
+            csv_path = export_path.replace(".html",".csv")
+            rows = zip(p_date_format,p_val)
+            with open(csv_path, mode='w') as csv_file:
+                csv_file = csv.writer(csv_file, delimiter=';', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+                for row in rows:
+                    csv_file.writerow(row)
 
         # Add vertical lines
         # Find minimum and maximum for Y axis of vertical lines
-        minimum = min(p_val) + 0.05*min(p_val)
+        minimum = min(p_val) + 0.05 * min(p_val)
         maximum = 0
         # Add bypass lines
         bypass = [bp[1] for bp in bypass]
@@ -224,11 +294,14 @@ class Dive:
                                                           name="MERMAID events",
                                                           color="purple")
 
-        data = [bypass_line, valve_line, pump_line, mermaid_events_line, depth_line]
+        data = [bypass_line, valve_line, pump_line,
+                mermaid_events_line, depth_line]
 
         layout = graph.Layout(title=self.directory_name + '/' + self.log_name,
-                              xaxis=dict(title='Coordinated Universal Time (UTC)', titlefont=dict(size=18)),
-                              yaxis=dict(title='Depth (meters)', titlefont=dict(size=18)),
+                              xaxis=dict(
+                                  title='Coordinated Universal Time (UTC)', titlefont=dict(size=18)),
+                              yaxis=dict(title='Depth (meters)',
+                                         titlefont=dict(size=18)),
                               hovermode='closest'
                               )
 
@@ -299,28 +372,34 @@ class Dive:
         gps_after_dive = [self.gps_list[-1]] + next_dive.gps_list[:-1]
 
         # Find location when float leave the surface
-        surface_leave_date = utils.find_timestamped_values("\[DIVING, *\d+\] *(\d+)mbar reached", self.log_content)
+        surface_leave_date = utils.find_timestamped_values(
+            "\[DIVING, *\d+\] *(\d+)mbar reached", self.log_content)
         surface_leave_date = surface_leave_date[0][1]
-        self.surface_leave_loc = gps.linear_interpolation(gps_before_dive, surface_leave_date)
+        self.surface_leave_loc = gps.linear_interpolation(
+            gps_before_dive, surface_leave_date)
 
         # Find location when float reach the surface
-        surface_reach_date = utils.find_timestamped_values("\[SURFIN, *\d+\]filling external bladder", self.log_content)
+        surface_reach_date = utils.find_timestamped_values(
+            "\[SURFIN, *\d+\]filling external bladder", self.log_content)
         surface_reach_date = surface_reach_date[-1][1]
-        self.surface_reach_loc = gps.linear_interpolation(gps_after_dive, surface_reach_date)
+        self.surface_reach_loc = gps.linear_interpolation(
+            gps_after_dive, surface_reach_date)
 
         # Location is determined when the float reach the mixed layer depth
         mixed_layer_depth_m = 50
 
         # Find pressure values
-        pressure = utils.find_timestamped_values("P\s*(\+?\-?\d+)mbar", self.log_content)
+        pressure = utils.find_timestamped_values(
+            "P\s*(\+?\-?\d+)mbar", self.log_content)
         pressure_date = [p[1] for p in pressure]
-        pressure_val = [int(p[0])/100. for p in pressure]
+        pressure_val = [int(p[0]) / 100. for p in pressure]
 
         # Return if there is the max value doesn't reach the mixed layer depth
         if max(pressure_val) < mixed_layer_depth_m:
             # compute location of events from surface position
             for event in self.events:
-                event.compute_station_location(self.surface_leave_loc, self.surface_reach_loc)
+                event.compute_station_location(
+                    self.surface_leave_loc, self.surface_reach_loc)
             return
 
         # loop until to reach a depth greater than mixed_layer_depth
@@ -330,59 +409,66 @@ class Dive:
         d2 = pressure_date[i]
         p2 = pressure_val[i]
         if i > 0:
-            d1 = pressure_date[i-1]
-            p1 = pressure_val[i-1]
+            d1 = pressure_date[i - 1]
+            p1 = pressure_val[i - 1]
         else:
             d1 = surface_leave_date
             p1 = 0
 
         # compute when the float pass under the mixed layer
-        reach_great_depth_date = d1 + (mixed_layer_depth_m - p1) * (d2 - d1) / (p2 - p1)
+        reach_great_depth_date = d1 + \
+            (mixed_layer_depth_m - p1) * (d2 - d1) / (p2 - p1)
 
         # loop until to reach a depth higher than mixed_layer_depth bur for in the ascent phase
-        i = len(pressure_val)-1
+        i = len(pressure_val) - 1
         while pressure_val[i] < mixed_layer_depth_m and i > 0:
             i -= 1
         d1 = pressure_date[i]
         p1 = pressure_val[i]
 
-        if i < len(pressure_val)-1:
-            d2 = pressure_date[i+1]
-            p2 = pressure_val[i+1]
+        if i < len(pressure_val) - 1:
+            d2 = pressure_date[i + 1]
+            p2 = pressure_val[i + 1]
         else:
             d2 = surface_reach_date
             p2 = 0
 
         # compute when the float pass above the mixed layer
-        leave_great_depth_date = d1 + (mixed_layer_depth_m - p1) * (d2 - d1) / (p2 - p1)
+        leave_great_depth_date = d1 + \
+            (mixed_layer_depth_m - p1) * (d2 - d1) / (p2 - p1)
 
         # compute location with linear interpolation
-        self.great_depth_reach_loc = gps.linear_interpolation(gps_before_dive, reach_great_depth_date)
-        self.great_depth_leave_loc = gps.linear_interpolation(gps_after_dive, leave_great_depth_date)
+        self.great_depth_reach_loc = gps.linear_interpolation(
+            gps_before_dive, reach_great_depth_date)
+        self.great_depth_leave_loc = gps.linear_interpolation(
+            gps_after_dive, leave_great_depth_date)
 
         # compute location of events
         for event in self.events:
-            event.compute_station_location(self.great_depth_reach_loc, self.great_depth_leave_loc)
+            event.compute_station_location(
+                self.great_depth_reach_loc, self.great_depth_leave_loc)
 
     def generate_events_plotly(self):
         for event in self.events:
             event.plotly(self.export_path)
 
-    def generate_events_png(self):
+    def generate_profile_plotly(self,csv_file):
+        for profile in self.profiles:
+            profile.plotly_temperature(self.export_path,csv_file)
+            profile.plotly_salinity(self.export_path)
+
+    def generate_events_plot(self):
         for event in self.events:
-            event.plot_png(self.export_path)
+            event.plot(self.export_path)
 
     def generate_events_sac(self):
         for event in self.events:
-            event.to_sac(self.export_path, self.station_number, force_without_loc=False)
-
-    def generate_events_mseed(self):
-        for event in self.events:
-            event.to_mseed(self.export_path, self.station_number, force_without_loc=False)
+            event.to_sac_and_mseed(
+                self.export_path, self.station_number, force_without_loc=False)
 
 
 # Create dives object
-def get_dives(path, events):
+def get_dives(path, events, profiles):
     # Concatenate log files that need it
     concatenate_log_files(path)
     # Get the list of log files
@@ -392,7 +478,11 @@ def get_dives(path, events):
     # Create Dive objects
     dives = list()
     for log_name in log_names:
-        dives.append(Dive(path, log_name, events))
+        print log_name
+        try:
+            dives.append(Dive(path, log_name, events, profiles))
+        except :
+            print "wrong format"
     return dives
 
 

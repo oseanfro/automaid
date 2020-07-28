@@ -1,0 +1,8 @@
+1594538008:<ERR>[MONITR,0154]reboot code 0x0050, src/diving.c@111
+1594538008:[SOS   ,0017]emergency call
+1594538467:[SOS   ,0017]emergency call
+1594538701:<WARN>[SOS   ,0036]IRIDIUM
+1594538706:<WARN>[SOS   ,0096]"src/diving.c@111o344020001"#2 failed, 23 tries remaining
+1594538706:[SOS   ,0017]emergency call
+1594539098:[SOS   ,0017]emergency call
+1594539191:[MONITR,0198]rebooting with code 0x0000, data "src/monitor.c@520006"

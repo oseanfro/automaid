@@ -193,7 +193,7 @@ def get_gps_from_log(content):
     gps_log_list = content.split("GPS fix...")[1:]
     for gps_log in gps_log_list:
         # get gps information of each gps fix
-        fixdate = re.findall("(\d+):\[MRMAID *, *\d+\]\$GPSACK", gps_log)
+        fixdate = re.findall("(\d+):\[MRMAID *, *\d+\]M?e?r?m?a?i?d? ?\$GPSACK", gps_log)
         if len(fixdate) > 0:
             fixdate = fixdate[0]
             fixdate = UTCDateTime(int(fixdate))

@@ -1,0 +1,14 @@
+1594528900:<ERR>[MONITR,0154]reboot code 0x0050, src/diving.c@111
+1594528900:[SOS   ,0017]emergency call
+1594529125:<WARN>[SOS   ,0036]IRIDIUM
+1594529130:<WARN>[SOS   ,0096]"src/diving.c@111o344020001"#1 failed, 24 tries remaining
+1594529130:[SOS   ,0017]emergency call
+1594529534:[SOS   ,0017]emergency call
+1594529764:<WARN>[SOS   ,0036]IRIDIUM
+1594529769:<WARN>[SOS   ,0096]"src/diving.c@111o344020001"#2 failed, 22 tries remaining
+1594529769:[SOS   ,0017]emergency call
+1594530166:[SOS   ,0017]emergency call
+1594530408:<WARN>[SOS   ,0036]IRIDIUM
+1594530413:<WARN>[SOS   ,0096]"src/diving.c@111o344020001"#3 failed, 20 tries remaining
+1594530413:[SOS   ,0017]emergency call
+1594530509:[MONITR,0198]rebooting with code 0x0000, data "src/monitor.c@520006"

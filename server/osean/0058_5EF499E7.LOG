@@ -1,0 +1,155 @@
+1593088487:[MONITR,0197]reboot code 0x0000, src/monitor.c@520
+1593088487:[MAIN  ,0007]buoy 452.120-R-0058
+1593088487:[MAIN  ,0055]soft pilotage 452.012.300_V2.20-20200612
+1593088487:[MAIN  ,0011]date 2020-06-25T12:34:47
+1593088493:[MAIN  ,0006]battery 15506mV,    7930uA
+1593088496:[MAIN  ,0024]internal pressure 79586Pa
+1593088497:[PRESS ,0038]P    +60mbar,T+13277mdegC
+1593088498:[MRMAID,0182]thread started
+1593088499:[MRMAID,0186]no wake-up
+1593088500:[MRMAID,0188]acq already stopped
+1593088500:[MRMAID,0052]Mermaid $BOARD:452116600-58;
+1593088501:[MRMAID,0052]Mermaid $SOFT:2.1344;
+1593088501:[TESTMD,0053]Enter in test mode? yes/no
+1593088501:[TESTMD,0252]0058>
+1593088526:[TESTMD,0050]"yes"
+1593088526:[TESTMD,0249]
+Command list
+pext    : Get external pressure
+pint    : Get internal vacuum
+ui      : Get voltage/current
+act     : Test actuators
+fillb   : Pump until filling the bladder
+bpopen  : Open bypass
+bpclose : Close bypass
+date    : Get date
+gps     : GPS synchronization
+iridium : Iridium transfer
+mstart  : Start mermaid acq
+mstop   : Stop mermaid acq
+mdata   : Get mermaid datas
+mchecksd  : Start mermaid acq
+mdump  : Send data REQUEST command with date and duration
+s41dumpa : Get averaged CTD datas
+s41dumpr : Get raw CTD datas
+ls      : List files
+cp      : Copy file or directory content on the desktop
+rm      : Remove a file
+h       : Print command list
+q       : Quit
+
+Advanced
+pumps X : pompe Xs (lent)
+pumpf X : pompe Xs (rapide)
+evh     : ouvre l'electrovalve 30s
+bypass  : ouvre le bypass 30s
+dvmine  : deverminage de la carte
+nominal : mode nominal pour mesure de conso
+cychydr : test du circuit hydraulique
+mkdir   : creer un repertoire
+mv      : deplacer un fichier
+ps      : liste les processus
+
+Set params
+stage   : Stage settings
+buoy    : Buoy settings
+p2t     : Pressure sensor settings
+log     : Verb cfg
+mermaid : Mermaid cfg
+upload  : On/Off Irid transfer
+sys  : system param settings
+
+
+1593088526:[TESTMD,0252]0058>
+1593088572:[TESTMD,0050]"gps"
+1593088580:[SURF  ,0022]GPS fix...
+1593088581:<WARN>[GPSFIX,0123]GPRMC ms=430 #1
+1593088627:[SURF  ,0015]10 PPS detected...
+1593088628:[MRMAID,0052]Mermaid $GPSACK:+50,+5,+24,+12,+34,-14,-194396;
+1593088638:[MRMAID,0052]Mermaid $GPSOFF:3686321;
+1593088640:[GPSFIX,0179]-2s diff
+1593088642:[SURF  ,0222]2020-06-25T12:37:22
+1593088642:[SURF  ,0082]Latitude : N43deg06.485mn, Longitude :E006deg02.283mn
+1593088642:[SURF  ,0223]fix3D,6satellites
+1593088642:[SURF  ,0084]GPS fix GPGSA : hdop1.240,vdop2.450
+1593088657:[TESTMD,0252]0058>
+1593088681:[TESTMD,0050]"gps"
+1593088691:[SURF  ,0022]GPS fix...
+1593088712:[SURF  ,0015]10 PPS detected...
+1593088713:[MRMAID,0052]Mermaid $GPSACK:+0,+0,+0,+0,+0,+0,-30;
+1593088723:[MRMAID,0052]Mermaid $GPSOFF:3686321;
+1593088724:[GPSFIX,0179]-1s diff
+1593088725:[SURF  ,0222]2020-06-25T12:38:45
+1593088725:[SURF  ,0082]Latitude : N43deg06.485mn, Longitude :E006deg02.284mn
+1593088725:[SURF  ,0223]fix3D,7satellites
+1593088725:[SURF  ,0084]GPS fix GPGSA : hdop0.940,vdop1.410
+1593088740:[TESTMD,0252]0058>
+1593088827:[TESTMD,0050]"iridium"
+1593088836:[SURF  ,0025]Iridium...
+1593088911:<WARN>[SURF  ,0023]failed to connect #1, code -5, net 3, qual -1, dial -1
+1593088977:[SURF  ,0009]connected in 140s, signal quality 5
+1593089025:<WARN>[SURF  ,0071]timeout
+1593089025:<WARN>[SURF  ,0056]peer mute
+1593089030:[SURF  ,0014]disconnected after 193s
+1593089035:[TESTMD,0252]0058>
+1593089080:[TESTMD,0050]"iridium"
+1593089090:[SURF  ,0025]Iridium...
+1593089142:[SURF  ,0009]connected in 52s, signal quality 5
+1593089179:<WARN>[SURF  ,0071]timeout
+1593089179:<WARN>[SURF  ,0056]peer mute
+1593089185:[SURF  ,0014]disconnected after 95s
+1593089190:[TESTMD,0252]0058>
+1593089211:[TESTMD,0050]"iridium"
+1593089221:[SURF  ,0025]Iridium...
+1593089293:<WARN>[SURF  ,0023]failed to connect #1, code -5, net 4, qual -1, dial -1
+1593089374:<WARN>[SURF  ,0023]failed to connect #2, code -5, net 4, qual -1, dial -1
+1593089480:[SURF  ,0009]connected in 259s, signal quality 1
+1593089542:<WARN>[SURF  ,0071]timeout
+1593089542:<WARN>[SURF  ,0056]peer mute
+1593089547:[SURF  ,0014]disconnected after 326s
+1593089552:[TESTMD,0252]0058>
+1593089697:[TESTMD,0050]"iridium"
+1593089715:[SURF  ,0025]Iridium...
+1593089807:[SURF  ,0009]connected in 92s, signal quality 2
+1593089836:<WARN>[SURF  ,0071]timeout
+1593089836:<WARN>[SURF  ,0056]peer mute
+1593089841:[SURF  ,0014]disconnected after 126s
+1593089846:[TESTMD,0252]0058>
+1593089862:[TESTMD,0050]"iridium"
+1593089877:[SURF  ,0025]Iridium...
+1593089949:<WARN>[SURF  ,0023]failed to connect #1, code -5, net 4, qual -1, dial -1
+1593090044:[SURF  ,0009]connected in 167s, signal quality 4
+1593090082:[SURF  ,0218]prompt received, remote cmd end
+1593090082:[SURF  ,0012]40 cmd(s) received
+1593090118:[UPLOAD,0248]Upload data files...
+1593090138:[UPLOAD,0231]"0058/5C332751.LOG" uploaded at 139bytes/s
+1593090211:[UPLOAD,0231]"0058/5C337F3F.LOG" uploaded at 31bytes/s
+1593090228:[UPLOAD,0231]"0058/5C6E7D22.LOG" uploaded at 157bytes/s
+1593090242:[UPLOAD,0231]"0058/5C6EA2CE.LOG" uploaded at 143bytes/s
+1593090252:[UPLOAD,0231]"0058/5C6EA7C0.LOG" uploaded at 148bytes/s
+1593090272:[UPLOAD,0231]"0058/5C6EC843.LOG" uploaded at 147bytes/s
+1593090288:[UPLOAD,0231]"0058/5C751CD6.LOG" uploaded at 142bytes/s
+1593090303:[UPLOAD,0231]"0058/5C76597F.LOG" uploaded at 165bytes/s
+1593090314:[UPLOAD,0231]"0058/5C77E8B7.LOG" uploaded at 124bytes/s
+1593090333:[UPLOAD,0231]"0058/5C790543.LOG" uploaded at 159bytes/s
+1593090339:[UPLOAD,0231]"0058/5C7D2B70.LOG" uploaded at 93bytes/s
+1593090346:[UPLOAD,0231]"0058/5C7D2C1D.LOG" uploaded at 114bytes/s
+1593090372:[UPLOAD,0231]"0058/5D136304.LOG" uploaded at 163bytes/s
+1593090402:[UPLOAD,0231]"0058/5D13841A.LOG" uploaded at 166bytes/s
+1593090419:[UPLOAD,0231]"0058/5D1B286B.LOG" uploaded at 154bytes/s
+1593090449:[UPLOAD,0231]"0058/5D31D65A.LOG" uploaded at 139bytes/s
+1593090482:[UPLOAD,0231]"0058/5D39757D.LOG" uploaded at 165bytes/s
+1593090523:[UPLOAD,0231]"0058/5D6E6D4C.LOG" uploaded at 185bytes/s
+1593090531:[UPLOAD,0231]"0058/5E1C4CF9.BIN" uploaded at 66bytes/s
+1593090541:[UPLOAD,0231]"0058/5EF1F017.BIN" uploaded at 86bytes/s
+1593090558:[UPLOAD,0231]"0058/5EF20D44.BIN" uploaded at 96bytes/s
+1593090565:[UPLOAD,0231]"0058/5EF215BE.BIN" uploaded at 94bytes/s
+1593090575:[UPLOAD,0231]"0058/5EF33C61.BIN" uploaded at 84bytes/s
+1593090581:[UPLOAD,0231]"0058/5EF35AF7.BIN" uploaded at 99bytes/s
+1593090588:[UPLOAD,0231]"0058/5EF35ECE.BIN" uploaded at 88bytes/s
+1593090595:[UPLOAD,0231]"0058/5EF36025.BIN" uploaded at 79bytes/s
+1593090602:[UPLOAD,0231]"0058/5EF47671.BIN" uploaded at 79bytes/s
+1593090609:[UPLOAD,0231]"0058/5EF47802.BIN" uploaded at 79bytes/s
+1593090627:[MAIN  ,0013]28 file(s) uploaded
+1593090658:[SURF  ,0014]disconnected after 781s
+1593090663:[TESTMD,0252]0058>

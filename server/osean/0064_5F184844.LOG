@@ -1,0 +1,75 @@
+1595426884:[MONITR,0197]reboot code 0x0000, src/monitor.c@520
+1595426885:[MAIN  ,0007]buoy 452.020-P-0064
+1595426885:[MAIN  ,0055]soft pilotage 452.012.300_V2.22-20200709
+1595426885:[MAIN  ,0011]date 2020-07-22T14:08:05
+1595426891:[MAIN  ,0006]battery 14936mV,   10614uA
+1595426893:[MAIN  ,0024]internal pressure 101210Pa
+1595426895:[PRESS ,0038]P -96320mbar,T+25158mdegC
+1595426895:[MRMAID,0182]thread started
+1595426896:[MRMAID,0186]no wake-up
+1595426897:[MRMAID,0188]acq already stopped
+1595426897:[MRMAID,0052]Mermaid $BOARD:452116600-64;
+1595426898:[MRMAID,0052]Mermaid $SOFT:2.1344;
+1595426898:[TESTMD,0053]Enter in test mode? yes/no
+1595426898:[TESTMD,0252]0064>
+1595426900:[TESTMD,0050]"yes"
+1595426900:[TESTMD,0249]
+Command list
+pext    : Get external pressure
+pint    : Get internal vacuum
+ui      : Get voltage/current
+act     : Test actuators
+fillb   : Pump until filling the bladder
+bpopen  : Open bypass
+bpclose : Close bypass
+date    : Get date
+gps     : GPS synchronization
+iridium : Iridium transfer
+mstart  : Start mermaid acq
+mstop   : Stop mermaid acq
+mdata   : Get mermaid datas
+mchecksd  : Start mermaid acq
+mdump  : Send data REQUEST command with date and duration
+s41dumpa : Get averaged CTD datas
+s41dumpr : Get raw CTD datas
+ls      : List files
+cp      : Copy file or directory content on the desktop
+rm      : Remove a file
+h       : Print command list
+q       : Quit
+
+Advanced
+pumps X : pompe Xs (lent)
+pumpf X : pompe Xs (rapide)
+evh     : ouvre l'electrovalve 30s
+bypass  : ouvre le bypass 30s
+dvmine  : deverminage de la carte
+nominal : mode nominal pour mesure de conso
+cychydr : test du circuit hydraulique
+mkdir   : creer un repertoire
+mv      : deplacer un fichier
+ps      : liste les processus
+
+Set params
+stage   : Stage settings
+buoy    : Buoy settings
+p2t     : Pressure sensor settings
+log     : Verb cfg
+mermaid : Mermaid cfg
+upload  : On/Off Irid transfer
+sys  : system param settings
+
+
+1595426900:[TESTMD,0252]0064>
+1595427919:[TESTMD,0050]"ui"
+1595427921:[MAIN  ,0006]battery 14933mV,   11224uA
+1595427921:[TESTMD,0252]0064>
+1595427930:[TESTMD,0050]"featureactuiwatch1"
+1595427930:[TESTMD,0252]0064>
+1595428020:[TESTMD,0050]"iridium"
+1595428027:[SURF  ,0025]Iridium...
+1595428147:<ERR>[MODEM ,0347]ping error
+1595428147:<WARN>[SURF  ,0023]failed to connect #1, code -1, net -1, qual -1, dial -1
+1595428272:<ERR>[MODEM ,0347]ping error
+1595428272:<WARN>[SURF  ,0023]failed to connect #2, code -1, net -1, qual -1, dial -1
+1595428315:<WARN>[MONITR,0007]battery  6592mV,  -17568uA

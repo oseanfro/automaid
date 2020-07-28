@@ -1,0 +1,3 @@
+1592471792:<ERR>[MONITR,0154]reboot code 0x0050, src/main.c@440
+1592471792:[SOS   ,0017]emergency call
+1592471800:[PUMP  ,0016]pump during 900000ms

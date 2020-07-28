@@ -1,0 +1,113 @@
+1594114368:[MONITR,0197]reboot code 0x0000, src/monitor.c@520
+1594114368:[MAIN  ,0007]buoy 452.120-R-0064
+1594114368:[MAIN  ,0055]soft pilotage 452.012.300_V2.21-20200701
+1594114368:[MAIN  ,0011]date 2020-07-07T09:32:48
+1594114374:[MAIN  ,0006]battery 15532mV,    7564uA
+1594114377:[MAIN  ,0024]internal pressure 80235Pa
+1594114378:[PRESS ,0038]P   +120mbar,T+29296mdegC
+1594114378:[MRMAID,0182]thread started
+1594114380:[MRMAID,0186]no wake-up
+1594114381:[MRMAID,0188]acq already stopped
+1594114381:[MRMAID,0052]Mermaid $BOARD:452116600-64;
+1594114382:[MRMAID,0052]Mermaid $SOFT:2.1344;
+1594114382:[TESTMD,0053]Enter in test mode? yes/no
+1594114382:[TESTMD,0252]0064>
+1594114395:[TESTMD,0050]"yes"
+1594114396:[TESTMD,0249]
+Command list
+pext    : Get external pressure
+pint    : Get internal vacuum
+ui      : Get voltage/current
+act     : Test actuators
+fillb   : Pump until filling the bladder
+bpopen  : Open bypass
+bpclose : Close bypass
+date    : Get date
+gps     : GPS synchronization
+iridium : Iridium transfer
+mstart  : Start mermaid acq
+mstop   : Stop mermaid acq
+mdata   : Get mermaid datas
+mchecksd  : Start mermaid acq
+mdump  : Send data REQUEST command with date and duration
+s41dumpa : Get averaged CTD datas
+s41dumpr : Get raw CTD datas
+ls      : List files
+cp      : Copy file or directory content on the desktop
+rm      : Remove a file
+h       : Print command list
+q       : Quit
+
+Advanced
+pumps X : pompe Xs (lent)
+pumpf X : pompe Xs (rapide)
+evh     : ouvre l'electrovalve 30s
+bypass  : ouvre le bypass 30s
+dvmine  : deverminage de la carte
+nominal : mode nominal pour mesure de conso
+cychydr : test du circuit hydraulique
+mkdir   : creer un repertoire
+mv      : deplacer un fichier
+ps      : liste les processus
+
+Set params
+stage   : Stage settings
+buoy    : Buoy settings
+p2t     : Pressure sensor settings
+log     : Verb cfg
+mermaid : Mermaid cfg
+upload  : On/Off Irid transfer
+sys  : system param settings
+
+
+1594114396:[TESTMD,0252]0064>
+1594114417:[TESTMD,0050]"act"
+1594114417:[SURFIN,0020]filling external bladder
+1594114420:[SURFIN,0019]external bladder full
+1594114425:[VALVE ,0034]valve opening 30000ms
+1594114460:[SURFIN,0020]filling external bladder
+1594114468:[PUMP  ,0016]pump during 300000ms
+1594114476:[SURFIN,0019]external bladder full
+1594114476:[TESTMD,0045]pump run 6s
+1594114481:[BYPASS,0035]bypass opening 30000ms
+1594114526:[SURFIN,0020]filling external bladder
+1594114534:[PUMP  ,0016]pump during 300000ms
+1594114632:[SURFIN,0019]external bladder full
+1594114632:[TESTMD,0045]pump run 96s
+1594114637:[TESTMD,0066]test done
+1594114637:[TESTMD,0252]0064>
+1594114642:[TESTMD,0050]"gps"
+1594114650:[SURF  ,0022]GPS fix...
+1594114650:<WARN>[GPSFIX,0123]GPRMC ms=560 #1
+1594114693:[SURF  ,0015]10 PPS detected...
+1594114695:[MRMAID,0052]Mermaid $GPSACK:+50,+6,+6,+9,+32,-15,-741638;
+1594114705:[MRMAID,0052]Mermaid $GPSOFF:3686319;
+1594114707:[GPSFIX,0179]-1s diff
+1594114708:[SURF  ,0222]2020-07-07T09:38:28
+1594114708:[SURF  ,0082]Latitude : N43deg41.967mn, Longitude :E007deg18.501mn
+1594114708:[SURF  ,0223]fix3D,5satellites
+1594114708:[SURF  ,0084]GPS fix GPGSA : hdop2.860,vdop2.660
+1594114723:[TESTMD,0252]0064>
+1594114726:[TESTMD,0050]"gps"
+1594114738:[SURF  ,0022]GPS fix...
+1594114758:[SURF  ,0015]10 PPS detected...
+1594114759:[MRMAID,0052]Mermaid $GPSACK:+0,+0,+0,+0,+0,+0,+0;
+1594114769:[MRMAID,0052]Mermaid $GPSOFF:3686319;
+1594114772:[GPSFIX,0179]+0s diff
+1594114772:[SURF  ,0222]2020-07-07T09:39:32
+1594114772:[SURF  ,0082]Latitude : N43deg41.966mn, Longitude :E007deg18.499mn
+1594114772:[SURF  ,0223]fix3D,6satellites
+1594114772:[SURF  ,0084]GPS fix GPGSA : hdop0.950,vdop1.460
+1594114787:[TESTMD,0252]0064>
+1594114795:[TESTMD,0050]"iridium"
+1594114805:[SURF  ,0025]Iridium...
+1594114877:<WARN>[SURF  ,0023]failed to connect #1, code -5, net 4, qual -1, dial -1
+1594115115:<WARN>[SURF  ,0023]failed to connect #2, code -8, net 1, qual 5, dial 1
+1594115201:[SURF  ,0009]connected in 396s, signal quality 2
+1594115279:[SURF  ,0218]prompt received, remote cmd end
+1594115279:[SURF  ,0012]16 cmd(s) received
+1594115302:[UPLOAD,0248]Upload data files...
+1594115325:[UPLOAD,0231]"0064/5EFDC90F.BIN" uploaded at 89bytes/s
+1594115341:[MAIN  ,0013]1 file(s) uploaded
+1594115369:[SURF  ,0014]disconnected after 564s
+1594115374:[TESTMD,0252]0064>
