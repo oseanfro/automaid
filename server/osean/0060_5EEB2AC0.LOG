@@ -1,6 +1,0 @@
-1592470208:<ERR>[MONITR,0154]reboot code 0x0050, src/main.c@440
-1592470208:[SOS   ,0017]emergency call
-1592470216:[PUMP  ,0016]pump during 900000ms
-1592471149:<WARN>[GPSFIX,0123]GPRMC ms=510 #1
-1592471534:[SOS   ,0017]emergency call
-1592471542:[PUMP  ,0016]pump during 900000ms

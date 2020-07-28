@@ -1,5 +1,0 @@
-1594853145:<ERR>[MONITR,0154]reboot code 0x0050, src/diving.c@111
-1594853145:[SOS   ,0017]emergency call
-1594853547:[SOS   ,0017]emergency call
-1594853940:[SOS   ,0017]emergency call
-1594854040:[MONITR,0198]rebooting with code 0x0000, data "src/monitor.c@520006"

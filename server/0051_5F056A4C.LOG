@@ -1,8 +1,0 @@
-1594190412:<ERR>[MONITR,0154]reboot code 0x0050, src/monitor.c@260
-1594190412:[SOS   ,0017]emergency call
-1594190420:[PUMP  ,0016]pump during 900000ms
-1594190876:[SOS   ,0017]emergency call
-1594190884:[PUMP  ,0016]pump during 900000ms
-1594191302:[SOS   ,0017]emergency call
-1594191310:[PUMP  ,0016]pump during 900000ms
-1594191419:[MONITR,0198]rebooting with code 0x0000, data "src/monitor.c@520006"
