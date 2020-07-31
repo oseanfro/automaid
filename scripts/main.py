@@ -9,6 +9,7 @@ import profile
 import kml
 import re
 import utils
+#import decrypt
 
 # Set a time range of analysis for a specific float
 filterDate = {
@@ -109,6 +110,9 @@ def main():
         # Copy files
         for f in files_to_copy:
             shutil.copy(f, mfloat_path)
+
+        # Decrypt all BIN files
+        #decrypt.decrypt_all(mfloat_path)
 
         # Build list of all mermaid events recorded by the float
         mevents = events.Events(mfloat_path)

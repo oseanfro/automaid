@@ -1,0 +1,38 @@
+[
+  {
+    "Name": "DatabaseV1_0.json",
+    "MinVersion": "2.17",
+    "MaxVersion": "None",
+    "DateRelease": "2020-06-05"
+  },
+  {
+    "Name": "DatabaseV0_5.json",
+    "MinVersion": "2.14",
+    "MaxVersion": "2.16",
+    "DateRelease": "2020-03-17"
+  },
+  {
+    "Name": "DatabaseV0_4.json",
+    "MinVersion": "2.13",
+    "MaxVersion": "2.13",
+    "DateRelease": "2020-03-03"
+  },
+  {
+    "Name": "DatabaseV0_3.json",
+    "MinVersion": "2.11",
+    "MaxVersion": "2.12",
+    "DateRelease": "2020-02-11"
+  },
+  {
+    "Name": "DatabaseV0_2.json",
+    "MinVersion": "2.10",
+    "MaxVersion": "2.10",
+    "DateRelease": "2020-01-30"
+  },
+  {
+    "Name": "DatabaseV0_1.json",
+    "MinVersion": "2.9",
+    "MaxVersion": "2.9",
+    "DateRelease": "2020-01-13"
+  }
+]

@@ -3,143 +3,279 @@ import shutil
 from string import maketrans
 import sys
 import glob
+import struct
 import json
 import re
 import time
-from bitarray import bitarray
 
-def _byte2int(list,reversed):
-    if reversed:
-        list.reverse()
-    return int("".join(list),16)
-def _byte2hex(list,reversed):
-    if reversed:
-        list.reverse()
-    return "".join(list)
+# Get database name with link file and version read on file
+def get_database_version(file_version) :
+    if os.path.exists("databases/Databases.json"):
+        with open("databases/Databases.json","r") as f:
+            databases = json.loads(f.read())
+        # get major and minor versions
+        file_version=file_version.split(".")
+        if (len(file_version) == 2) :
+            file_major = int(file_version[0])
+            file_minor = int(file_version[1])
+            #print "FILE MAJOR : " + str(file_major)
+            #print "FILE MINOR : " + str(file_minor)
+            for database in databases :
+                database_minor_max = 2147483647
+                database_major_max = 2147483647
+                databaseMin_version = database["MinVersion"].split(".")
+                database_major_min = int(databaseMin_version[0])
+                database_minor_min = int(databaseMin_version[1])
+                if database["MaxVersion"] != "None":
+                    databaseMax_version = database["MaxVersion"].split(".")
+                    database_major_max = int(databaseMax_version[0])
+                    database_minor_max = int(databaseMax_version[1])
+                #print "MAJOR MAX : " + str(database_major_max)
+                #print "MAJOR MIN : " + str(database_major_min)
+                #print "MINOR MAX : " +str(database_minor_max)
+                #print "MINOR MIN : " +str(database_minor_min)
+                if ((file_major > database_major_min) and (file_major < database_minor_max)) \
+                or ((file_major >= database_major_min) and (file_major <= database_major_max) \
+                and (file_minor >= database_minor_min) and (file_minor <= database_minor_max)) :
+                    return database["Name"]
+                #print "\r\n"
+            print "No Database available for : " + str(file_version)
+            return ""
+        else :
+            print "wrong version format : " + str(file_version)
+            return ""
+    else :
+        print "no databases file : databases/Databases.json"
+        return ""
+# Concatenate .000 files .BIN files in the path
+def concatenate_bin_files(path):
+    bin_files = list()
+    extensions = ["000", "001", "002", "003", "004", "005", "BIN"]
+    for extension in extensions:
+        bin_files += glob.glob(path + "*." + extension)
+    bin_files = [x.split("/")[-1] for x in bin_files]
+    bin_files.sort()
 
-def main(argv):
-    #if(len(argv) < 3):
-        #sys.exit("not enough argument, need to call script with: python decrypt.py inputpathfile outputpathfile decryptcardpath")
-    inputpathfile = argv[0]
-    index = 0
-    argumentindex = 0
-    logs = []
-    dict = {"id":[],"timestamp":[],"info":{"string":"","arguments":"","type":"","unused":""},"data":{}}
-
+    bin = b''
+    for bin_file in bin_files:
+        # If log extension is a digit, fill the log string
+        if bin_file[-3:].isdigit():
+            with open(path + bin_file, "rb") as fl:
+                # We assume that files are sorted in a correct order
+                bin += fl.read()
+            os.remove(path + bin_file)
+        else:
+            if len(bin) > 0:
+                # If log extension is not a digit and the log string is not empty
+                # we need to add it at the end of the file
+                with open(path + bin_file, "rb") as fl:
+                    bin += fl.read()
+                with open(path + bin_file, "wb") as fl:
+                    fl.write(bin)
+                bin = b''
+# Decrypt one file with LOG, WARN,and ERR cards give in arguments
+def decrypt_one(path,LOG_card,WARN_card,ERR_card,version):
     #parse data
-    with open(inputpathfile, "rb") as f:
+    string =""
+    with open(path, "rb") as f:
         byte = f.read(1)
         while byte != "":
-            if(index < 4):
-                dict["id"].append(byte.encode('hex'))
-            elif(index < 8):
-                dict["timestamp"].append(byte.encode('hex'))
-            elif(index < 9):
-                binaryinfo = "{0:08b}".format(int(byte.encode('hex'),16))
-                dict["info"]["string"] = binaryinfo[-1]
-                dict["info"]["arguments"] = binaryinfo[-2]
-                dict["info"]["type"] = "".join(reversed(binaryinfo[-4:-2]))
-                dict["info"]["unused"] = "".join(reversed(binaryinfo[-8:-4]))
-            elif(dict["info"]["string"] != "" and dict["info"]["arguments"] != ""):
-                if(dict["info"]["string"] == "1" and dict["info"]["arguments"] == "0"):
-                    if(index < 10):
-                        dict["data"]["datasize"] = byte.encode('hex')
-                        dict["data"]["string"] = []
-                    elif(index < (10 + int(dict["data"]["datasize"],16))):
-                        dict["data"]["string"].append(byte.encode('utf8'))
-                    else:
-                        #string end
-                        logs.append(dict)
-                        dict = {"id":[],"timestamp":[],"info":{"string":"","arguments":"","type":"","unused":""},"data":{}}
-                        index = 0
-                        dict["id"].append(byte.encode('hex'))
-                elif(dict["info"]["arguments"] == "1" and dict["info"]["string"] == "0"):
-                    if(index < 10):
-                        dict["data"]["datasize"] = byte.encode('hex')
-                        dict["data"]["arguments"] = []
-                    elif (argumentindex >= int(dict["data"]["datasize"],16)):
-                        # end arguments
-                        logs.append(dict)
-                        dict = {"id":[],"timestamp":[],"info":{"string":"","arguments":"","type":"","unused":""},"data":{}}
-                        index = 0
-                        argumentindex =0
-                        dict["id"].append(byte.encode('hex'))
-                    elif(index < (10+argumentindex+1)):
-                        dictargument = {}
-                        dictargument["size"] = byte.encode('hex')
-                        dictargument["data"] = []
-                    elif(index < (10+argumentindex+int(dictargument["size"],16)+1)):
-                        dictargument["data"].append(byte.encode('hex'))
-                        if(index == (10+argumentindex+int(dictargument["size"],16))):
-                            dict["data"]["arguments"].append(dictargument)
-                            argumentindex = argumentindex + int(dictargument["size"],16) + 1
-                    else:
-                        print "error 0x01"
-                        sys.exit(1)
-                elif(dict["info"]["arguments"] == "0" and dict["info"]["string"] == "0"):
-                    if(index < 10):
-                        dict["data"]["datasize"] = byte.encode('hex')
-                    elif (int(dict["data"]["datasize"],16) == 0):
-                        # end arguments
-                        logs.append(dict)
-                        dict = {"id":[],"timestamp":[],"info":{"string":"","arguments":"","type":"","unused":""},"data":{}}
-                        index = 0
-                        dict["id"].append(byte.encode('hex'))
-                else :
-                    print "error 0x02"
-                    sys.exit(2)
-            else :
-                print "error 0x03"
-                sys.exit(3)
-            index = index+1
             byte = f.read(1)
-        printed = json.dumps(logs, indent=4)
+            if byte != b'#':
+                continue
+            else :
+                byte = f.read(1)
+                if byte != b'*':
+                    continue
+                else :
+                    #Read head
+                    IDbytes = f.read(2)
+                    if len(IDbytes) != 2 :
+                        break;
+                    TIMESTAMPbytes = f.read(4)
+                    if len(TIMESTAMPbytes) != 4 :
+                        break;
+                    INFOSbytes = f.read(1)
+                    if INFOSbytes == "" :
+                        break;
+                    DATASIZEbytes = f.read(1)
+                    if DATASIZEbytes == "" :
+                        break;
 
-        #open decrypt cards
-        with open("../decrypt/card.json","r") as f:
-            decryptlist = json.loads(f.read())
-        for decryptcard in decryptlist:
-            if decryptcard["type"] == "LOG":
-                LOGcard = decryptcard["decryptCard"]
-            elif decryptcard["type"] == "WARN":
-                WARNcard = decryptcard["decryptCard"]
-            elif decryptcard["type"] == "ERR":
-                ERRcard = decryptcard["decryptCard"]
+                    #unpack head
+                    id = struct.unpack('<H', IDbytes)[0]
+                    timestamp = struct.unpack('<I', TIMESTAMPbytes)[0]
+                    infos = struct.unpack('<B', INFOSbytes)[0]
+                    dataSize = struct.unpack('<B', DATASIZEbytes)[0]
 
-        #{"id":[],"timestamp":[],"info":{"string":"","arguments":"","type":"","unused":""},"data":{}}
-        for log in logs:
-            timestamp = _byte2int(log["timestamp"],True)
-            id = "0x"+_byte2hex(log["id"],True)[-4:]+"UL"
-            if log["info"]["type"] == "00":
-                begin = "(LOG)"
-                cards = LOGcard
-            elif log["info"]["type"] == "01":
-                begin = "(WARN)"
-                cards = WARNcard
-            elif log["info"]["type"] == "11":
-                begin = "(ERR)"
-                cards = ERRcard
-            if(log["info"]["arguments"] == "1" and log["info"]["string"] == "0"):
-                for card in cards:
-                    if card["ID"] == id:
-                        values = ()
-                        for argument in log["data"]["arguments"]:
-                            values+=(_byte2int(argument["data"],True),)
-                        logged = card["Format"] % values
-                        print begin + str(timestamp) + " : " + logged
-            elif(log["info"]["arguments"] == "0" and log["info"]["string"] == "1"):
-                for card in cards:
-                    if card["ID"] == id:
-                        if "%.*s" in card["Format"]:
-                            formated = card["Format"] % (int(log["data"]["datasize"],16),"".join(log["data"]["string"]))
-                        else:
-                            formated = card["Format"] % "".join(log["data"]["string"])
-                        break
-                print begin + str(timestamp) + " : " + formated
-            elif(log["info"]["arguments"] == "0" and log["info"]["string"] == "0"):
-                for card in cards:
-                    if card["ID"] == id:
-                        print begin + str(timestamp) + " : " + card["Format"]
+                    #Process head
+                    idString = "0x"+"{0:0{1}X}".format(id,4)+"UL"
+                    binaryinfo = "{0:08b}".format(infos)
+                    type = "00"
+                    argformat = "00"
+                    if (int(version.split(".")[0]) <= 2) and (int(version.split(".")[1]) < 13):
+                        type = binaryinfo[-3:-1]
+                        argformat = binaryinfo[-5:-3]
+                    else :
+                        type = binaryinfo[-2:]
+                        argformat = binaryinfo[-4:-2]
+                    if argformat != "00":
+                        continue
+
+                    print "ID : " + str(id)
+                    print "IDString : " + str(idString)
+                    print "Timestamp : " + str(timestamp)
+                    print "Infos : " + str(infos)
+                    print "BinaryInfos : " + str(binaryinfo)
+                    print "Type : " + str(type)
+                    print "ArgFormat : " + str(argformat)
+                    print "dataSize : " + str(dataSize)
+                    string += str(timestamp) + ":"
+
+                    decrypt_card={}
+                    if type == "00":
+                        decrypt_card = LOG_card
+                    elif type == "01":
+                        string += "<WARN>"
+                        decrypt_card = WARN_card
+                    elif type == "10":
+                        string += "<ERR>"
+                        decrypt_card = ERR_card
+                    else :
+                        string += "<DBG>"
+
+                    Formats = []
+                    File = "MAIN"
+
+                    if(id < len(decrypt_card)) :
+                        index = id
+                    else :
+                        index = len(decrypt_card)-1
+
+                    while index >= 0 :
+                        if decrypt_card[index]["ID"] == idString:
+                            Formats = decrypt_card[index]["FORMATS"]
+                            File = decrypt_card[index]["FILE"]
+                            break;
+                        index = index - 1
+                    if len(Formats) <= 0 :
+                        f.read(dataSize)
+                        string+="["+"{:04d}".format(id)+"] Format not found\r\n"
+                        continue
+                    print Formats
+
+                    string+="["+"{:6}".format(File)+","+"{:04d}".format(id)+"]"
+                    index=0
+                    argIndex=0
+                    if dataSize > 0:
+                        while index < dataSize :
+                            #Read Argument Head
+                            ARGINFOSByte = f.read(1)
+                            if ARGINFOSByte == "":
+                                break
+                            ARGSIZEByte = f.read(1)
+                            if ARGSIZEByte == "":
+                                break
+                            #Unpack Argument Head
+                            ArgInfos=struct.unpack('<B', ARGINFOSByte)[0]
+                            ArgSize = struct.unpack('<B', ARGSIZEByte)[0]
+
+                            #Process Argument Head
+                            ArgInfosBinary="{0:08b}".format(ArgInfos)
+                            ArgType = ArgInfosBinary[-2:]
+                            index = index+2
+                            if ArgSize > 0:
+                                Arg = 0
+                                if ArgType == "00":
+                                    # integer
+                                    if ArgSize == 4:
+                                        ArgByte = f.read(4)
+                                        if len(ArgByte) != 4 :
+                                            break;
+                                        Arg = struct.unpack('<i', ArgByte)[0]
+                                    elif ArgSize == 2:
+                                        ArgByte = f.read(2)
+                                        if len(ArgByte) != 2 :
+                                            break;
+                                        Arg = struct.unpack('<h', ArgByte)[0]
+                                    elif ArgSize == 1:
+                                        ArgByte = f.read(1)
+                                        if ArgByte == "" :
+                                            break;
+                                        Arg = struct.unpack('<b', ArgByte)[0]
+                                elif ArgType == "01":
+                                    # unsigned integer
+                                    if ArgSize == 4:
+                                        ArgByte = f.read(4)
+                                        if len(ArgByte) != 4 :
+                                            break;
+                                        Arg = struct.unpack('<I', ArgByte)[0]
+                                    elif ArgSize == 2:
+                                        ArgByte = f.read(2)
+                                        if len(ArgByte) != 2 :
+                                            break;
+                                        Arg = struct.unpack('<H', ArgByte)[0]
+                                    elif ArgSize == 1:
+                                        ArgByte = f.read(1)
+                                        if ArgByte == "":
+                                            break
+                                        Arg = struct.unpack('<B', ArgByte)[0]
+                                elif ArgType == "11":
+                                    # string
+                                    ArgByte = f.read(ArgSize)
+                                    if len(ArgByte) != ArgSize :
+                                        break;
+                                    Arg = struct.unpack("%ds" % ArgSize, ArgByte)[0]
+                                Formats[argIndex] = Formats[argIndex].replace(r"\r\n","\r\n")
+                                if "%.*s" in Formats[argIndex]:
+                                    string += Formats[argIndex] % (ArgSize,Arg)
+                                else :
+                                    string += Formats[argIndex] % Arg
+                            else :
+                                string += str(Formats[argIndex])
+                                index = index + 1
+                            index = index + ArgSize
+                            argIndex = argIndex + 1
+                    else :
+                        string += str(Formats[0])
+                    string += "\r\n"
+    return string
+# Decrypt all BIN files in a path
+def decrypt_all(path):
+    #Concatenate BINS files
+    concatenate_bin_files(path)
+    # Generate List of BINS file
+    files_to_decrypt = glob.glob(path + "*.BIN")
+    for file in files_to_decrypt :
+        # Get version line
+        with open(file, "r") as f:
+            version = f.readline()
+        # Get version
+        catch = re.findall("<BDD [0-9]{3}\.[0-9]{3}\.[0-9]{3}_V([0-9]+\.[0-9]+)-?.*>", version)
+        #print catch
+        if len(catch) > 0:
+            # Get database file path
+            database_file = get_database_version(catch[-1])
+            if database_file != "" :
+                database_file_path = os.path.join("databases",database_file)
+                if os.path.exists(database_file_path):
+                    # Read and Parse Database file
+                    with open(database_file_path,"r") as f:
+                        decryptlist = json.loads(f.read())
+                    for decryptcard in decryptlist:
+                        if decryptcard["TYPE"] == "LOG":
+                            LOGcard = decryptcard["DECRYPTCARD"]
+                        elif decryptcard["TYPE"] == "WARN":
+                            WARNcard = decryptcard["DECRYPTCARD"]
+                        elif decryptcard["TYPE"] == "ERR":
+                            ERRcard = decryptcard["DECRYPTCARD"]
+                    #print file
+                    Log_file = decrypt_one(file,LOGcard,WARNcard,ERRcard,catch[-1])
+                    with open(file.replace(".BIN",".LOG"),"w") as f:
+                        f.write(Log_file)
+                    print file.replace(".BIN",".LOG")
+                else:
+                    print "No database : " + str(database_file_path)
 
 if __name__ == "__main__":
-   main(sys.argv[1:])
+    decrypt_all("../server/osean/decrypt/bins/")
