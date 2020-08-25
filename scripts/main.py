@@ -6,6 +6,7 @@ import dives
 import events
 import vitals
 import profile
+import decrypt
 import kml
 import re
 import utils
@@ -89,7 +90,7 @@ def main():
             os.remove(f)
 
         # Copy appropriate files in the directory and remove files outside of the time range
-        extensions = ["000", "001", "002", "003", "004", "005", "LOG"]
+        extensions = ["000", "001", "002", "003", "004", "005", "LOG", "BIN"]
         files_to_copy = list()
         for extension in extensions:
                 files_to_copy += glob.glob("../" + dataPath + "/" + mfloat_nb + "*." + extension)
@@ -112,7 +113,7 @@ def main():
             shutil.copy(f, mfloat_path)
 
         # Decrypt all BIN files
-        #decrypt.decrypt_all(mfloat_path)
+        decrypt.decrypt_all(mfloat_path)
 
         # Build list of all mermaid events recorded by the float
         mevents = events.Events(mfloat_path)
@@ -164,6 +165,8 @@ def main():
 
         # Clean directories
         for f in glob.glob(mfloat_path + "/" + mfloat_nb + "_*.LOG"):
+            os.remove(f)
+        for f in glob.glob(mfloat_path + "/" + mfloat_nb + "_*.BIN"):
             os.remove(f)
         for f in glob.glob(mfloat_path + "/" + mfloat_nb + "_*.MER"):
             os.remove(f)

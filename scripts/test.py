@@ -141,12 +141,12 @@ def dive(mfloat,date_begin,date_end):
             if dive.is_complete_dive:
                 all_filling_str = utils.find_timestampedUTC_values("filling external bladder", dive.log_content)
                 if len(all_filling_str) == 0:
-                    print str(UTCDateTime(dive.date).isoformat()) + " : Pas de debut de remplissage de vessie" 
+                    print str(UTCDateTime(dive.date).isoformat()) + " : Pas de debut de remplissage de vessie"
                     continue
                 start_filling_date = all_filling_str[-1][1]
                 all_bladder_full_str = utils.find_timestampedUTC_values("external bladder full", dive.log_content)
                 if len(all_bladder_full_str) == 0:
-                    print str(UTCDateTime(dive.date).isoformat()) + " : Pas de fin de remplissage de vessie" 
+                    print str(UTCDateTime(dive.date).isoformat()) + " : Pas de fin de remplissage de vessie"
                     continue
                 bladder_full_date =  all_bladder_full_str[-1][1]
                 bladder_full_power = utils.find_timestampedUTC_values("battery.+", dive.log_content)
@@ -174,7 +174,7 @@ def dive(mfloat,date_begin,date_end):
             if dive.is_complete_dive:
                 bypass_all_str = re.findall(":\[BYPASS.+\].*opening (\d+)ms", dive.log_content)
                 if len(bypass_all_str) == 0:
-                    print str(UTCDateTime(dive.date).isoformat()) + " : Pas de coups de bypass " 
+                    print str(UTCDateTime(dive.date).isoformat()) + " : Pas de coups de bypass "
                     continue
                 bypass_first = int(bypass_all_str[0])
                 bypass_second = [int(x) for x in bypass_all_str[1:]]
@@ -200,12 +200,12 @@ def dive(mfloat,date_begin,date_end):
             if dive.is_complete_dive:
                 all_filling_str = utils.find_timestampedUTC_values("filling external bladder", dive.log_content)
                 if len(all_filling_str) == 0:
-                    print str(UTCDateTime(dive.date).isoformat()) + " : Pas de remplissage de vessie, ne peut pas estimer une fin de plongee" 
+                    print str(UTCDateTime(dive.date).isoformat()) + " : Pas de remplissage de vessie, ne peut pas estimer une fin de plongee"
                     continue
                 start_filling_date = all_filling_str[-1][1]
                 all_bypass_str = utils.find_timestampedUTC_values(":\[BYPASS.+\].*opening (\d+)ms", dive.log_content)
                 if len(all_bypass_str) == 0:
-                    print str(UTCDateTime(dive.date).isoformat()) + " : Pas de coup de bypass, ne peut pas estimer un debut de plongee" 
+                    print str(UTCDateTime(dive.date).isoformat()) + " : Pas de coup de bypass, ne peut pas estimer un debut de plongee"
                     continue
                 first_bypass_date = all_bypass_str[0][1]
                 temps_pompe_timestamp_str = utils.find_timestampedUTC_values(":\[PUMP.+\].*during (\d+)ms", dive.log_content)
@@ -235,7 +235,7 @@ def dive(mfloat,date_begin,date_end):
                         temps_valve_min = time
                 temps_total_valve_par_plongee = sum(liste_activation_valve)
                 temps_valve += [temps_total_valve_par_plongee]
-                print str(UTCDateTime(dive.date).isoformat()) + " : " + str(round(float(tv) / 1000, 3))
+                print str(UTCDateTime(dive.date).isoformat()) + " : " + str(round(float(temps_total_valve_par_plongee) / 1000, 3))
         # print "Temps total (ms): " + str(sum(temps_valve))
         temps_valve_moyen = float(sum(temps_valve)) / dive_nb / 1000
         print "Temps moyen (s): " + str(round(temps_valve_moyen, 3))

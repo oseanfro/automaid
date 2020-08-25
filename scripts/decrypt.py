@@ -8,6 +8,11 @@ import json
 import re
 import time
 
+#1:CLIENT
+#2:SUPERUSERS
+#3:ADMINISTRATOR
+user_level = 1
+
 # Get database name with link file and version read on file
 def get_database_version(file_version) :
     if os.path.exists("databases/Databases.json"):
@@ -122,30 +127,32 @@ def decrypt_one(path,LOG_card,WARN_card,ERR_card,version):
                     if argformat != "00":
                         continue
 
-                    print "ID : " + str(id)
-                    print "IDString : " + str(idString)
-                    print "Timestamp : " + str(timestamp)
-                    print "Infos : " + str(infos)
-                    print "BinaryInfos : " + str(binaryinfo)
-                    print "Type : " + str(type)
-                    print "ArgFormat : " + str(argformat)
-                    print "dataSize : " + str(dataSize)
-                    string += str(timestamp) + ":"
+                    #print "ID : " + str(id)
+                    #print "IDString : " + str(idString)
+                    #print "Timestamp : " + str(timestamp)
+                    #print "Infos : " + str(infos)
+                    #print "BinaryInfos : " + str(binaryinfo)
+                    #print "Type : " + str(type)
+                    #print "ArgFormat : " + str(argformat)
+                    #print "dataSize : " + str(dataSize)
+
 
                     decrypt_card={}
+                    type_string = ""
                     if type == "00":
                         decrypt_card = LOG_card
                     elif type == "01":
-                        string += "<WARN>"
+                        type_string = "<WARN>"
                         decrypt_card = WARN_card
                     elif type == "10":
-                        string += "<ERR>"
+                        type_string = "<ERR>"
                         decrypt_card = ERR_card
                     else :
-                        string += "<DBG>"
+                        type_string = "<DBG>"
 
                     Formats = []
                     File = "MAIN"
+                    Level = "1"
 
                     if(id < len(decrypt_card)) :
                         index = id
@@ -156,15 +163,19 @@ def decrypt_one(path,LOG_card,WARN_card,ERR_card,version):
                         if decrypt_card[index]["ID"] == idString:
                             Formats = decrypt_card[index]["FORMATS"]
                             File = decrypt_card[index]["FILE"]
+                            Level = decrypt_card[index]["LEVEL"]
                             break;
                         index = index - 1
+
+                    if int(Level) > user_level :
+                        continue
                     if len(Formats) <= 0 :
                         f.read(dataSize)
-                        string+="["+"{:04d}".format(id)+"] Format not found\r\n"
+                        string+=str(timestamp) + ":" + type_string + "["+"{:04d}".format(id)+"] Format not found\r\n"
                         continue
-                    print Formats
-
-                    string+="["+"{:6}".format(File)+","+"{:04d}".format(id)+"]"
+                    #print Formats
+                    string += str(timestamp) + ":" + type_string
+                    string +="["+"{:6}".format(File)+","+"{:04d}".format(id)+"]"
                     index=0
                     argIndex=0
                     if dataSize > 0:
@@ -184,6 +195,7 @@ def decrypt_one(path,LOG_card,WARN_card,ERR_card,version):
                             ArgInfosBinary="{0:08b}".format(ArgInfos)
                             ArgType = ArgInfosBinary[-2:]
                             index = index+2
+                            Formats[argIndex] = Formats[argIndex].replace(r"\r\n","\r\n")
                             if ArgSize > 0:
                                 Arg = 0
                                 if ArgType == "00":
@@ -226,8 +238,11 @@ def decrypt_one(path,LOG_card,WARN_card,ERR_card,version):
                                     if len(ArgByte) != ArgSize :
                                         break;
                                     Arg = struct.unpack("%ds" % ArgSize, ArgByte)[0]
-                                Formats[argIndex] = Formats[argIndex].replace(r"\r\n","\r\n")
+                                    #replace none ascii characters
+                                    Arg = ''.join([i if ord(i) < 128 else ' ' for i in Arg])
                                 if "%.*s" in Formats[argIndex]:
+                                    #print ArgSize
+                                    #print Arg
                                     string += Formats[argIndex] % (ArgSize,Arg)
                                 else :
                                     string += Formats[argIndex] % Arg
@@ -237,7 +252,7 @@ def decrypt_one(path,LOG_card,WARN_card,ERR_card,version):
                             index = index + ArgSize
                             argIndex = argIndex + 1
                     else :
-                        string += str(Formats[0])
+                        string += str(Formats[0].replace(r"\r\n","\r\n"))
                     string += "\r\n"
     return string
 # Decrypt all BIN files in a path
@@ -245,7 +260,9 @@ def decrypt_all(path):
     #Concatenate BINS files
     concatenate_bin_files(path)
     # Generate List of BINS file
+    #print path
     files_to_decrypt = glob.glob(path + "*.BIN")
+    #print files_to_decrypt
     for file in files_to_decrypt :
         # Get version line
         with open(file, "r") as f:

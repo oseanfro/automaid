@@ -1,3 +1,0 @@
-{
-    "files": ["main.py", "dives.py", "events.py", "gps.py", "profile.py", "imu.py", "json_parse.py", "kml.py", "vitals.py", "utils.py", "test.py"]
-}
