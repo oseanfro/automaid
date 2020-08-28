@@ -238,6 +238,8 @@ def decrypt_one(path,LOG_card,WARN_card,ERR_card,version):
                                     if len(ArgByte) != ArgSize :
                                         break;
                                     Arg = struct.unpack("%ds" % ArgSize, ArgByte)[0]
+                                    if ord(Arg[ArgSize-1]) == 0 :
+                                        Arg = Arg[:-1]
                                     #replace none ascii characters
                                     Arg = ''.join([i if ord(i) < 128 else ' ' for i in Arg])
                                 if "%.*s" in Formats[argIndex]:
