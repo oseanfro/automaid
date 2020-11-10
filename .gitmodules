@@ -1,0 +1,3 @@
+[submodule "scripts/databases"]
+	path = scripts/databases
+	url = https://github.com/oseanfro/Databases
