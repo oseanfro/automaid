@@ -16,8 +16,8 @@ B	./bin/V103_Sources/icdf24.c	/^static const int32_t B = 19L;$/;"	variable	file:
 B	./src/V103/cdf24_1.c	/^static const int32_t B = 19L;$/;"	variable	file:
 B	./src/V103/icdf24.c	/^static const int32_t B = 19L;$/;"	variable	file:
 B	./src/V103EC/icdf24.c	/^static const int32_t B = 19L;$/;"	variable	file:
-BEGIN_DATE	./imu.py	/^BEGIN_DATE = "2020-06-11T12:33:05"$/;"	variable
-BLADDER_FULL	./imu.py	/^BLADDER_FULL = "2020-06-11T14:52:13"$/;"	variable
+BEGIN_DATE	./imu.py	/^BEGIN_DATE = "2020-09-29T16:03:52"$/;"	variable
+BLADDER_FULL	./imu.py	/^BLADDER_FULL = "2020-10-08T06:26:40"$/;"	variable
 C	./bin/V103EC_Sources/icdf24.c	/^static const int32_t C = 64L;$/;"	variable	file:
 C	./bin/V103_Sources/cdf24_1.c	/^static const int32_t C = 64L;$/;"	variable	file:
 C	./bin/V103_Sources/icdf24.c	/^static const int32_t C = 64L;$/;"	variable	file:
@@ -60,7 +60,7 @@ DBG_PRINT	./src/V103EC/icdf24.c	23;"	macro	file:
 DBG_PRINT	./src/V103EC/icdf24.c	27;"	macro	file:
 DECRYPTCARD	./databases/DatabaseV0_1.json	/^  "DECRYPTCARD": [],$/;"	function
 DECRYPTCARD	./databases/DatabaseV0_1.json	/^  "DECRYPTCARD": [{$/;"	function
-DIVE_NAME	./imu.py	/^DIVE_NAME="20200611-LOCEAN-MISSION3"$/;"	variable
+DIVE_NAME	./imu.py	/^DIVE_NAME = "20200929-LANDER_MISSION_5-1570M"$/;"	variable
 DateRelease	./databases/Databases.json	/^    "DateRelease": "2020-01-13"$/;"	function
 DateRelease	./databases/Databases.json	/^    "DateRelease": "2020-01-30"$/;"	function
 DateRelease	./databases/Databases.json	/^    "DateRelease": "2020-02-11"$/;"	function
@@ -68,7 +68,7 @@ DateRelease	./databases/Databases.json	/^    "DateRelease": "2020-03-03"$/;"	fun
 DateRelease	./databases/Databases.json	/^    "DateRelease": "2020-03-17"$/;"	function
 DateRelease	./databases/Databases.json	/^    "DateRelease": "2020-06-05"$/;"	function
 Dive	./dives.py	/^class Dive:$/;"	class
-END_DATE	./imu.py	/^END_DATE = "2020-06-11T15:01:31"$/;"	variable
+END_DATE	./imu.py	/^END_DATE = "2020-10-08T06:31:14"$/;"	variable
 EXEC	./bin/V103EC_Sources/Makefile	/^EXEC=icdf24_v103ec_test$/;"	macro
 EXEC	./bin/V103_Sources/Makefile	/^EXEC=icdf24_v103_test$/;"	macro
 EXEC	./src/V103/Makefile	/^EXEC=icdf24_v103_test$/;"	macro
@@ -118,7 +118,7 @@ FILE	./databases/DatabaseV0_1.json	/^    "FILE": "UPLOAD",$/;"	function
 FILE	./databases/DatabaseV0_1.json	/^    "FILE": "VALVE",$/;"	function
 FILE	./databases/DatabaseV0_1.json	/^    "FILE": "ZIO",$/;"	function
 FILE	./databases/DatabaseV0_1.json	/^    "FILE": "ZTX",$/;"	function
-FIRST_BYPASS	./imu.py	/^FIRST_BYPASS = "2020-06-11T12:48:23"$/;"	variable
+FIRST_BYPASS	./imu.py	/^FIRST_BYPASS = "2020-09-30T07:09:41"$/;"	variable
 FORMATS	./databases/DatabaseV0_1.json	/^    "FORMATS": ["    %s"],$/;"	function
 FORMATS	./databases/DatabaseV0_1.json	/^    "FORMATS": ["    FatFS v%s"],$/;"	function
 FORMATS	./databases/DatabaseV0_1.json	/^    "FORMATS": ["    FreeRTOS %s"],$/;"	function
@@ -141,7 +141,7 @@ FORMATS	./databases/DatabaseV0_1.json	/^    "FORMATS": ["    modem %s", " %s", "
 FORMATS	./databases/DatabaseV0_1.json	/^    "FORMATS": ["    near %dmbar", " %dmbar\/s", " (%dmbar", " %dmbar\/s stored)"],$/;"	function
 FORMATS	./databases/DatabaseV0_1.json	/^    "FORMATS": ["    p2t%c", "%c", ": %ux", "%dms", ", offset %dmbar"],$/;"	function
 FORMATS	./databases/DatabaseV0_1.json	/^    "FORMATS": ["    p2t%c", "%c", ": dp %dmbar", ", dt %dmdegC"],$/;"	function
-FORMATS	./databases/DatabaseV0_1.json	/^    "FORMATS": ["    pump %dms", " %u%", " %d", " %u%", " (%dms", " %u%", " %d", " %u% stored)"],$/;"	function
+FORMATS	./databases/DatabaseV0_1.json	/^    "FORMATS": ["    pump %dms", " %u%%", " %d", " %u%%", " (%dms", " %u%%", " %d", " %u%% stored)"],$/;"	function
 FORMATS	./databases/DatabaseV0_1.json	/^    "FORMATS": ["    pump is running"],$/;"	function
 FORMATS	./databases/DatabaseV0_1.json	/^    "FORMATS": ["    rate %dmbar\/s", " (%dmbar\/s stored)"],$/;"	function
 FORMATS	./databases/DatabaseV0_1.json	/^    "FORMATS": ["    serial number: %s"],$/;"	function
@@ -636,7 +636,7 @@ FORMATS	./databases/DatabaseV0_1.json	/^    "FORMATS": ["sbe41 protected cmd[%d]
 FORMATS	./databases/DatabaseV0_1.json	/^    "FORMATS": ["sbe41_init : cannot start the thread"],$/;"	function
 FORMATS	./databases/DatabaseV0_1.json	/^    "FORMATS": ["set %s", " UART%d"],$/;"	function
 FORMATS	./databases/DatabaseV0_1.json	/^    "FORMATS": ["set min 1 time 1 UART%d"],$/;"	function
-FORMATS	./databases/DatabaseV0_1.json	/^    "FORMATS": ["setting to %u%"],$/;"	function
+FORMATS	./databases/DatabaseV0_1.json	/^    "FORMATS": ["setting to %u%%"],$/;"	function
 FORMATS	./databases/DatabaseV0_1.json	/^    "FORMATS": ["soft pilotage %s"],$/;"	function
 FORMATS	./databases/DatabaseV0_1.json	/^    "FORMATS": ["speed"],$/;"	function
 FORMATS	./databases/DatabaseV0_1.json	/^    "FORMATS": ["speed1"],$/;"	function
@@ -1130,7 +1130,7 @@ Name	./databases/Databases.json	/^    "Name": "DatabaseV0_5.json",$/;"	function
 Name	./databases/Databases.json	/^    "Name": "DatabaseV1_0.json",$/;"	function
 Profile	./profile.py	/^class Profile:$/;"	class
 Profiles	./profile.py	/^class Profiles:$/;"	class
-REF_PRESSURE_REACH	./imu.py	/^REF_PRESSURE_REACH = "2020-06-11T13:49:10"$/;"	variable
+REF_PRESSURE_REACH	./imu.py	/^REF_PRESSURE_REACH = "2020-09-30T19:51:48"$/;"	variable
 SQRT2_DEN	./bin/V103EC_Sources/icdf24.c	/^static const int32_t SQRT2_DEN = 169L;$/;"	variable	file:
 SQRT2_DEN	./bin/V103_Sources/cdf24_1.c	/^static const int32_t SQRT2_DEN = 169L;$/;"	variable	file:
 SQRT2_DEN	./bin/V103_Sources/icdf24.c	/^static const int32_t SQRT2_DEN = 169L;$/;"	variable	file:
@@ -1147,12 +1147,14 @@ SRC	./bin/V103EC_Sources/Makefile	/^SRC=long_ops.c icdf24.c$/;"	macro
 SRC	./bin/V103_Sources/Makefile	/^SRC=long_ops.c icdf24.c$/;"	macro
 SRC	./src/V103/Makefile	/^SRC=long_ops.c icdf24.c$/;"	macro
 SRC	./src/V103EC/Makefile	/^SRC=long_ops.c icdf24.c$/;"	macro
-START_MISSION_5M	./imu.py	/^START_MISSION_5M = "2020-06-11T12:51:38"$/;"	variable
+START_MISSION_5M	./imu.py	/^START_MISSION_5M = "2020-09-30T07:15:37"$/;"	variable
 STEP	./databases/DatabaseV0_1.json	/^    "STEP": "0"$/;"	function
 STEP	./databases/DatabaseV0_1.json	/^    "STEP": "15"$/;"	function
-SURFACE	./imu.py	/^SURFACE = "2020-06-11T14:53:18"$/;"	variable
-SURFACING	./imu.py	/^SURFACING = "2020-06-11T14:04:19"$/;"	variable
-TIME_SHIFING_s	./imu.py	/^TIME_SHIFING_s=-(13*60+18)$/;"	variable
+SURFACE	./imu.py	/^SURFACE = "2020-10-08T06:27:45"$/;"	variable
+SURFACING	./imu.py	/^SURFACING = "2020-10-08T00:43:03"$/;"	variable
+TAKE_OFF	./imu.py	/^TAKE_OFF = "2020-10-08T00:53:06"$/;"	variable
+TIME_SHIFTING_date_reset	./imu.py	/^TIME_SHIFTING_date_reset="2020-07-01T09:00:00"$/;"	variable
+TIME_SHIFTING_derive_s_day	./imu.py	/^TIME_SHIFTING_derive_s_day=0.872$/;"	variable
 TYPE	./databases/DatabaseV0_1.json	/^  "TYPE": "DBG"$/;"	function
 TYPE	./databases/DatabaseV0_1.json	/^  "TYPE": "ERR"$/;"	function
 TYPE	./databases/DatabaseV0_1.json	/^  "TYPE": "LOG"$/;"	function
@@ -1175,11 +1177,9 @@ __init__	./dives.py	/^    def __init__(self, base_path, log_name, events, profil
 __init__	./events.py	/^    def __init__(self, base_path=None):$/;"	member	class:Events
 __init__	./events.py	/^    def __init__(self, file_name, header, binary):$/;"	member	class:Event
 __init__	./gps.py	/^    def __init__(self, date, latitude, longitude, clockdrift, clockfreq, source):$/;"	member	class:GPS
-__init__	./imu.py	/^    def __init__(self, base_path,input_path, log_name, time_shifting_s,begin_date,end_date):$/;"	member	class:Imu
+__init__	./imu.py	/^    def __init__(self, base_path,input_path, log_name,begin_date,end_date):$/;"	member	class:Imu
 __init__	./profile.py	/^    def __init__(self, base_path=None):$/;"	member	class:Profiles
 __init__	./profile.py	/^    def __init__(self, file_name, header, binary):$/;"	member	class:Profile
-_byte2hex	./decrypt.py	/^def _byte2hex(list,reversed):$/;"	function
-_byte2int	./decrypt.py	/^def _byte2int(list,reversed):$/;"	function
 add_list	./auto_test.py	/^    def add_list(self):$/;"	member	class:Input
 add_will_overflow	./bin/V103EC_Sources/long_ops.c	/^int add_will_overflow (int32_t x, int32_t y) {$/;"	function
 add_will_overflow	./bin/V103_Sources/long_ops.c	/^int add_will_overflow (int32_t x, int32_t y) {$/;"	function
@@ -1201,8 +1201,10 @@ clockfreq	./gps.py	/^    clockfreq = None$/;"	variable	class:GPS
 compute_events_station_location	./dives.py	/^    def compute_events_station_location(self, next_dive):$/;"	member	class:Dive
 compute_station_location	./events.py	/^    def compute_station_location(self, drift_begin_gps, drift_end_gps):$/;"	member	class:Event
 concatenate_bin_files	./decrypt.py	/^def concatenate_bin_files(path):$/;"	function
+concatenate_files	./utils.py	/^def concatenate_files(path):$/;"	function
 concatenate_log_files	./dives.py	/^def concatenate_log_files(path):$/;"	function
 continiousprofile	./profile.py	/^    continiousprofile = None$/;"	variable	class:Profile
+convert2dict	./utils.py	/^def convert2dict(obj):$/;"	function
 correct_clock_drift	./events.py	/^    def correct_clock_drift(self, gps_descent, gps_ascent):$/;"	member	class:Event
 correct_date	./events.py	/^    def correct_date(self):$/;"	member	class:Event
 correct_events_clock_drift	./dives.py	/^    def correct_events_clock_drift(self):$/;"	member	class:Dive
@@ -1210,7 +1212,7 @@ counts2pascal	./utils.py	/^def counts2pascal(data):$/;"	function
 criterion	./events.py	/^    criterion = None$/;"	variable	class:Event
 data	./events.py	/^    data = None$/;"	variable	class:Event
 data	./profile.py	/^    data = None$/;"	variable	class:Profile
-dataPath	./main.py	/^dataPath = "server"$/;"	variable
+dataPath	./configuration.py	/^dataPath = "server"$/;"	variable
 dataPath	./tool_float_test.py	/^dataPath = "..\/server"$/;"	variable
 data_pressure	./profile.py	/^    data_pressure = None$/;"	variable	class:Profile
 data_salinity	./profile.py	/^    data_salinity = None$/;"	variable	class:Profile
@@ -1367,7 +1369,7 @@ dates	./imu.py	/^    dates = None$/;"	variable	class:Imu
 day	./auto_test.py	/^    day = None$/;"	variable	class:Input
 decimated_fs	./events.py	/^    decimated_fs = None  # Sampling frequency of the received data$/;"	variable	class:Event
 decrypt_all	./decrypt.py	/^def decrypt_all(path):$/;"	function
-decrypt_one	./decrypt.py	/^def decrypt_one(path,LOG_card,WARN_card,ERR_card):$/;"	function
+decrypt_one	./decrypt.py	/^def decrypt_one(path,LOG_card,WARN_card,ERR_card,version):$/;"	function
 depth	./events.py	/^    depth = None$/;"	variable	class:Event
 directory_name	./dives.py	/^    directory_name = None$/;"	variable	class:Dive
 dive	./test.py	/^def dive(mfloat,date_begin,date_end):$/;"	function
@@ -1522,7 +1524,7 @@ environment	./events.py	/^    environment = None$/;"	variable	class:Event
 events	./dives.py	/^    events = None$/;"	variable	class:Dive
 events	./events.py	/^    events = None$/;"	variable	class:Events
 events	./profile.py	/^    events = None$/;"	variable	class:Profiles
-events_plotly	./main.py	/^events_plotly = False$/;"	variable
+events_plotly	./configuration.py	/^events_plotly = False$/;"	variable
 export_path	./dives.py	/^    export_path = None$/;"	variable	class:Dive
 export_path	./parse.json	/^        "export_path": "..\/server\/20000108-19h29m58sNoDive\/"$/;"	function
 export_path	./parse.json	/^        "export_path": "..\/server\/20000108-20h47m28sNoDive\/"$/;"	function
@@ -1669,17 +1671,18 @@ export_path	./parse.json	/^        "export_path": "..\/server\/20190514-04h27m44
 export_path	./parse.json	/^        "export_path": "..\/server\/20190514-06h26m39s\/"$/;"	function
 file_name	./events.py	/^    file_name = None$/;"	variable	class:Event
 file_name	./profile.py	/^    file_name = None$/;"	variable	class:Profile
-filterDate	./main.py	/^filterDate = {$/;"	variable
+file_path	./tool_invert_raw.py	/^file_path = "tool_invert_raw\/"$/;"	variable
+filterDate	./configuration.py	/^filterDate = {$/;"	variable
 filterDate	./tool_float_test.py	/^filterDate = [$/;"	variable
 find_measured_sampling_frequency	./events.py	/^    def find_measured_sampling_frequency(self):$/;"	member	class:Event
-find_timestampedUTC_values	./utils.py	/^def find_timestampedUTC_values(regexp, content):$/;"	function
 find_timestamped_values	./utils.py	/^def find_timestamped_values(regexp, content):$/;"	function
 folderbeg	./kml.py	/^def folderbeg(name):$/;"	function
 format_log	./utils.py	/^def format_log(log):$/;"	function
 framelist	./auto_test.py	/^    framelist = None$/;"	variable	class:Input
 generate	./kml.py	/^def generate(dest_path, mfloat_name, dives):$/;"	function
+generate	./main.py	/^def generate(mfloat, datapath, filterdate):$/;"	function
 generateJSON	./dives.py	/^    def generateJSON(self):$/;"	member	class:Dive
-generate_csv_file	./main.py	/^generate_csv_file = False$/;"	variable
+generate_csv_file	./configuration.py	/^generate_csv_file = False$/;"	variable
 generate_datetime_log	./dives.py	/^    def generate_datetime_log(self):$/;"	member	class:Dive
 generate_dive_plotly	./dives.py	/^    def generate_dive_plotly(self, csv_file):$/;"	member	class:Dive
 generate_events_plot	./dives.py	/^    def generate_events_plot(self):$/;"	member	class:Dive
@@ -1713,12 +1716,6 @@ header	./profile.py	/^    header = None$/;"	variable	class:Profile
 heading	./imu.py	/^    heading = None$/;"	variable	class:Imu
 hexoutput	./profile.py	/^    hexoutput = None$/;"	variable	class:Profile
 html	./tool_invert_mer/20180412T133807.01_5ACFECDC.MER.DET.WLT5.html	/^<html><head><meta charset="utf-8" \/><\/head><body><script type="text\/javascript">\/**$/;"	function
-html	./tool_invert_raw/1553758471.958038.html	/^<html><head><meta charset="utf-8" \/><\/head><body><script type="text\/javascript">\/**$/;"	function
-html	./tool_invert_raw/1553766924.310180.html	/^<html><head><meta charset="utf-8" \/><\/head><body><script type="text\/javascript">\/**$/;"	function
-html	./tool_invert_raw/1553771378.490936.html	/^<html><head><meta charset="utf-8" \/><\/head><body><script type="text\/javascript">\/**$/;"	function
-html	./tool_invert_raw/2019-03-19/2019-03-19T10_09_00.349517.html	/^<html><head><meta charset="utf-8" \/><\/head><body><script type="text\/javascript">\/**$/;"	function
-html	./tool_invert_raw/2019-03-19/2019-03-19T12_26_56.134613.html	/^<html><head><meta charset="utf-8" \/><\/head><body><script type="text\/javascript">\/**$/;"	function
-html	./tool_invert_raw/2019-03-19/2019-03-19T14_23_20.733093.html	/^<html><head><meta charset="utf-8" \/><\/head><body><script type="text\/javascript">\/**$/;"	function
 icdf24	./bin/V103EC_Sources/icdf24.c	/^int icdf24 (int32_t* x, size_t lx, size_t K, int normalized) {$/;"	function
 icdf24	./bin/V103_Sources/icdf24.c	/^int icdf24 (int32_t* x, size_t lx, size_t K, int normalized) {$/;"	function
 icdf24	./src/V103/icdf24.c	/^int icdf24 (int32_t* x, size_t lx, size_t K, int normalized) {$/;"	function
@@ -2022,6 +2019,7 @@ mmd_name	./parse.json	/^        "mmd_name": "0054_5CDA43B2.MER", $/;"	function
 mmd_name	./parse.json	/^        "mmd_name": "0054_5CDA5F92.MER", $/;"	function
 mmd_name	./parse.json	/^        "mmd_name": "0054_5CDA89A4.MER", $/;"	function
 mmd_name	./parse.json	/^        "mmd_name": null, $/;"	function
+mode	./tool_invert_raw.py	/^mode = "Binary"$/;"	variable
 month	./auto_test.py	/^    month = None$/;"	variable	class:Input
 normalized_2_cdf24	./bin/V103EC_Sources/icdf24.c	/^static void normalized_2_cdf24 (int32_t* x, size_t lx, size_t K) {$/;"	function	file:
 normalized_2_cdf24	./bin/V103_Sources/cdf24_1.c	/^static void normalized_2_cdf24 (int32_t* x, size_t lx, size_t K) {$/;"	function	file:
@@ -2050,8 +2048,9 @@ plotly_roll	./imu.py	/^    def plotly_roll(self, export_path,begins,ends):$/;"	m
 plotly_salinity	./profile.py	/^    def plotly_salinity(self, export_path):$/;"	member	class:Profile
 plotly_temperature	./profile.py	/^    def plotly_temperature(self, export_path, csv_file):$/;"	member	class:Profile
 plotly_vertical_shape	./utils.py	/^def plotly_vertical_shape(position, ymin=0, ymax=1, name='name', color='blue'):$/;"	function
+process	./main.py	/^def process(mfloat_path, mfloat, begin, end):$/;"	function
 profiles	./dives.py	/^    profiles = None$/;"	variable	class:Dive
-redo	./main.py	/^redo = False$/;"	variable
+redo	./main.py	/^redo = "True"$/;"	variable
 requested	./events.py	/^    requested = None$/;"	variable	class:Event
 roll	./imu.py	/^    roll = None$/;"	variable	class:Imu
 root	./auto_test.py	/^    root = None$/;"	variable	class:Input
@@ -2059,6 +2058,8 @@ runningpumpbeforeprofile	./profile.py	/^    runningpumpbeforeprofile = None$/;"	
 s41_environment	./dives.py	/^    s41_environment = None$/;"	variable	class:Dive
 s41_name	./dives.py	/^    s41_name = None$/;"	variable	class:Dive
 samplerate	./profile.py	/^    samplerate = None$/;"	variable	class:Profile
+sampling_file	./tool_invert_raw.py	/^sampling_file = "tool_invert_raw\/2019-10-10_freq"$/;"	variable
+sampling_freq	./tool_invert_raw.py	/^sampling_freq = 40.000000$/;"	variable
 set_environment	./events.py	/^    def set_environment(self, environment):$/;"	member	class:Event
 snr	./events.py	/^    snr = None$/;"	variable	class:Event
 source	./gps.py	/^    source = None$/;"	variable	class:GPS
@@ -2094,6 +2095,7 @@ to_sac_and_mseed	./events.py	/^    def to_sac_and_mseed(self, export_path, stati
 top_bin_interval	./profile.py	/^    top_bin_interval = None$/;"	variable	class:Profile
 top_bin_max	./profile.py	/^    top_bin_max = None$/;"	variable	class:Profile
 top_bin_size	./profile.py	/^    top_bin_size = None$/;"	variable	class:Profile
+totimestamp	./utils.py	/^def totimestamp(dt, epoch = datetime(1970,1,1)):$/;"	function
 trig	./events.py	/^    trig = None$/;"	variable	class:Event
 unnormalized_cdf24	./bin/V103EC_Sources/icdf24.c	/^static void unnormalized_cdf24 (int32_t* x, size_t lx, size_t K) {$/;"	function	file:
 unnormalized_cdf24	./bin/V103_Sources/cdf24_1.c	/^static void unnormalized_cdf24 (int32_t* x, size_t lx, size_t K) {$/;"	function	file:
@@ -2101,5 +2103,6 @@ unnormalized_cdf24	./bin/V103_Sources/icdf24.c	/^static void unnormalized_cdf24 
 unnormalized_cdf24	./src/V103/cdf24_1.c	/^static void unnormalized_cdf24 (int32_t* x, size_t lx, size_t K) {$/;"	function	file:
 unnormalized_cdf24	./src/V103/icdf24.c	/^static void unnormalized_cdf24 (int32_t* x, size_t lx, size_t K) {$/;"	function	file:
 unnormalized_cdf24	./src/V103EC/icdf24.c	/^static void unnormalized_cdf24 (int32_t* x, size_t lx, size_t K) {$/;"	function	file:
+user_level	./decrypt.py	/^user_level = 3$/;"	variable
 verify_format_log	./utils.py	/^def verify_format_log(log):$/;"	function
 year	./auto_test.py	/^    year = None$/;"	variable	class:Input

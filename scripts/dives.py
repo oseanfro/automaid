@@ -294,7 +294,8 @@ class Dive:
                                                           name="MERMAID events",
                                                           color="purple")
         #data = [mermaid_events_line, depth_line]
-        data = [bypass_line, valve_line, pump_line,mermaid_events_line, depth_line]
+        data = [bypass_line, valve_line,pump_line,depth_line]
+        #data = [bypass_line, valve_line, pump_line,mermaid_events_line, depth_line]
 
         layout = graph.Layout(title=self.directory_name + '/' + self.log_name,
                               xaxis=dict(

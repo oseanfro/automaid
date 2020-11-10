@@ -11,7 +11,7 @@ import time
 #1:CLIENT
 #2:SUPERUSERS
 #3:ADMINISTRATOR
-user_level = 1
+user_level = 3
 
 # Get database name with link file and version read on file
 def get_database_version(file_version) :
