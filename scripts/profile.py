@@ -15,7 +15,6 @@ import matplotlib.pyplot as plt
 
 class Profiles:
     events = None
-
     def __init__(self, base_path=None):
         # Initialize event list (if list is declared above, then elements of the previous instance are kept in memory)
         self.profiles = list()
@@ -141,9 +140,9 @@ class Profile:
     def plotly_temperature(self, export_path, csv_file):
         if list(self.data):
             # Check if file exist
-            export_path = export_path + \
-                UTCDateTime.strftime(UTCDateTime(self.date), "%Y%m%dT%H%M%S") + \
-                "." + self.file_name + ".TEMP" + ".html"
+            export_name = UTCDateTime.strftime(UTCDateTime(self.date), "%Y%m%dT%H%M%S") + \
+            "." + self.file_name + ".TEMP" + ".html"
+            export_path = export_path + export_name
             if csv_file:
                 csv_path = export_path.replace(".TEMP.html",".csv")
                 rows = zip(self.data_pressure,self.data_temperature,self.data_salinity)
@@ -152,7 +151,9 @@ class Profile:
                     for row in rows:
                         csv_file.writerow(row)
             if os.path.exists(export_path):
+                print export_path + "already exist"
                 return
+            print export_name
             # Add acoustic values to the graph
             data_line = graph.Scatter(x=self.data_temperature,
                                       y=self.data_pressure,
@@ -186,6 +187,7 @@ class Profile:
                 UTCDateTime.strftime(UTCDateTime(self.date), "%Y%m%dT%H%M%S") + \
                 "." + self.file_name + ".SAL" + ".html"
             if os.path.exists(export_path):
+                print export_path + "already exist"
                 return
             # Add acoustic values to the graph
             data_line = graph.Scatter(x=self.data_salinity,

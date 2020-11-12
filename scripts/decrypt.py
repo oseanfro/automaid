@@ -14,11 +14,12 @@ import time
 user_level = 3
 
 # Get database name with link file and version read on file
-def get_database_version(file_version) :
+def get_database_version(file_version,model) :
     if os.path.exists("databases/Databases.json"):
         with open("databases/Databases.json","r") as f:
             databases = json.loads(f.read())
         # get major and minor versions
+        
         file_version=file_version.split(".")
         if (len(file_version) == 2) :
             file_major = int(file_version[0])
@@ -26,23 +27,26 @@ def get_database_version(file_version) :
             #print "FILE MAJOR : " + str(file_major)
             #print "FILE MINOR : " + str(file_minor)
             for database in databases :
-                database_minor_max = 2147483647
-                database_major_max = 2147483647
-                databaseMin_version = database["MinVersion"].split(".")
-                database_major_min = int(databaseMin_version[0])
-                database_minor_min = int(databaseMin_version[1])
-                if database["MaxVersion"] != "None":
-                    databaseMax_version = database["MaxVersion"].split(".")
-                    database_major_max = int(databaseMax_version[0])
-                    database_minor_max = int(databaseMax_version[1])
-                #print "MAJOR MAX : " + str(database_major_max)
-                #print "MAJOR MIN : " + str(database_major_min)
-                #print "MINOR MAX : " +str(database_minor_max)
-                #print "MINOR MIN : " +str(database_minor_min)
-                if ((file_major > database_major_min) and (file_major < database_minor_max)) \
-                or ((file_major >= database_major_min) and (file_major <= database_major_max) \
-                and (file_minor >= database_minor_min) and (file_minor <= database_minor_max)) :
-                    return database["Name"]
+                print "Model : " + str(database["Model"])
+                if not database["Model"] or (model == database["Model"]):
+                    database_minor_max = 2147483647
+                    database_major_max = 2147483647
+                    databaseMin_version = database["MinVersion"].split(".")
+                    database_major_min = int(databaseMin_version[0])
+                    database_minor_min = int(databaseMin_version[1])
+                    if database["MaxVersion"] != "None":
+                        databaseMax_version = database["MaxVersion"].split(".")
+                        database_major_max = int(databaseMax_version[0])
+                        database_minor_max = int(databaseMax_version[1])
+                    #print "MAJOR MAX : " + str(database_major_max)
+                    #print "MAJOR MIN : " + str(database_major_min)
+                    #print "MINOR MAX : " +str(database_minor_max)
+                    #print "MINOR MIN : " +str(database_minor_min)
+                    if ((file_major > database_major_min) and (file_major < database_minor_max)) \
+                    or ((file_major >= database_major_min) and (file_major <= database_major_max) \
+                    and (file_minor >= database_minor_min) and (file_minor <= database_minor_max)) :
+                        print database["Name"]
+                        return database["Name"]
                 #print "\r\n"
             print "No Database available for : " + str(file_version)
             return ""
@@ -267,6 +271,7 @@ def decrypt_all(path):
     #print files_to_decrypt
     for file in files_to_decrypt :
         # Get version line
+        print file
         with open(file, "r") as f:
             version = f.readline()
         # Get version
@@ -274,7 +279,7 @@ def decrypt_all(path):
         #print catch
         if len(catch) > 0:
             # Get database file path
-            database_file = get_database_version(catch[-1])
+            database_file = get_database_version(catch[-1],0)
             if database_file != "" :
                 database_file_path = os.path.join("databases",database_file)
                 if os.path.exists(database_file_path):

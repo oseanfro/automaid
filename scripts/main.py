@@ -62,7 +62,7 @@ def process(mfloat_path, mfloat, begin, end):
         if events_plotly:
             dive.generate_events_plotly()
         dive.generate_events_sac()
-        dive.generate_profile_plotly()
+        dive.generate_profile_plotly(generate_csv_file)
 
     # Plot vital data
     kml.generate(mfloat_path, mfloat, mdives)

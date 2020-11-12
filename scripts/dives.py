@@ -144,7 +144,6 @@ class Dive:
                     "<PARAMETERS>.+</PILOTS>", content, re.DOTALL)[0]
                 self.profiles = profiles.get_profiles_between(
                     self.date, self.end_date)
-
         # Find the position of the float
         self.gps_list = gps.get_gps_list(
             self.log_content, self.mmd_environment, self.mmd_name)
