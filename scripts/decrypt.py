@@ -11,27 +11,26 @@ import time
 #1:CLIENT
 #2:SUPERUSERS
 #3:ADMINISTRATOR
-user_level = 3
+user_level = 1
 
 # Get database name with link file and version read on file
 def get_database_version(file_version,model) :
-    if os.path.exists("databases/Databases.json"):
-        with open("databases/Databases.json","r") as f:
+    absFilePath = os.path.abspath(__file__)
+    scriptpath, scriptfilename = os.path.split(absFilePath)
+    database_path = os.path.join(scriptpath,"databases/Databases.json")
+    if os.path.exists(database_path):
+        with open(database_path,"r") as f:
             databases = json.loads(f.read())
         # get major and minor versions
-        
         file_version=file_version.split(".")
         file_major = 2
         file_minor = 17
-        
         if file_version[0] :
             file_major = int(file_version[0])
         if file_version[1] :
             file_minor = int(file_version[1])
-        print "FILE MAJOR : " + str(file_major)
-        print "FILE MINOR : " + str(file_minor)
         for database in databases :
-            print "Model : " + str(database["Model"])
+            #print "Model : " + str(database["Model"])
             if not database["Model"] or (model == database["Model"]):
                 database_minor_max = 2147483647
                 database_major_max = 2147483647
@@ -280,19 +279,16 @@ def decrypt_all(path):
         #print catch
         if len(catch) > 0:
             # Get database file path
-            print catch[-1]
             file_version=catch[-1].split(".")
             file_major = '2'
             file_minor = '17'
-            
+
             if file_version[0] :
                 file_major = file_version[0]
             if file_version[1] :
                 file_minor = file_version[1]
-                
+
             file_version = file_major+'.'+file_minor
-            print file_version
-                
             database_file = get_database_version(file_version,0)
             if database_file != "" :
                 database_file_path = os.path.join("databases",database_file)

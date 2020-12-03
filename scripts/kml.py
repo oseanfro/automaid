@@ -38,9 +38,42 @@ def generate(dest_path, mfloat_name, dives):
 
     kml_string += docend()
     kml_string += kmlend()
-    with open(dest_path + "position.kml", 'w') as f:
+
+    processed_path = ""
+    if (dest_path[-1] == '/'):
+        processed_path = os.path.join(os.path.dirname(os.path.dirname(dest_path)), "processed","position.kml")
+    else:
+        processed_path = os.path.join(dest_path, "position.kml")
+
+    with open(processed_path, 'w') as f:
         f.write(kml_string)
 
+
+def generate_from_mail(dest_path, mfloat_name, datamails, point_name):
+    if len(datamails) < 1:
+        return
+    kml_string = str()
+    kml_string += kmlbeg()
+    kml_string += docbeg(mfloat_name)
+    kml_string += linestyle(mfloat_name)
+    kml_string += markerstyle()
+
+    kml_string += folderbeg("GPS points")
+    kml_string += gps_point_marker_from_mail(datamails,point_name)
+    kml_string += folderend()
+
+    # kmlfile += look_at_auto(mermaid, 0)
+    kml_string += docend()
+    kml_string += kmlend()
+    processed_path = ""
+
+    if (dest_path[-1] == '/'):
+        processed_path = os.path.join(os.path.dirname(os.path.dirname(dest_path)), "processed","position.kml")
+    else:
+        processed_path = os.path.join(dest_path, "position.kml")
+
+    #with open(processed_path, 'w') as f:
+        #f.write(kml_string)
 
 def generate_from_file(input_path,dest_path, name):
     markers = {}
@@ -291,6 +324,20 @@ def gps_point_marker(dives):
         </Placemark>"""
     return string
 
+def gps_point_marker_from_mail(datamails,name):
+    string = ""
+    for datamail in datamails:
+        pos = str( datamail["longitude"]) + "," + str(datamail["latitude"]) + ",0"
+        string += """
+        <Placemark>
+            <name>""" + str(datamail[name]) + """</name>
+            <visibility>1</visibility>
+            <styleUrl> #markerStyle2 </styleUrl>
+            <Point>
+                <coordinates> """ + pos + """ </coordinates>
+            </Point>
+        </Placemark>"""
+    return string
 
 def interpolated_point_marker(dives):
     dfmt = "%d/%m/%y %H:%M"
@@ -353,7 +400,6 @@ def interpolated_point_marker(dives):
 
 if __name__ == "__main__":
     generate_from_file(sys.argv[1],sys.argv[2],sys.argv[3])
-
 
 def last_pos_marker(dives):
     last_dive = dives[-1]

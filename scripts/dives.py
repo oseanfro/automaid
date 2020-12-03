@@ -79,7 +79,7 @@ class Dive:
         elif not self.is_complete_dive:
             self.directory_name += "IcDive"
 
-        self.export_path = self.base_path + self.directory_name + "/"
+        self.export_path = os.path.join(os.path.dirname(os.path.dirname(self.base_path)), "processed", self.directory_name) + "/"
 
         # Get the station name
         if self.is_dive or self.is_init:
@@ -297,9 +297,7 @@ class Dive:
                                                           ymax=maximum,
                                                           name="MERMAID events",
                                                           color="purple")
-        #data = [mermaid_events_line, depth_line]
-        data = [bypass_line, valve_line,pump_line,depth_line]
-        #data = [bypass_line, valve_line, pump_line,mermaid_events_line, depth_line]
+        data = [bypass_line, valve_line, pump_line,mermaid_events_line, depth_line]
 
         layout = graph.Layout(title=self.directory_name + '/' + self.log_name,
                               xaxis=dict(
@@ -495,6 +493,9 @@ def get_dives(path, events, profiles):
             print "wrong format"
     return dives
 
+def get_buoy(self):
+    list = self.base_path.split("/")
+    return (list[len(list) - 3])
 
 # Concatenate .000 files .LOG files in the path
 def concatenate_log_files(path):

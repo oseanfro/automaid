@@ -148,10 +148,10 @@ def main():
     if "scripts" in os.listdir("."):
         os.chdir("scripts")
 
-    # Create processed directory if it doesn't exist
-    if not os.path.exists("../processed/"):
-        os.mkdir("../processed/")
-
+    outputPath = "../processed"
+    # Create ouput directory
+    if not os.path.exists(outputPath):
+        os.mkdir(outputPath)
     # Search Mermaid floats
     mfloats = [p.split("/")[-1][:-4] for p in glob.glob("../" + dataPath + "/*.vit")]
 
@@ -160,23 +160,17 @@ def main():
         print ""
         print "> " + mfloat
 
-        # Set the path for the float
-        mfloat_path = "../processed/" + mfloat + "/"
-
         # Get float number
         mfloat_nb = re.findall("(\d+)$", mfloat)[0]
+        mfloat_path = os.path.join(outputPath,mfloat)
+        mfloat_src_path = os.path.join(mfloat_path,"source")
 
-        # Delete the directory if the redo flag is true
-        if redo and os.path.exists(mfloat_path):
-            shutil.rmtree(mfloat_path)
-
-        # Create directory for the float
+        # Create float directory
         if not os.path.exists(mfloat_path):
             os.mkdir(mfloat_path)
-
-        # Remove existing files in the processed directory (if the script have been interrupted the time before)
-        for f in glob.glob(mfloat_path + "*.*"):
-            os.remove(f)
+        # Create directory for the source float
+        if not os.path.exists(mfloat_src_path):
+            os.mkdir(mfloat_src_path)
 
         # Copy appropriate files in the directory and remove files outside of the time range
         extensions = ["000", "001", "002", "003", "004", "005", "LOG", "BIN"]
@@ -196,28 +190,13 @@ def main():
 
         # Add .vit and .out files
         files_to_copy += glob.glob("../" + dataPath + "/" + mfloat + "*")
-
         # Copy files
         for f in files_to_copy:
-            shutil.copy(f, mfloat_path)
-
-        mdives =[]
+            shutil.copy(f, mfloat_src_path)
         try:
-            mdives = process(mfloat_path, mfloat, begin, end)
+            generate(mfloat,outputPath,filterDate);
         except:
-            mdives = []
             print "error on process"
-        else :
-            # Clean directories
-            print "process ok"
-            for f in glob.glob(mfloat_path + "/" + mfloat_nb + "_*.LOG"):
-                os.remove(f)
-            for f in glob.glob(mfloat_path + "/" + mfloat_nb + "_*.BIN"):
-                os.remove(f)
-            for f in glob.glob(mfloat_path + "/" + mfloat_nb + "_*.MER"):
-                os.remove(f)
-            for f in glob.glob(mfloat_path + "/" + mfloat_nb + "_*.S41"):
-                os.remove(f)
 
 
 if __name__ == "__main__":

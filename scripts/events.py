@@ -81,7 +81,11 @@ class Event:
                 self.requested = False
                 self.trig = int(catch_trig[0])
                 date = re.findall(" DATE=(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6})", header, re.DOTALL)
-                self.date = UTCDateTime.strptime(date[0], "%Y-%m-%dT%H:%M:%S.%f")
+                try:
+                    self.date = UTCDateTime.strptime(date[0], "%Y-%m-%dT%H:%M:%S.%f")
+                except IndexError as e:
+                    date = re.findall(" DATE=(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})", header, re.DOTALL)
+                    self.date = UTCDateTime.strptime(date[0], "%Y-%m-%dT%H:%M:%S")
                 self.depth = int(re.findall(" PRESSURE=(-?\d+)", self.header)[0])
                 self.temperature = int(re.findall(" TEMPERATURE=(-?\d+)", self.header)[0])
                 self.criterion = float(re.findall(" CRITERION=(\d+\.\d+)", self.header)[0])
@@ -156,23 +160,28 @@ class Event:
         normalized = re.findall(" NORMALIZED=(\d+)", self.environment)[0]
         edge_correction = re.findall(" EDGES_CORRECTION=(\d+)", self.environment)[0]
         # Write cdf24 data
-        with open("bin/wtcoeffs", 'w') as f:
+        automaid_dir = os.path.dirname(__file__)
+        wtcoeffsname = os.path.join(automaid_dir, 'bin/wtcoeffs')
+        icdf24_v103ec_test = os.path.join(automaid_dir, 'bin/icdf24_v103ec_test')
+        icdf24_v103_test = os.path.join(automaid_dir, 'bin/icdf24_v103_test')
+        icdf24_data = os.path.join(automaid_dir, "bin/wtcoeffs.icdf24_" + self.scales)
+        with open(wtcoeffsname, 'w') as f:
             f.write(self.binary)
         # Do icd24
         if edge_correction == "1":
             print "icdf24_v103ec_test"
-            subprocess.check_output(["bin/icdf24_v103ec_test",
+            subprocess.check_output([icdf24_v103ec_test,
                                      self.scales,
                                      normalized,
-                                     "bin/wtcoeffs"])
+                                     wtcoeffsname])
         else:
             print "icdf24_v103_test"
-            subprocess.check_output(["bin/icdf24_v103_test",
+            subprocess.check_output([icdf24_v103_test,
                                     self.scales,
                                     normalized,
-                                    "bin/wtcoeffs"])
+                                    wtcoeffsname])
         # Read icd24 data
-        self.data = numpy.fromfile("bin/wtcoeffs.icdf24_" + self.scales, numpy.int32)
+        self.data = numpy.fromfile(icdf24_data, numpy.int32)
 
     def get_export_file_name(self):
         export_file_name = UTCDateTime.strftime(UTCDateTime(self.date), "%Y%m%dT%H%M%S") + "." + self.file_name
