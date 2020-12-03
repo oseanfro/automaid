@@ -7,9 +7,13 @@ from obspy import UTCDateTime
 from obspy.core.stream import Stream
 from obspy.core.trace import Trace
 from obspy.core.trace import Stats
+import matplotlib as mpl
+if os.environ.get('DISPLAY','') == '':
+    print "no display found. Using non-interactive Agg backend"
+    mpl.use('agg',warn=False, force=True)
+import matplotlib.pyplot as plt
 import plotly.graph_objs as graph
 import plotly.offline as plotly
-import matplotlib.pyplot as plt
 import utils
 import gps
 
@@ -59,6 +63,12 @@ class Event:
     station_loc = None
     drift_correction = None
     stanford_rounds = None
+    stanford_duration = None
+    stanford_period = None
+    stanford_win_len = None
+    stanford_win_type = None
+    stanford_overlap = None
+    stanford_db_offset = None
 
     def __init__(self, file_name, header, binary):
         self.file_name = file_name
@@ -98,6 +108,36 @@ class Event:
 
     def set_environment(self, environment):
         self.environment = environment
+        duration = re.findall("DURATION_h=(\d+)", self.environment)
+        if len(duration) > 0 :
+            self.stanford_duration = duration[0]
+        else :
+            self.stanford_duration = ""
+        period = re.findall("PROCESS_PERIOD_h=(\d+)", self.environment)
+        if len(duration) > 0 :
+            self.stanford_period = period[0]
+        else :
+            self.stanford_period = ""
+        win_len = re.findall("WINDOW_LEN=(\d+)", self.environment)
+        if len(duration) > 0 :
+            self.stanford_win_len = win_len[0]
+        else :
+            self.stanford_win_len = ""
+        win_type = re.findall("WINDOW_TYPE=(\w+)", self.environment)
+        if len(duration) > 0 :
+            self.stanford_win_type = win_type[0]
+        else :
+            self.stanford_win_type = ""
+        overlap = re.findall("OVERLAP_PERCENT=(\d+)", self.environment)
+        if len(duration) > 0 :
+            self.stanford_overlap = overlap[0]
+        else :
+            self.stanford_overlap = ""
+        db_offset = re.findall("dB_OFFSET=(\d+)", self.environment)
+        if len(duration) > 0 :
+            self.stanford_db_offset = db_offset[0]
+        else :
+            self.stanford_db_offset = ""
     def is_stanford_event(self):
         if self.stanford_rounds :
             return True
@@ -201,15 +241,30 @@ class Event:
     def __get_figure_title(self):
         title = "" + self.date.isoformat() \
                 + "     Fs = " + str(self.decimated_fs) + "Hz\n" \
-                + "     Depth: " + str(self.depth) + " m" \
-                + "     Temperature: " + str(self.temperature) + " degC" \
+                + "     Depth: " + str(self.depth) + " m\n" \
+                + "     Temperature: " + str(self.temperature) + " degC\n" \
                 + "     Criterion = " + str(self.criterion) \
                 + "     SNR = " + str(self.snr)
         return title
+    def __get_figure_title_stanford_html(self):
+        title = "" + self.date.isoformat() \
+                + "<br> Fs = " + str(self.decimated_fs) + "Hz" \
+                + "     DURATION = " + str(self.stanford_duration) + "h" \
+                + "     PROCESS_PERIOD = " + str(self.stanford_period) + "h" \
+                + "     WINDOW_LEN = " + str(self.stanford_win_len) \
+                + "<br> WINDOW_TYPE = " + str(self.stanford_win_type) \
+                + "     OVERLAP_PERCENT = " + str(self.stanford_overlap) \
+                + "     dB_OFFSET = " + str(self.stanford_db_offset) + "db"
+        return title
     def __get_figure_title_stanford(self):
         title = "" + self.date.isoformat() \
-                + "     Fs = " + str(self.decimated_fs) + "Hz\n" \
-                + "     Rounds = " + str(self.stanford_rounds)
+                + "\n Fs = " + str(self.decimated_fs) + "Hz" \
+                + "     DURATION = " + str(self.stanford_duration) + "h" \
+                + "     PROCESS_PERIOD = " + str(self.stanford_period) + "h" \
+                + "     WINDOW_LEN = " + str(self.stanford_win_len) \
+                + "\n WINDOW_TYPE = " + str(self.stanford_win_type) \
+                + "     OVERLAP_PERCENT = " + str(self.stanford_overlap) \
+                + "     dB_OFFSET = " + str(self.stanford_db_offset) + "db"
         return title
 
     def plotly(self, export_path):
@@ -250,17 +305,23 @@ class Event:
         freq_max=(float)((x0.size*40)/int(win_sz[0]))
         freq = numpy.arange(0.,freq_max,freq_max/x0.size)
         # Add acoustic values to the graph
-        data_line = graph.Scatter(x=freq,
+        x0_line = graph.Scatter(x=freq,
                                   y=x0,
                                   name="Percentil 50",
                                   line=dict(color='blue',
                                             width=2),
                                   mode='lines')
+        x1_line = graph.Scatter(x=freq,
+                                  y=x1,
+                                  name="Percentil 95",
+                                  line=dict(color='red',
+                                            width=2),
+                                  mode='lines')
 
-        data = [data_line]
+        data = [x0_line,x1_line]
 
         layout = graph.Layout(title=self.__get_figure_title_stanford(),
-                              xaxis=dict(title='Freq (Hz)', titlefont=dict(size=18)),
+                              xaxis=dict(title='Freq (Hz)', titlefont=dict(size=18), type='log'),
                               yaxis=dict(title='dBfs^2/Hz', titlefont=dict(size=18)),
                               hovermode='closest'
                               )
@@ -291,30 +352,24 @@ class Event:
     def plot_stanford(self, export_path):
         # Check if file exist
         export_path = export_path + self.get_export_file_name() + ".png"
+        print export_path
         if os.path.exists(export_path):
             return
         win_sz = re.findall("WINDOW_LEN=(\d+)", self.environment, re.DOTALL)
-        print win_sz
         dt = numpy.dtype([('perc50', numpy.int8)])
-        print dt
         x_split = numpy.array_split(self.data,2)
-        print x_split
         x0=x_split[0]
         x1=x_split[1]
-        print x0
-        print x1
         freq_max=(float)((x0.size*40)/int(win_sz[0]))
-        print freq_max
         freq = numpy.arange(0.,freq_max,(freq_max/x0.size))
-        print freq
         # Plot frequency image
         plt.figure(figsize=(9, 4))
-        plt.title(self.__get_figure_title(), fontsize=12)
-        plt.plot(freq,
-                 x0,
-                 color='b')
+        plt.title(self.__get_figure_title_stanford(), fontsize=12)
+        plt.plot(freq,x0,color='b')
+        plt.plot(freq,x1,color='r')
         plt.xlabel("Freq (Hz)", fontsize=12)
         plt.ylabel("dBfs^2/Hz", fontsize=12)
+        plt.xscale("log")
         plt.tight_layout()
         plt.grid()
         plt.savefig(export_path)

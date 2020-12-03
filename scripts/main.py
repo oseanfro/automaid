@@ -193,6 +193,7 @@ def main():
         # Copy files
         for f in files_to_copy:
             shutil.copy(f, mfloat_src_path)
+
         try:
             generate(mfloat,outputPath,filterDate);
         except:

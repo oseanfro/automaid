@@ -293,7 +293,7 @@ def decrypt_all(path):
             file_version = file_major+'.'+file_minor
             database_file = get_database_version(file_version,0)
             if database_file != "" :
-                database_file_path = os.path.join(scriptpath,database_file)
+                database_file_path = os.path.join(scriptpath,"databases",database_file)
                 if os.path.exists(database_file_path):
                     # Read and Parse Database file
                     with open(database_file_path,"r") as f:

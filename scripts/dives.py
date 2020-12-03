@@ -474,6 +474,10 @@ class Dive:
             if not event.is_stanford_event():
                 event.to_sac_and_mseed(self.export_path, self.station_number, force_without_loc=False)
 
+    def get_buoy(self):
+        list = self.base_path.split("/")
+        return (list[len(list) - 3])
+
 
 # Create dives object
 def get_dives(path, events, profiles):
@@ -492,10 +496,6 @@ def get_dives(path, events, profiles):
         except :
             print "wrong format"
     return dives
-
-def get_buoy(self):
-    list = self.base_path.split("/")
-    return (list[len(list) - 3])
 
 # Concatenate .000 files .LOG files in the path
 def concatenate_log_files(path):

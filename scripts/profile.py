@@ -10,8 +10,12 @@ import numpy
 from obspy import UTCDateTime
 import plotly.graph_objs as graph
 import plotly.offline as plotly
-import matplotlib.pyplot as plt
 
+import matplotlib as mpl
+if os.environ.get('DISPLAY','') == '':
+    print "no display found. Using non-interactive Agg backend"
+    mpl.use('agg',warn=False, force=True)
+import matplotlib.pyplot as plt
 
 class Profiles:
     events = None

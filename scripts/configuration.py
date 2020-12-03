@@ -2,7 +2,7 @@ import datetime
 
 # Plot interactive figures in HTML format for acoustic events
 # WARNING: Plotly files takes a lot of memory so commented by default
-events_plotly = True
+events_plotly = False
 
 # Path for input datas
 dataPath = "server"
