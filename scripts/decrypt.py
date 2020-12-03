@@ -21,37 +21,38 @@ def get_database_version(file_version,model) :
         # get major and minor versions
         
         file_version=file_version.split(".")
-        if (len(file_version) == 2) :
+        file_major = 2
+        file_minor = 17
+        
+        if file_version[0] :
             file_major = int(file_version[0])
+        if file_version[1] :
             file_minor = int(file_version[1])
-            #print "FILE MAJOR : " + str(file_major)
-            #print "FILE MINOR : " + str(file_minor)
-            for database in databases :
-                print "Model : " + str(database["Model"])
-                if not database["Model"] or (model == database["Model"]):
-                    database_minor_max = 2147483647
-                    database_major_max = 2147483647
-                    databaseMin_version = database["MinVersion"].split(".")
-                    database_major_min = int(databaseMin_version[0])
-                    database_minor_min = int(databaseMin_version[1])
-                    if database["MaxVersion"] != "None":
-                        databaseMax_version = database["MaxVersion"].split(".")
-                        database_major_max = int(databaseMax_version[0])
-                        database_minor_max = int(databaseMax_version[1])
-                    #print "MAJOR MAX : " + str(database_major_max)
-                    #print "MAJOR MIN : " + str(database_major_min)
-                    #print "MINOR MAX : " +str(database_minor_max)
-                    #print "MINOR MIN : " +str(database_minor_min)
-                    if ((file_major > database_major_min) and (file_major < database_minor_max)) \
-                    or ((file_major >= database_major_min) and (file_major <= database_major_max) \
-                    and (file_minor >= database_minor_min) and (file_minor <= database_minor_max)) :
-                        print database["Name"]
-                        return database["Name"]
+        print "FILE MAJOR : " + str(file_major)
+        print "FILE MINOR : " + str(file_minor)
+        for database in databases :
+            print "Model : " + str(database["Model"])
+            if not database["Model"] or (model == database["Model"]):
+                database_minor_max = 2147483647
+                database_major_max = 2147483647
+                databaseMin_version = database["MinVersion"].split(".")
+                database_major_min = int(databaseMin_version[0])
+                database_minor_min = int(databaseMin_version[1])
+                if database["MaxVersion"] != "None":
+                    databaseMax_version = database["MaxVersion"].split(".")
+                    database_major_max = int(databaseMax_version[0])
+                    database_minor_max = int(databaseMax_version[1])
+                #print "MAJOR MAX : " + str(database_major_max)
+                #print "MAJOR MIN : " + str(database_major_min)
+                #print "MINOR MAX : " +str(database_minor_max)
+                #print "MINOR MIN : " +str(database_minor_min)
+                if ((file_major > database_major_min) and (file_major < database_minor_max)) \
+                or ((file_major >= database_major_min) and (file_major <= database_major_max) \
+                and (file_minor >= database_minor_min) and (file_minor <= database_minor_max)) :
+                    print database["Name"]
+                    return database["Name"]
                 #print "\r\n"
             print "No Database available for : " + str(file_version)
-            return ""
-        else :
-            print "wrong version format : " + str(file_version)
             return ""
     else :
         print "no databases file : databases/Databases.json"
@@ -275,11 +276,24 @@ def decrypt_all(path):
         with open(file, "r") as f:
             version = f.readline()
         # Get version
-        catch = re.findall("<BDD [0-9]{3}\.[0-9]{3}\.[0-9]{3}_V([0-9]+\.[0-9]+)-?.*>", version)
+        catch = re.findall("<BDD [0-9]{3}\.[0-9]{3}\.[0-9]{3}_?V?([0-9]*\.[0-9]+)-?.*>", version)
         #print catch
         if len(catch) > 0:
             # Get database file path
-            database_file = get_database_version(catch[-1],0)
+            print catch[-1]
+            file_version=catch[-1].split(".")
+            file_major = '2'
+            file_minor = '17'
+            
+            if file_version[0] :
+                file_major = file_version[0]
+            if file_version[1] :
+                file_minor = file_version[1]
+                
+            file_version = file_major+'.'+file_minor
+            print file_version
+                
+            database_file = get_database_version(file_version,0)
             if database_file != "" :
                 database_file_path = os.path.join("databases",database_file)
                 if os.path.exists(database_file_path):
@@ -294,7 +308,7 @@ def decrypt_all(path):
                         elif decryptcard["TYPE"] == "ERR":
                             ERRcard = decryptcard["DECRYPTCARD"]
                     #print file
-                    Log_file = decrypt_one(file,LOGcard,WARNcard,ERRcard,catch[-1])
+                    Log_file = decrypt_one(file,LOGcard,WARNcard,ERRcard,file_version)
                     with open(file.replace(".BIN",".LOG"),"w") as f:
                         f.write(Log_file)
                     print file.replace(".BIN",".LOG")

@@ -108,22 +108,27 @@ class Dive:
             except IOError:
                 print "manque le fichier " + self.mmd_name
                 self.mmd_name = None
+                self.events = []
             else:
                 self.mmd_environment = re.findall("<ENVIRONMENT>.+</PARAMETERS>", content, re.DOTALL)[0]
                 # Get list of events associated to the dive
-                self.events = events.get_events_between(
-                    self.date, self.end_date)
-
+                self.events = events.get_events_between(self.date, self.end_date)
                 # For each event
                 for event in self.events:
                     # 1 Set the environment information
                     event.set_environment(self.mmd_environment)
                     # 2 Find true sampling frequency
                     event.find_measured_sampling_frequency()
-                    # 3 Correct events date
-                    event.correct_date()
-                    # 4 Invert wavelet transform of event
-                    event.invert_transform()
+                    if event.is_stanford_event() :
+                        # 3 Extract stanford data
+                        event.extract_stanford_data()
+                    else:
+                        print "normal"
+                        # 3 Correct events date
+                        event.correct_date()
+                        # 4 Invert wavelet transform of event
+                        event.invert_transform()
+
 
         # Find the .S41 file of the ascent
         catch = re.findall("bytes in (\w+/\w+\.S41)", self.log_content)
@@ -449,7 +454,10 @@ class Dive:
 
     def generate_events_plotly(self):
         for event in self.events:
-            event.plotly(self.export_path)
+            if event.is_stanford_event():
+                event.plotly_stanford(self.export_path)
+            else :
+                event.plotly(self.export_path)
 
     def generate_profile_plotly(self,csv_file):
         for profile in self.profiles:
@@ -458,12 +466,15 @@ class Dive:
 
     def generate_events_plot(self):
         for event in self.events:
-            event.plot(self.export_path)
+            if event.is_stanford_event():
+                event.plot_stanford(self.export_path)
+            else :
+                event.plot(self.export_path)
 
     def generate_events_sac(self):
         for event in self.events:
-            event.to_sac_and_mseed(
-                self.export_path, self.station_number, force_without_loc=False)
+            if not event.is_stanford_event():
+                event.to_sac_and_mseed(self.export_path, self.station_number, force_without_loc=False)
 
 
 # Create dives object

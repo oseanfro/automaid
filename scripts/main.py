@@ -10,6 +10,7 @@ import vitals
 import kml
 import re
 import utils
+import sys
 
 from configuration import dataPath
 from configuration import events_plotly
@@ -122,19 +123,20 @@ def generate(mfloat, datapath, filterdate):
         shutil.copy(f, mfloat_path_processed)
 
     mdives =[]
+    files_to_delete = list()
     try:
         mdives = process(mfloat_path_processed, mfloat, begin, end)
     except:
         mdives = []
+    else:
+        # Clean directories
+        files_to_delete += glob.glob(mfloat_path_processed + mfloat_nb + "_*[.][0-9][0-9][0-9]")
+        files_to_delete += glob.glob(mfloat_path_processed + mfloat_nb + "_*[.]BIN")
+        files_to_delete += glob.glob(mfloat_path_processed + mfloat_nb + "_*[.]LOG")
+        files_to_delete += glob.glob(mfloat_path_processed + mfloat_nb + "_*[.]MER")
+        files_to_delete += glob.glob(mfloat_path_processed + mfloat_nb + "_*[.]S41")
+        files_to_delete += glob.glob(mfloat_path_processed + mfloat + "*")
 
-    # Clean directories
-    files_to_delete = list()
-    files_to_delete += glob.glob(mfloat_path_processed + mfloat_nb + "_*[.][0-9][0-9][0-9]")
-    files_to_delete += glob.glob(mfloat_path_processed + mfloat_nb + "_*[.]BIN")
-    files_to_delete += glob.glob(mfloat_path_processed + mfloat_nb + "_*[.]LOG")
-    files_to_delete += glob.glob(mfloat_path_processed + mfloat_nb + "_*[.]MER")
-    files_to_delete += glob.glob(mfloat_path_processed + mfloat_nb + "_*[.]S41")
-    files_to_delete += glob.glob(mfloat_path_processed + mfloat + "*")
     for f in files_to_delete:
         os.remove(f)
 
@@ -204,16 +206,18 @@ def main():
             mdives = process(mfloat_path, mfloat, begin, end)
         except:
             mdives = []
-
-        # Clean directories
-        for f in glob.glob(mfloat_path + "/" + mfloat_nb + "_*.LOG"):
-            os.remove(f)
-        for f in glob.glob(mfloat_path + "/" + mfloat_nb + "_*.BIN"):
-            os.remove(f)
-        for f in glob.glob(mfloat_path + "/" + mfloat_nb + "_*.MER"):
-            os.remove(f)
-        for f in glob.glob(mfloat_path + "/" + mfloat_nb + "_*.S41"):
-            os.remove(f)
+            print "error on process"
+        else :
+            # Clean directories
+            print "process ok"
+            for f in glob.glob(mfloat_path + "/" + mfloat_nb + "_*.LOG"):
+                os.remove(f)
+            for f in glob.glob(mfloat_path + "/" + mfloat_nb + "_*.BIN"):
+                os.remove(f)
+            for f in glob.glob(mfloat_path + "/" + mfloat_nb + "_*.MER"):
+                os.remove(f)
+            for f in glob.glob(mfloat_path + "/" + mfloat_nb + "_*.S41"):
+                os.remove(f)
 
 
 if __name__ == "__main__":
