@@ -17,7 +17,7 @@ user_level = 1
 def get_database_version(file_version,model) :
     absFilePath = os.path.abspath(__file__)
     scriptpath, scriptfilename = os.path.split(absFilePath)
-    database_path = os.path.join(scriptpath,"databases/Databases.json")
+    database_path = os.path.join(scriptpath,scriptfilename)
     if os.path.exists(database_path):
         with open(database_path,"r") as f:
             databases = json.loads(f.read())
@@ -54,7 +54,7 @@ def get_database_version(file_version,model) :
         print "No Database available for : " + str(file_version)
         return ""
     else :
-        print "no databases file : databases/Databases.json"
+        print "no databases file : " + database_path
         return ""
 # Concatenate .000 files .BIN files in the path
 def concatenate_bin_files(path):
