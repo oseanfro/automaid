@@ -51,8 +51,8 @@ def get_database_version(file_version,model) :
                     print database["Name"]
                     return database["Name"]
                 #print "\r\n"
-            print "No Database available for : " + str(file_version)
-            return ""
+        print "No Database available for : " + str(file_version)
+        return ""
     else :
         print "no databases file : databases/Databases.json"
         return ""
