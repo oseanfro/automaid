@@ -17,7 +17,7 @@ user_level = 1
 def get_database_version(file_version,model) :
     absFilePath = os.path.abspath(__file__)
     scriptpath, scriptfilename = os.path.split(absFilePath)
-    database_path = os.path.join(scriptpath,scriptfilename)
+    database_path = os.path.join(scriptpath,"databases/Databases.json")
     if os.path.exists(database_path):
         with open(database_path,"r") as f:
             databases = json.loads(f.read())
@@ -279,6 +279,8 @@ def decrypt_all(path):
         #print catch
         if len(catch) > 0:
             # Get database file path
+            absFilePath = os.path.abspath(__file__)
+            scriptpath, scriptfilename = os.path.split(absFilePath)
             file_version=catch[-1].split(".")
             file_major = '2'
             file_minor = '17'
@@ -291,7 +293,7 @@ def decrypt_all(path):
             file_version = file_major+'.'+file_minor
             database_file = get_database_version(file_version,0)
             if database_file != "" :
-                database_file_path = os.path.join("databases",database_file)
+                database_file_path = os.path.join(scriptpath,database_file)
                 if os.path.exists(database_file_path):
                     # Read and Parse Database file
                     with open(database_file_path,"r") as f:
