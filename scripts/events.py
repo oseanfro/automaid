@@ -320,7 +320,7 @@ class Event:
 
         data = [x0_line,x1_line]
 
-        layout = graph.Layout(title=self.__get_figure_title_stanford(),
+        layout = graph.Layout(title=self.__get_figure_title_stanford_html(),
                               xaxis=dict(title='Freq (Hz)', titlefont=dict(size=18), type='log'),
                               yaxis=dict(title='dBfs^2/Hz', titlefont=dict(size=18)),
                               hovermode='closest'
