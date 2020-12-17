@@ -20,16 +20,16 @@ def dive(mfloat,date_begin,date_end):
         mfloat_nb = re.findall("(\d+)$", mfloat)[0]
 
         # Copy appropriate files in the directory
-        for f in glob.glob("../processed/"+ mfloat +"/*/*.LOG.h"):
+        for f in glob.glob("../processed/"+ mfloat +"/processed/*/*.LOG.h"):
             shutil.copy(f, mfloat_path)
 
-        for f in glob.glob("../processed/"+ mfloat +"/*/*.MER.env"):
+        for f in glob.glob("../processed/"+ mfloat +"/processed/*/*.MER.env"):
             shutil.copy(f, mfloat_path)
 
-        for f in glob.glob("../processed/"+ mfloat +"/*.LOG.h"):
+        for f in glob.glob("../processed/"+ mfloat +"/processed/*.LOG.h"):
             shutil.move(f, f[0:len(f)-2])
 
-        for f in glob.glob("../processed/"+ mfloat +"/*.MER.env"):
+        for f in glob.glob("../processed/"+ mfloat +"/processed/*.MER.env"):
             sp=f.split(".")
             shutil.move(f, "../processed/"+ mfloat +"/"+sp[5]+".MER")
 
@@ -126,6 +126,8 @@ def dive(mfloat,date_begin,date_end):
                 except :
                     print "No external bladder full : " + dive.log_name
                 else :
+                    print start_filling_date
+                    print bladder_full_date
                     bdf_time = int(UTCDateTime(bladder_full_date) - UTCDateTime(start_filling_date))
                 temps_bladder_full.append(bdf_time)
                 print str(UTCDateTime(dive.date).isoformat()) + " : " + str(bdf_time)
@@ -256,4 +258,4 @@ def dive(mfloat,date_begin,date_end):
 
 
 if __name__ == "__main__":
-    main()
+    dive("465.152-R-0004",19800101,21000101)

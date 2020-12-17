@@ -89,6 +89,26 @@ def find_timestamped_values(regexp, content):
     return timestamped_values
 
 
+def find_timestampedUTC_values(regexp, content):
+    timestamped_values = list()
+    lines = split_log_lines(content)
+    last_value = 0
+    for line in lines:
+        value_catch = re.findall(regexp, line)
+        timestamp_catch = re.findall("(\S+):\[", line)
+        if len(value_catch) > 0:
+            print timestamp_catch
+            v = value_catch[0]
+            print value_catch[0]
+            d = UTCDateTime(timestamp_catch[0])
+            try:
+                d = UTCDateTime(int(timestamp_catch[0]))
+                last_value = int(timestamp_catch[0])
+            except:
+                d = UTCDateTime(last_value)
+            timestamped_values.append([v, d])
+    return timestamped_values
+
 # Format log files
 def format_log(log):
     datetime_log = ""
