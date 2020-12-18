@@ -126,8 +126,6 @@ def dive(mfloat,date_begin,date_end):
                 except :
                     print "No external bladder full : " + dive.log_name
                 else :
-                    print start_filling_date
-                    print bladder_full_date
                     bdf_time = int(UTCDateTime(bladder_full_date) - UTCDateTime(start_filling_date))
                 temps_bladder_full.append(bdf_time)
                 print str(UTCDateTime(dive.date).isoformat()) + " : " + str(bdf_time)
@@ -249,11 +247,9 @@ def dive(mfloat,date_begin,date_end):
         print str(round(float(temps_pompe_moyen) / float(temps_valve_moyen), 1))
 
         # Clean directories
-        for f in glob.glob(mfloat_path + "/" + mfloat + "*"):
+        for f in glob.glob(mfloat_path + "/" + "*.LOG.h"):
             os.remove(f)
-        for f in glob.glob(mfloat_path + "/" + mfloat_nb + "_*.LOG"):
-            os.remove(f)
-        for f in glob.glob(mfloat_path + "/" + mfloat_nb + "_*.MER"):
+        for f in glob.glob(mfloat_path + "/" + "*.MER.env"):
             os.remove(f)
 
 

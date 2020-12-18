@@ -481,8 +481,6 @@ class Dive:
 
 # Create dives object
 def get_dives(path, events, profiles):
-    # Concatenate log files that need it
-    concatenate_log_files(path)
     # Get the list of log files
     log_names = glob.glob(path + "*.LOG*")
     log_names = [x.split("/")[-1] for x in log_names]

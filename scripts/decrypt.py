@@ -263,8 +263,6 @@ def decrypt_one(path,LOG_card,WARN_card,ERR_card,version):
     return string
 # Decrypt all BIN files in a path
 def decrypt_all(path):
-    #Concatenate BINS files
-    concatenate_bin_files(path)
     # Generate List of BINS file
     #print path
     files_to_decrypt = glob.glob(path + "*.BIN")

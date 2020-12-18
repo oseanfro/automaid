@@ -25,6 +25,7 @@ def process(mfloat_path, mfloat, begin, end):
     utils.concatenate_files(mfloat_path)
     # Decrypt all BIN files
     decrypt.decrypt_all(mfloat_path)
+
     # Build list of all mermaid events recorded by the float
     mevents = events.Events(mfloat_path)
     # Build list of all profiles recorded
