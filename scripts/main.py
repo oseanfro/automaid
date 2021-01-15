@@ -107,6 +107,8 @@ def generate(mfloat, datapath, filterdate):
     files_to_copy += glob.glob(mfloat_path_source + mfloat_nb + "_*[.]MER")
     files_to_copy += glob.glob(mfloat_path_source + mfloat_nb + "_*[.]S41")
 
+    print files_to_copy
+
     if mfloat in filterDate.keys():
         begin = filterDate[mfloat][0]
         end = filterDate[mfloat][1]

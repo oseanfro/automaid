@@ -67,6 +67,7 @@ filterDate = {
     "452.020-P-0052": (datetime.datetime(2019, 8, 17), datetime.datetime(2100, 1, 1)),
     "452.020-P-0053": (datetime.datetime(2019, 8, 19), datetime.datetime(2100, 1, 1)),
     "452.020-P-0054": (datetime.datetime(2019, 8, 21), datetime.datetime(2100, 1, 1)),
-    "452.020-P-0057": (datetime.datetime(2100, 1, 1), datetime.datetime(2100, 1, 1)),
+    "452.020-P-0056": (datetime.datetime(2019, 1, 1), datetime.datetime(2100, 1, 1)),
+    "452.020-P-0057": (datetime.datetime(2019, 1, 1), datetime.datetime(2100, 1, 1)),
     "452.020-P-0060": (datetime.datetime(2100, 1, 1), datetime.datetime(2100, 1, 1))
 }
