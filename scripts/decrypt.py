@@ -273,13 +273,13 @@ def decrypt_all(path):
         with open(file, "r") as f:
             version = f.readline()
         # Get version
-        catch = re.findall("<BDD [0-9]{3}\.[0-9]{3}\.[0-9]{3}_?V?([0-9]*\.[0-9]+)-?.*>", version)
+        catch = re.findall("<BDD ([0-9]{3})\.[0-9]{3}\.[0-9]{3}_?V?([0-9]*\.[0-9]+)-?.*>", version)
         #print catch
         if len(catch) > 0:
             # Get database file path
             absFilePath = os.path.abspath(__file__)
             scriptpath, scriptfilename = os.path.split(absFilePath)
-            file_version=catch[-1].split(".")
+            file_version=catch[-1][1].split(".")
             file_major = '2'
             file_minor = '17'
 
@@ -289,7 +289,10 @@ def decrypt_all(path):
                 file_minor = file_version[1]
 
             file_version = file_major+'.'+file_minor
-            database_file = get_database_version(file_version,0)
+            model = 0
+            if catch[-1][0] == "589" :
+                model = 1
+            database_file = get_database_version(file_version,model)
             if database_file != "" :
                 database_file_path = os.path.join(scriptpath,"databases",database_file)
                 if os.path.exists(database_file_path):
