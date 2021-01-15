@@ -222,6 +222,24 @@ def list_vitals(filepath,client,buoy,mdives,datapath,filterDate):
             listread.append(utils.convert2dict(emergency))
     return listread
 
+def sort_vitals(elem):
+    match = re.match("([A-Z0-9]{8}).vit",elem)
+    return int(match.group(1),16)
+
+
+def merge_vitals(path,final):
+    if os.path.exists(os.path.join(path,final)):
+        os.remove(os.path.join(path,final))
+    files_to_merges = [m.split('/')[-1] for m in glob.glob(path+"/[A-Z0-9][A-Z0-9][A-Z0-9][A-Z0-9][A-Z0-9][A-Z0-9][A-Z0-9][A-Z0-9].vit")]
+    if(len(files_to_merges)>0) :
+        files_sorted  = sorted(files_to_merges,key=sort_vitals)
+        with open(os.path.join(path,final), "a") as final_file:
+            for file in files_sorted :
+                with open(os.path.join(path,file), "r") as splitted:
+                    final_file.write(splitted.read())
+
+
+
 #on rentre une list de dictionnaire
 #et renvoie une liste plus complete avec des donnee process
 def process (list):
