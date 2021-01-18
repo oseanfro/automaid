@@ -123,7 +123,6 @@ class Dive:
                         # 3 Extract stanford data
                         event.extract_stanford_data()
                     else:
-                        print "normal"
                         # 3 Correct events date
                         event.correct_date()
                         # 4 Invert wavelet transform of event

@@ -160,13 +160,12 @@ class Emergency:
         line_coord = re.match(".*: EMERGENCY ([NS])(\d+)deg(\d+\.\d+)mn ([EW])(\d+)deg(\d+\.\d+)mn",line)
 
         if line_buoy:
-            server_date = re.match("(\d+)-(\d+)h(\d+)mn(\d+)S",line_buoy.group(1))
             iso8601_date = re.match("(\d+)-(\d+)-(\d+)T(\d+):(\d+):(\d+)",line_buoy.group(1))
             if  self.date is None and self.cause is None:
-                if server_date :
-                    self.date = utils.totimestamp(datetime.datetime.strptime(line_buoy.group(1), "%Y%m%d-%Hh%Mmn%S"))
-                elif iso8601_date:
+                if iso8601_date :
                     self.date = utils.totimestamp(datetime.datetime.strptime(line_buoy.group(1), "%Y-%m-%dT%H:%M:%S"))
+                else:
+                    self.date = utils.totimestamp(datetime.datetime.strptime(line_buoy.group(1), "%Y%m%d-%Hh%Mmn%S"))
                 self.cause = line_buoy.group(3)
                 self._state = "In_progress"
             else:
@@ -234,10 +233,10 @@ def sort_vitals(elem):
 
 
 def merge_vitals(path,final):
-    if os.path.exists(os.path.join(path,final)):
-        os.remove(os.path.join(path,final))
     files_to_merges = [m.split('/')[-1] for m in glob.glob(path+"/[A-Z0-9][A-Z0-9][A-Z0-9][A-Z0-9][A-Z0-9][A-Z0-9][A-Z0-9][A-Z0-9].vit")]
     if(len(files_to_merges)>0) :
+        if os.path.exists(os.path.join(path,final)):
+            os.remove(os.path.join(path,final))
         files_sorted  = sorted(files_to_merges,key=sort_vitals)
         with open(os.path.join(path,final), "a") as final_file:
             for file in files_sorted :
@@ -277,13 +276,11 @@ def plot_battery_voltage(vital_file_path, vital_file_name, begin, end):
     content = content.replace('>','')
     battery_catch = re.findall("(.+):Vbat(\d+)mV\(min(\d+)mV\)", content)
 
-    server_date = re.match("(\d+)-(\d+)h(\d+)mn(\d+)S",battery_catch[0][0])
     iso8601_date = re.match("(\d+)-(\d+)-(\d+)T(\d+):(\d+):(\d+)",battery_catch[0][0])
-
-    if server_date:
-        date = [UTCDateTime(0).strptime(i[0], "%Y%m%d-%Hh%Mmn%S") for i in battery_catch]
-    elif iso8601_date :
+    if iso8601_date :
         date = [UTCDateTime(0).strptime(i[0], "%Y-%m-%dT%H:%M:%S") for i in battery_catch]
+    else :
+        date = [UTCDateTime(0).strptime(i[0], "%Y%m%d-%Hh%Mmn%S") for i in battery_catch]
     voltage = [float(i[1])/1000. for i in battery_catch]
     minimum_voltage = [float(i[2])/1000. for i in battery_catch]
 
@@ -343,13 +340,11 @@ def plot_internal_pressure(vital_file_path, vital_file_name, begin, end):
     content = content.replace('>','')
     internal_pressure_catch = re.findall("(.+):Pint(-?\d+)Pa", content)
 
-    server_date = re.match("(\d+)-(\d+)h(\d+)mn(\d+)S",internal_pressure_catch[0][0])
     iso8601_date = re.match("(\d+)-(\d+)-(\d+)T(\d+):(\d+):(\d+)",internal_pressure_catch[0][0])
-
-    if server_date:
-        date = [UTCDateTime(0).strptime(i[0], "%Y%m%d-%Hh%Mmn%S") for i in internal_pressure_catch]
-    elif iso8601_date :
+    if iso8601_date :
         date = [UTCDateTime(0).strptime(i[0], "%Y-%m-%dT%H:%M:%S") for i in internal_pressure_catch]
+    else :
+        date = [UTCDateTime(0).strptime(i[0], "%Y%m%d-%Hh%Mmn%S") for i in internal_pressure_catch]
 
     internal_pressure = [float(i[1])/100. for i in internal_pressure_catch]
 
@@ -400,13 +395,12 @@ def plot_pressure_offset(vital_file_path, vital_file_name, begin, end):
     content = content.replace(' ', '')
     content = content.replace('>','')
     pressure_offset_catch = re.findall("(.+):Pext(-?\d+)mbar\(range(-?\d+)mbar\)", content)
-    server_date = re.match("(\d+)-(\d+)h(\d+)mn(\d+)S",pressure_offset_catch[0][0])
     iso8601_date = re.match("(\d+)-(\d+)-(\d+)T(\d+):(\d+):(\d+)",pressure_offset_catch[0][0])
-
-    if server_date:
-        date = [UTCDateTime(0).strptime(i[0], "%Y%m%d-%Hh%Mmn%S") for i in pressure_offset_catch]
-    elif iso8601_date :
+    if iso8601_date :
         date = [UTCDateTime(0).strptime(i[0], "%Y-%m-%dT%H:%M:%S") for i in pressure_offset_catch]
+    else :
+        date = [UTCDateTime(0).strptime(i[0], "%Y%m%d-%Hh%Mmn%S") for i in pressure_offset_catch]
+
     pressure_offset = [int(i[1]) for i in pressure_offset_catch]
     pressure_offset_range = [int(i[2]) for i in pressure_offset_catch]
 

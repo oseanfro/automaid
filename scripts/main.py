@@ -125,10 +125,12 @@ def generate(mfloat, datapath, filterdate):
 
     mdives =[]
     files_to_delete = list()
+
     try:
         mdives = process(mfloat_path_processed, mfloat, begin, end)
     except:
         mdives = []
+        print "Error on process"
     else:
         # Clean directories
         files_to_delete += glob.glob(mfloat_path_processed + mfloat_nb + "_*[.][0-9][0-9][0-9]")
