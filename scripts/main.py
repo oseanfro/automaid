@@ -107,8 +107,6 @@ def generate(mfloat, datapath, filterdate):
     files_to_copy += glob.glob(mfloat_path_source + mfloat_nb + "_*[.]MER")
     files_to_copy += glob.glob(mfloat_path_source + mfloat_nb + "_*[.]S41")
 
-    print files_to_copy
-
     if mfloat in filterDate.keys():
         begin = filterDate[mfloat][0]
         end = filterDate[mfloat][1]
@@ -155,52 +153,63 @@ def main():
     # Create ouput directory
     if not os.path.exists(outputPath):
         os.mkdir(outputPath)
-    # Search Mermaid floats
-    mfloats = [p.split("/")[-1][:-4] for p in glob.glob("../" + dataPath + "/*.vit")]
 
-    # For each Mermaid float
-    for mfloat in mfloats:
-        print ""
-        print "> " + mfloat
+    # Search Profiler by folder name
+    buoys_dir_paths=[os.path.join("../",dataPath)]
+    for root, dirs, files in os.walk(os.path.join("../",dataPath)):
+        for dir in dirs:
+            buoy_dir = re.match('.*([0-9]{3}.[0-9]{3}-[A-z]-([0-9]{4}|[0-9]{2}))', dir)
+            if (buoy_dir):
+                vitals.merge_vitals(os.path.join(root,dir),str(buoy_dir.group(1))+".vit");
+                buoys_dir_paths.append(os.path.join(root,dir))
 
-        # Get float number
-        mfloat_nb = re.findall("(\d+)$", mfloat)[0]
-        mfloat_path = os.path.join(outputPath,mfloat)
-        mfloat_src_path = os.path.join(mfloat_path,"source")
+    print buoys_dir_paths
+    # Search Profiler floats at root directory
+    for buoy_dir in buoys_dir_paths :
+        mfloats = [p.split("/")[-1][:-4] for p in glob.glob(buoy_dir + "/[0-9][0-9][0-9].[0-9][0-9][0-9]-*.vit")]
+        # For each Mermaid float
+        for mfloat in mfloats:
+            print ""
+            print "> " + mfloat
 
-        # Create float directory
-        if not os.path.exists(mfloat_path):
-            os.mkdir(mfloat_path)
-        # Create directory for the source float
-        if not os.path.exists(mfloat_src_path):
-            os.mkdir(mfloat_src_path)
+            # Get float number
+            mfloat_nb = re.findall("(\d+)$", mfloat)[0]
+            mfloat_path = os.path.join(outputPath,mfloat)
+            mfloat_src_path = os.path.join(mfloat_path,"source")
 
-        # Copy appropriate files in the directory and remove files outside of the time range
-        extensions = ["000", "001", "002", "003", "004", "005", "LOG", "BIN"]
-        files_to_copy = list()
-        for extension in extensions:
-                files_to_copy += glob.glob("../" + dataPath + "/" + mfloat_nb + "*." + extension)
-        files_to_copy += glob.glob("../" + dataPath + "/" + mfloat_nb + "*.MER")
-        files_to_copy += glob.glob("../" + dataPath + "/" + mfloat_nb + "*.S41")
-        if mfloat in filterDate.keys():
-            begin = filterDate[mfloat][0]
-            end = filterDate[mfloat][1]
-            files_to_copy = [f for f in files_to_copy if begin <= utils.get_date_from_file_name(f) <= end]
-        else:
-            # keep all files
-            begin = datetime.datetime(1000, 1, 1)
-            end = datetime.datetime(3000, 1, 1)
+            # Create float directory
+            if not os.path.exists(mfloat_path):
+                os.mkdir(mfloat_path)
+            # Create directory for the source float
+            if not os.path.exists(mfloat_src_path):
+                os.mkdir(mfloat_src_path)
 
-        # Add .vit and .out files
-        files_to_copy += glob.glob("../" + dataPath + "/" + mfloat + "*")
-        # Copy files
-        for f in files_to_copy:
-            shutil.copy(f, mfloat_src_path)
+            # Copy appropriate files in the directory and remove files outside of the time range
+            extensions = ["000", "001", "002", "003", "004", "005", "LOG", "BIN"]
+            files_to_copy = list()
+            for extension in extensions:
+                    files_to_copy += glob.glob( buoy_dir + "/" + mfloat_nb + "*." + extension)
+            files_to_copy += glob.glob(buoy_dir + "/" + mfloat_nb + "*.MER")
+            files_to_copy += glob.glob(buoy_dir + "/" + mfloat_nb + "*.S41")
+            if mfloat in filterDate.keys():
+                begin = filterDate[mfloat][0]
+                end = filterDate[mfloat][1]
+                files_to_copy = [f for f in files_to_copy if begin <= utils.get_date_from_file_name(f) <= end]
+            else:
+                # keep all files
+                begin = datetime.datetime(1000, 1, 1)
+                end = datetime.datetime(3000, 1, 1)
 
-        try:
-            generate(mfloat,outputPath,filterDate);
-        except:
-            print "error on process"
+            # Add .vit and .out files
+            files_to_copy += glob.glob(buoy_dir + "/" + mfloat + "*")
+            # Copy files
+            for f in files_to_copy:
+                shutil.copy(f, mfloat_src_path)
+
+            try:
+                generate(mfloat,outputPath,filterDate);
+            except:
+                print "error on process"
 
 
 if __name__ == "__main__":

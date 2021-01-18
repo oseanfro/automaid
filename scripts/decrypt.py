@@ -29,6 +29,7 @@ def get_database_version(file_version,model) :
             file_major = int(file_version[0])
         if file_version[1] :
             file_minor = int(file_version[1])
+        print "file version : " + str(file_major) +"."+ str(file_minor)
         for database in databases :
             #print "Model : " + str(database["Model"])
             if not database["Model"] or (model == database["Model"]):
@@ -100,34 +101,37 @@ def decrypt_one(path,LOG_card,WARN_card,ERR_card,version):
                     #Read head
                     IDbytes = f.read(2)
                     if len(IDbytes) != 2 :
+                        print "err:IDbytes"
                         break;
                     TIMESTAMPbytes = f.read(4)
                     if len(TIMESTAMPbytes) != 4 :
+                        print "err:TIMESTAMPbytes"
                         break;
                     INFOSbytes = f.read(1)
                     if INFOSbytes == "" :
+                        print "err:INFOSbytes"
                         break;
                     DATASIZEbytes = f.read(1)
                     if DATASIZEbytes == "" :
+                        print "err:DATASIZEbytes"
                         break;
 
                     #unpack head
-                    id = struct.unpack('<H', IDbytes)[0]
-                    timestamp = struct.unpack('<I', TIMESTAMPbytes)[0]
-                    infos = struct.unpack('<B', INFOSbytes)[0]
-                    dataSize = struct.unpack('<B', DATASIZEbytes)[0]
+                    try :
+                        id = struct.unpack('<H', IDbytes)[0]
+                        timestamp = struct.unpack('<I', TIMESTAMPbytes)[0]
+                        infos = struct.unpack('<B', INFOSbytes)[0]
+                        dataSize = struct.unpack('<B', DATASIZEbytes)[0]
+                    except :
+                        print "err:header"
 
                     #Process head
                     idString = "0x"+"{0:0{1}X}".format(id,4)+"UL"
                     binaryinfo = "{0:08b}".format(infos)
                     type = "00"
                     argformat = "00"
-                    if (int(version.split(".")[0]) <= 2) and (int(version.split(".")[1]) < 13):
-                        type = binaryinfo[-3:-1]
-                        argformat = binaryinfo[-5:-3]
-                    else :
-                        type = binaryinfo[-2:]
-                        argformat = binaryinfo[-4:-2]
+                    type = binaryinfo[-2:]
+                    argformat = binaryinfo[-4:-2]
                     if argformat != "00":
                         continue
 
@@ -187,17 +191,26 @@ def decrypt_one(path,LOG_card,WARN_card,ERR_card,version):
                             #Read Argument Head
                             ARGINFOSByte = f.read(1)
                             if ARGINFOSByte == "":
+                                print "err:ARGINFOSByte"
                                 break
                             ARGSIZEByte = f.read(1)
                             if ARGSIZEByte == "":
+                                print "err:ARGSIZEByte"
                                 break
                             #Unpack Argument Head
-                            ArgInfos=struct.unpack('<B', ARGINFOSByte)[0]
-                            ArgSize = struct.unpack('<B', ARGSIZEByte)[0]
+                            try :
+                                ArgInfos=struct.unpack('<B', ARGINFOSByte)[0]
+                                ArgSize = struct.unpack('<B', ARGSIZEByte)[0]
+                            except :
+                                print "err:INFOSSIZE"
 
                             #Process Argument Head
                             ArgInfosBinary="{0:08b}".format(ArgInfos)
                             ArgType = ArgInfosBinary[-2:]
+
+                            #print "ArgInfosBinary : " + str(ArgInfosBinary)
+                            #print "ArgType : " + str(ArgType)
+                            #print "ArgSize : " + str(ArgSize)
                             index = index+2
                             Formats[argIndex] = Formats[argIndex].replace(r"\r\n","\r\n")
                             if ArgSize > 0:
@@ -207,59 +220,95 @@ def decrypt_one(path,LOG_card,WARN_card,ERR_card,version):
                                     if ArgSize == 4:
                                         ArgByte = f.read(4)
                                         if len(ArgByte) != 4 :
+                                            print "err:TYPE00SIZE04"
                                             break;
-                                        Arg = struct.unpack('<i', ArgByte)[0]
+                                        try :
+                                            Arg = struct.unpack('<i', ArgByte)[0]
+                                        except :
+                                            print "err:TYPE00SIZE04"
                                     elif ArgSize == 2:
                                         ArgByte = f.read(2)
                                         if len(ArgByte) != 2 :
+                                            print "err:TYPE00SIZE02"
                                             break;
-                                        Arg = struct.unpack('<h', ArgByte)[0]
+                                        try :
+                                            Arg = struct.unpack('<h', ArgByte)[0]
+                                        except :
+                                            print "err:TYPE00SIZE02"
                                     elif ArgSize == 1:
                                         ArgByte = f.read(1)
                                         if ArgByte == "" :
+                                            print "err:TYPE00SIZE01"
                                             break;
-                                        Arg = struct.unpack('<b', ArgByte)[0]
+                                        try :
+                                            Arg = struct.unpack('<b', ArgByte)[0]
+                                        except :
+                                            print "err:TYPE00SIZE01"
                                 elif ArgType == "01":
                                     # unsigned integer
                                     if ArgSize == 4:
                                         ArgByte = f.read(4)
                                         if len(ArgByte) != 4 :
+                                            print "err:TYPE01SIZE04"
                                             break;
-                                        Arg = struct.unpack('<I', ArgByte)[0]
+                                        try :
+                                            Arg = struct.unpack('<I', ArgByte)[0]
+                                        except :
+                                            print "err:TYPE01SIZE04"
                                     elif ArgSize == 2:
                                         ArgByte = f.read(2)
                                         if len(ArgByte) != 2 :
+                                            print "err:TYPE01SIZE02"
                                             break;
-                                        Arg = struct.unpack('<H', ArgByte)[0]
+                                        try :
+                                            Arg = struct.unpack('<H', ArgByte)[0]
+                                        except :
+                                            print "err:TYPE01SIZE02"
                                     elif ArgSize == 1:
                                         ArgByte = f.read(1)
                                         if ArgByte == "":
+                                            print "err:TYPE01SIZE01"
                                             break
-                                        Arg = struct.unpack('<B', ArgByte)[0]
+                                        try :
+                                            Arg = struct.unpack('<B', ArgByte)[0]
+                                        except :
+                                            print "err:TYPE01SIZE01"
                                 elif ArgType == "11":
                                     # string
                                     ArgByte = f.read(ArgSize)
                                     if len(ArgByte) != ArgSize :
+                                        print "err:TYPE11"
                                         break;
-                                    Arg = struct.unpack("%ds" % ArgSize, ArgByte)[0]
+                                    try :
+                                        Arg = struct.unpack("%ds" % ArgSize, ArgByte)[0]
+                                    except :
+                                        print "err:TYPE11"
                                     if ord(Arg[ArgSize-1]) == 0 :
                                         Arg = Arg[:-1]
                                     #replace none ascii characters
                                     Arg = ''.join([i if ord(i) < 128 else ' ' for i in Arg])
-                                if "%.*s" in Formats[argIndex]:
-                                    #print ArgSize
-                                    #print Arg
-                                    string += Formats[argIndex] % (ArgSize,Arg)
-                                else :
-                                    string += Formats[argIndex] % Arg
+
+                                #print ArgSize
+                                #print Arg
+                                #print "Format : " + str(Formats[argIndex]) + "\r\n"
+                                try :
+                                    if "%.*s" in Formats[argIndex]:
+                                        string += Formats[argIndex] % (ArgSize,Arg)
+                                    else :
+                                        string += Formats[argIndex] % Arg
+                                except :
+                                    print "error format"
                             else :
+                                #print "Format : " + str(Formats[argIndex]) + "\r\n"
                                 string += str(Formats[argIndex])
                                 index = index + 1
                             index = index + ArgSize
                             argIndex = argIndex + 1
                     else :
+                        #print "Format : " + (Formats[0].replace(r"\r\n","\r\n")) + "\r\n"
                         string += str(Formats[0].replace(r"\r\n","\r\n"))
                     string += "\r\n"
+    #print "finished"
     return string
 # Decrypt all BIN files in a path
 def decrypt_all(path):
@@ -307,10 +356,14 @@ def decrypt_all(path):
                         elif decryptcard["TYPE"] == "ERR":
                             ERRcard = decryptcard["DECRYPTCARD"]
                     #print file
-                    Log_file = decrypt_one(file,LOGcard,WARNcard,ERRcard,file_version)
-                    with open(file.replace(".BIN",".LOG"),"w") as f:
-                        f.write(Log_file)
-                    print file.replace(".BIN",".LOG")
+                    try :
+                        Log_file = decrypt_one(file,LOGcard,WARNcard,ERRcard,file_version)
+                    except:
+                        print "FORMAT ERROR :" +str(file)
+                    else:
+                        with open(file.replace(".BIN",".LOG"),"w") as f:
+                            f.write(Log_file)
+                        print file.replace(".BIN",".LOG")
                 else:
                     print "No database : " + str(database_file_path)
 
