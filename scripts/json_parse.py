@@ -3,8 +3,8 @@ import shutil
 import sys
 import glob
 import json
-import dives
-import events
+from . import dives
+from . import events
 
 def main():
     # Set working directory in "scripts"
@@ -27,6 +27,6 @@ def main():
             object_json_array.append(dive.generateJSON())
 
     #listbox = Listbox(root, listvariable=choices, selectmode="multiple")
-    print json.dumps(object_json_array, indent=4)
+    print(json.dumps(object_json_array, indent=4))
 if __name__ == "__main__":
  main()

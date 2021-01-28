@@ -9,7 +9,7 @@ from obspy.core.trace import Trace
 from obspy.core.trace import Stats
 import matplotlib as mpl
 if os.environ.get('DISPLAY','') == '':
-    print "no display found. Using non-interactive Agg backend"
+    print("no display found. Using non-interactive Agg backend")
     mpl.use('agg',warn=False, force=True)
 import matplotlib.pyplot as plt
 import plotly.graph_objs as graph
@@ -28,13 +28,13 @@ class Events:
         mer_files = glob.glob(base_path + "*.MER")
         for mer_file in mer_files:
             file_name = mer_file.split("/")[-1]
-            with open(mer_file, "r") as f:
+            with open(mer_file, "rb") as f:
                 content = f.read()
-            events = content.split("</PARAMETERS>")[-1].split("<EVENT>")[1:]
+            events = content.split(b'</PARAMETERS>')[-1].split(b'<EVENT>')[1:]
             for event in events:
                 # Divide header and binary
-                header = event.split("<DATA>\x0A\x0D")[0]
-                binary = event.split("<DATA>\x0A\x0D")[1].split("\x0A\x0D\x09</DATA>")[0]
+                header = event.split(b'<DATA>\x0A\x0D')[0].decode("utf-8")
+                binary = event.split(b'<DATA>\x0A\x0D")[1].split("\x0A\x0D\x09</DATA>')[0]
                 self.events.append(Event(file_name, header, binary))
 
     def get_events_between(self, begin, end):
@@ -150,7 +150,7 @@ class Event:
             self.measured_fs = float(fs_catch[0])
         else:
             self.measured_fs = 40
-        print "MEASURE_FS="+str(self.measured_fs)
+        print(("MEASURE_FS="+str(self.measured_fs)))
 
         # Divide frequency by number of scales
         if not self.is_stanford_event() :
@@ -209,13 +209,13 @@ class Event:
             f.write(self.binary)
         # Do icd24
         if edge_correction == "1":
-            print "icdf24_v103ec_test"
+            print("icdf24_v103ec_test")
             subprocess.check_output([icdf24_v103ec_test,
                                      self.scales,
                                      normalized,
                                      wtcoeffsname])
         else:
-            print "icdf24_v103_test"
+            print("icdf24_v103_test")
             subprocess.check_output([icdf24_v103_test,
                                     self.scales,
                                     normalized,
@@ -294,7 +294,7 @@ class Event:
     def plotly_stanford(self, export_path):
         # Check if file exist
         export_path = export_path + self.get_export_file_name() + ".html"
-        print export_path
+        print(export_path)
         if os.path.exists(export_path):
             return
         win_sz = re.findall("WINDOW_LEN=(\d+)", self.environment, re.DOTALL)
@@ -352,7 +352,7 @@ class Event:
     def plot_stanford(self, export_path):
         # Check if file exist
         export_path = export_path + self.get_export_file_name() + ".png"
-        print export_path
+        print(export_path)
         if os.path.exists(export_path):
             return
         win_sz = re.findall("WINDOW_LEN=(\d+)", self.environment, re.DOTALL)
@@ -385,7 +385,7 @@ class Event:
 
         # Check if the station location have been calculated
         if self.station_loc is None and not force_without_loc:
-            print self.get_export_file_name() + ": Skip sac/mseed generation, wait the next ascent to compute location"
+            print((self.get_export_file_name() + ": Skip sac/mseed generation, wait the next ascent to compute location"))
             return
 
         # Fill header info

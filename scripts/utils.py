@@ -118,7 +118,7 @@ def format_log(log):
         if len(catch) > 0:
             timestamp = catch[0]
             if(len(timestamp) > 10):
-                print "error value : " + timestamp
+                print(("error value : " + timestamp))
                 timestamp = timestamp[len(timestamp)-10:]
             value = int(timestamp)
             try:
@@ -141,11 +141,11 @@ def verify_format_log(log):
     for line in lines:
         catch = re.findall("(\d+):[(\w+ *),(\d+)].*", line)
         if len(catch) > 0:
-            print catch[0][0]
+            print((catch[0][0]))
             if len(catch[0][0]) > 10 :
                 error_log = True
                 continue
-            print catch[0]
+            print((catch[0]))
             if len(catch[0] < 3) :
                 error_log = True
                 continue

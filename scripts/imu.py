@@ -1,6 +1,7 @@
 import glob
 import os
 import re
+import wave
 import shutil
 import profile
 import sys
@@ -9,21 +10,21 @@ import plotly.graph_objs as graph
 import plotly.offline as plotly
 from obspy import UTCDateTime
 import sys
+import struct
 
-DIVE_NAME = "20200929-LANDER_MISSION_5-1570M"
-TIME_SHIFTING_date_reset="2020-07-01T09:00:00"
-TIME_SHIFTING_derive_s_day=0.872
+DIVE_NAME = "20200831-LANDER_MISSION_1-432M"
+TIME_SHIFTING_date_reset = "2020-07-01T09:00:00"
+TIME_SHIFTING_derive_s_day = 0.872
+BEGIN_DATE = "2020-08-31T09:56:47"
+FIRST_BYPASS = "2020-08-31T09:57:12"
+START_MISSION_5M = "2020-08-31T10:06:19"
+REF_PRESSURE_REACH = "2020-08-31T11:50:52"
+SURFACING = "2020-09-07T06:51:54"
+TAKE_OFF = "2020-09-07T07:03:59"
+BLADDER_FULL = "2020-09-07T08:47:15"
+SURFACE = "2020-09-07T08:48:20"
+END_DATE = "2020-09-07T08:54:45"
 
-BEGIN_DATE = "2020-09-29T16:03:52"
-FIRST_BYPASS = "2020-09-30T07:09:41"
-START_MISSION_5M = "2020-09-30T07:15:37"
-REF_PRESSURE_REACH = "2020-09-30T19:51:48"
-
-SURFACING = "2020-10-08T00:43:03"
-TAKE_OFF = "2020-10-08T00:53:06"
-BLADDER_FULL = "2020-10-08T06:26:40"
-SURFACE = "2020-10-08T06:27:45"
-END_DATE = "2020-10-08T06:31:14"
 
 #TODO use an array for lines :
 #LINES=[{"Name":"FIRST_BYPASS","Date":"2020-06-11T08:18:24","color","red"},
@@ -39,7 +40,7 @@ def main(argv):
         os.chdir("scripts")
 
     for arg in argv :
-        print arg
+        print(arg)
 
     # Get the list of IMU files
     log_names = glob.glob(imuPATH + "*.TXT")
@@ -59,9 +60,10 @@ def main(argv):
     for log_name in log_names :
         new_path = os.path.join(folder_path+"/"+DIVE_NAME+".TXT")
         IMU=Imu(folder_path+"/",os.path.join(imuPATH+log_name),DIVE_NAME+".TXT",BEGIN_DATE,END_DATE)
-        IMU.plotly_heading(folder_path+"/",BEGIN_DATE,END_DATE)
-        IMU.plotly_roll(folder_path+"/",BEGIN_DATE,END_DATE)
-        IMU.plotly_pitch(folder_path+"/",BEGIN_DATE,END_DATE)
+        #IMU.plotly_heading(folder_path+"/",BEGIN_DATE,END_DATE)
+        #IMU.plotly_roll(folder_path+"/",BEGIN_DATE,END_DATE)
+        #IMU.plotly_pitch(folder_path+"/",BEGIN_DATE,END_DATE)
+        IMU.plotWave(folder_path+"/")
 
 
 class Imu:
@@ -116,7 +118,7 @@ class Imu:
             elif begin_diff > 0 :
                 range_m_high = index_measure;
         if range_m_high == range_m_low :
-            print "no measure"
+            print("no measure")
         else :
             date0=UTCDateTime(self.log_splitted[(index_measure*5)]+"T"+self.log_splitted[(index_measure*5+1)])
             end_diff0 = date0 - UTCDateTime(end_date)
@@ -145,7 +147,7 @@ class Imu:
         if len(self.heading):
             # Check if file exist
             export_path = export_path + self.log_name.replace(".TXT","")+ ".HEADING"+ ".html"
-            print export_path
+            print(export_path)
             if os.path.exists(export_path):
                 os.remove(export_path)
             # Find minimum and maximum for Y axis of vertical lines
@@ -208,7 +210,7 @@ class Imu:
         if len(self.pitch):
             # Check if file exist
             export_path = export_path + self.log_name.replace(".TXT","") + ".PITCH"+ ".html"
-            print export_path
+            print(export_path)
             if os.path.exists(export_path):
                 os.remove(export_path)
             # Find minimum and maximum for Y axis of vertical lines
@@ -271,7 +273,7 @@ class Imu:
             if len(self.roll):
                 # Check if file exist
                 export_path = export_path + self.log_name.replace(".TXT","") +".ROLL"+ ".html"
-                print export_path
+                print(export_path)
             if os.path.exists(export_path):
                 os.remove(export_path)
             # Find minimum and maximum for Y axis of vertical lines
@@ -330,5 +332,51 @@ class Imu:
                                     )
             plotly.plot({'data': data, 'layout': layout},filename=export_path,auto_open=False)
 
+    def plotWave(self, export_path):
+         nbCanal = 1 # Son monophonique (un seul canal)
+         nbOctet = 2 # Chaque echantillon est quantifie sur 32 bits
+         fech = 1    # On echantillone a 1 Hz
+
+         if len(self.roll):
+            # Check if file exist
+            export_path_roll = export_path + self.log_name.replace(".TXT","") +".ROLL"+ ".wav"
+            print(export_path_roll)
+            rollFile = wave.open( export_path_roll, 'w') # Ouverture fichier en ecriture
+            parametres = (nbCanal, nbOctet, fech, len(self.roll), 'NONE', 'not compressed')
+            rollFile.setparams(parametres)
+            for roll in self.roll:
+                roll_int = int(float(roll)*100.0)
+                val = struct.pack('<h',roll_int)
+                rollFile.writeframes(val)
+            rollFile.close()
+
+         if len(self.pitch):
+            # Check if file exist
+            export_path_pitch = export_path + self.log_name.replace(".TXT","") +".PITCH"+ ".wav"
+            print(export_path_pitch)
+            pitchFile = wave.open( export_path_pitch, 'w') # Ouverture fichier en ecriture
+            parametres = (nbCanal, nbOctet, fech, len(self.pitch), 'NONE', 'not compressed')
+            pitchFile.setparams(parametres)
+            for pitch in self.pitch:
+                pitch_int = int(float(pitch)*100.0)
+                val = struct.pack('<h',pitch_int)
+                pitchFile.writeframes(val)
+            pitchFile.close()
+
+         if len(self.heading):
+            # Check if file exist
+            export_path_heading = export_path + self.log_name.replace(".TXT","") +".HEAD"+ ".wav"
+            print(export_path_heading)
+            headFile = wave.open( export_path_heading, 'w') # Ouverture fichier en ecriture
+            parametres = (nbCanal, nbOctet, fech, len(self.heading), 'NONE', 'not compressed')
+            headFile.setparams(parametres)
+            for head in self.heading:
+                head_int = int((float(head)-180.0)*100.0)
+                val = struct.pack('<h',head_int)
+                headFile.writeframes(val)
+            headFile.close()
+            
+        
+        
 if __name__ == "__main__":
     main(sys.argv[1:])

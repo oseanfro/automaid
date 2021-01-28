@@ -13,7 +13,7 @@ import plotly.offline as plotly
 
 import matplotlib as mpl
 if os.environ.get('DISPLAY','') == '':
-    print "no display found. Using non-interactive Agg backend"
+    print("no display found. Using non-interactive Agg backend")
     mpl.use('agg',warn=False, force=True)
 import matplotlib.pyplot as plt
 
@@ -71,7 +71,7 @@ class Profile:
 
     def __init__(self, file_name, header, binary):
         self.file_name = file_name
-        print "SBE41 file name : " + self.file_name
+        print(("SBE41 file name : " + self.file_name))
         self.date = utils.get_date_from_file_name(file_name)
         self.header = header
         self.binary = binary
@@ -110,7 +110,7 @@ class Profile:
                             ord(self.binary[index])
                     self.data.append(value)
         except:
-            print "error"
+            print("error")
             self.data = None
         else:
             self.data_pressure = list()
@@ -149,15 +149,15 @@ class Profile:
             export_path = export_path + export_name
             if csv_file:
                 csv_path = export_path.replace(".TEMP.html",".csv")
-                rows = zip(self.data_pressure,self.data_temperature,self.data_salinity)
+                rows = list(zip(self.data_pressure,self.data_temperature,self.data_salinity))
                 with open(csv_path, mode='w') as csv_file:
                     csv_file = csv.writer(csv_file, delimiter=';', quotechar='"', quoting=csv.QUOTE_MINIMAL)
                     for row in rows:
                         csv_file.writerow(row)
             if os.path.exists(export_path):
-                print export_path + "already exist"
+                print((export_path + "already exist"))
                 return
-            print export_name
+            print(export_name)
             # Add acoustic values to the graph
             data_line = graph.Scatter(x=self.data_temperature,
                                       y=self.data_pressure,
@@ -182,7 +182,7 @@ class Profile:
                         filename=export_path,
                         auto_open=False)
         else:
-            print export_path + " can't be exploited for temperature profile"
+            print((export_path + " can't be exploited for temperature profile"))
 
     def plotly_salinity(self, export_path):
         if list(self.data):
@@ -191,7 +191,7 @@ class Profile:
                 UTCDateTime.strftime(UTCDateTime(self.date), "%Y%m%dT%H%M%S") + \
                 "." + self.file_name + ".SAL" + ".html"
             if os.path.exists(export_path):
-                print export_path + "already exist"
+                print((export_path + "already exist"))
                 return
             # Add acoustic values to the graph
             data_line = graph.Scatter(x=self.data_salinity,
@@ -218,4 +218,4 @@ class Profile:
                         filename=export_path,
                         auto_open=False)
         else:
-            print export_path + " can't be exploited for salinity profile"
+            print((export_path + " can't be exploited for salinity profile"))

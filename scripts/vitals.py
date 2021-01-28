@@ -52,7 +52,7 @@ class Vitals:
         end = 0
         buffdate = 0
 
-        if self.buoy in filterDate.keys():
+        if self.buoy in list(filterDate.keys()):
             begin = filterDate[self.buoy][0]
             end = filterDate[self.buoy][1]
         else:

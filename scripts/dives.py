@@ -106,7 +106,7 @@ class Dive:
                 with open(self.base_path + self.mmd_name, "r") as f:
                     content = f.read()
             except IOError:
-                print "manque le fichier " + self.mmd_name
+                print(("manque le fichier " + self.mmd_name))
                 self.mmd_name = None
                 self.events = []
             else:
@@ -141,7 +141,7 @@ class Dive:
                 with open(self.base_path + self.s41_name, "r") as f:
                     content = f.read()
             except IOError:
-                print "manque le fichier " + self.s41_name
+                print(("manque le fichier " + self.s41_name))
                 self.s41_name = None
             else:
                 self.s41_environment = re.findall(
@@ -157,16 +157,16 @@ class Dive:
             surface_date = utils.find_timestamped_values("\[MAIN *, *\d+\]surface", self.log_content)
             surface_date = UTCDateTime(surface_date[0][1])
             if len(self.gps_list) == 0:
-                print "WARNING: No GPS synchronization at all for \"" \
-                    + str(self.mmd_name) + "\", \"" + str(self.log_name) + "\""
+                print(("WARNING: No GPS synchronization at all for \"" \
+                    + str(self.mmd_name) + "\", \"" + str(self.log_name) + "\""))
             elif len(self.gps_list) > 1 and self.gps_list[-1].date > surface_date:
                 self.gps_list_is_complete = True
             elif self.gps_list[-1].date > surface_date:
-                print "WARNING: No GPS synchronization before diving for \"" \
-                    + str(self.mmd_name) + "\", \"" + str(self.log_name) + "\""
+                print(("WARNING: No GPS synchronization before diving for \"" \
+                    + str(self.mmd_name) + "\", \"" + str(self.log_name) + "\""))
             else:
-                print "WARNING: No GPS synchronization after surfacing for \"" \
-                    + str(self.mmd_name) + "\", \"" + str(self.log_name) + "\""
+                print(("WARNING: No GPS synchronization after surfacing for \"" \
+                    + str(self.mmd_name) + "\", \"" + str(self.log_name) + "\""))
 
     def generateJSON(self):
         json_object = {}
@@ -257,7 +257,7 @@ class Dive:
         if csv_file:
             p_date_format = [UTCDateTime.strftime(UTCDateTime(date), "%Y%m%dT%H%M%S") for date in p_date]
             csv_path = export_path.replace(".html",".csv")
-            rows = zip(p_date_format,p_val)
+            rows = list(zip(p_date_format,p_val))
             with open(csv_path, mode='w') as csv_file:
                 csv_file = csv.writer(csv_file, delimiter=';', quotechar='"', quoting=csv.QUOTE_MINIMAL)
                 for row in rows:
@@ -321,20 +321,20 @@ class Dive:
             #       + str(self.mmd_name) + "\", \"" + str(self.log_name) + "\""
             return
         if not self.is_complete_dive:
-            print "WARNING: Events are not part of a complete dive, do not correct clock drift for \""\
-                  + str(self.mmd_name) + "\", \"" + str(self.log_name) + "\""
+            print(("WARNING: Events are not part of a complete dive, do not correct clock drift for \""\
+                  + str(self.mmd_name) + "\", \"" + str(self.log_name) + "\""))
             return
         if not self.gps_list_is_complete:
-            print "WARNING: GPS list is incomplete, do not correct clock drift for \""\
-                  + str(self.mmd_name) + "\", \"" + str(self.log_name) + "\""
+            print(("WARNING: GPS list is incomplete, do not correct clock drift for \""\
+                  + str(self.mmd_name) + "\", \"" + str(self.log_name) + "\""))
             return
         if self.gps_list[-2].clockfreq <= 0:
-            print "WARNING: Error with last gps synchronization before diving, do not correct clock drift for \""\
-                  + str(self.mmd_name) + "\", \"" + str(self.log_name) + "\""
+            print(("WARNING: Error with last gps synchronization before diving, do not correct clock drift for \""\
+                  + str(self.mmd_name) + "\", \"" + str(self.log_name) + "\""))
             return
         if self.gps_list[-1].clockfreq <= 0:
-            print "WARNING: Error with first gps synchronization after ascent, do not correct clock drift for \""\
-                  + str(self.mmd_name) + "\", \"" + str(self.log_name) + "\""
+            print(("WARNING: Error with first gps synchronization after ascent, do not correct clock drift for \""\
+                  + str(self.mmd_name) + "\", \"" + str(self.log_name) + "\""))
             return
 
         # Correct clock drift
@@ -350,22 +350,22 @@ class Dive:
 
         # Check if the dive contain enough gps fix
         if len(self.gps_list) <= 1:
-            print "WARNING: The current dive doesn't contain enough GPS fix,""" \
+            print(("WARNING: The current dive doesn't contain enough GPS fix,""" \
                   + " do not compute event location estimation for \"" \
-                  + str(self.mmd_name) + "\", \"" + str(self.log_name) + "\""
+                  + str(self.mmd_name) + "\", \"" + str(self.log_name) + "\""))
             return
 
         # Check if the next dive contain gps fix
         if len(next_dive.gps_list) <= 1:
-            print "WARNING: The next dive doesn't contain enough GPS fix,""" \
+            print(("WARNING: The next dive doesn't contain enough GPS fix,""" \
                   + " do not compute event location estimation for \"" \
-                  + str(self.mmd_name) + "\", \"" + str(self.log_name) + "\""
+                  + str(self.mmd_name) + "\", \"" + str(self.log_name) + "\""))
             return
 
         # Warning GPS list is incomplete, do not compute event location
         if not self.gps_list_is_complete:
-            print "WARNING: GPS list is incomplete, do not compute event location for \""\
-                  + str(self.mmd_name) + "\", \"" + str(self.log_name) + "\""
+            print(("WARNING: GPS list is incomplete, do not compute event location for \""\
+                  + str(self.mmd_name) + "\", \"" + str(self.log_name) + "\""))
             return
 
         # Divide gps in two list
@@ -487,11 +487,11 @@ def get_dives(path, events, profiles):
     # Create Dive objects
     dives = list()
     for log_name in log_names:
-        print log_name
+        print(log_name)
         try:
             dives.append(Dive(path, log_name, events, profiles))
         except :
-            print "wrong format"
+            print("wrong format")
     return dives
 
 # Concatenate .000 files .LOG files in the path

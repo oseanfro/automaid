@@ -2,6 +2,7 @@ import os
 import shutil
 import glob
 import datetime
+
 import dives
 import profile
 import events
@@ -77,8 +78,8 @@ def process(mfloat_path, mfloat, begin, end):
 # generate as a function
 def generate(mfloat, datapath, filterdate):
     # For each Mermaid float
-    print ""
-    print "> " + mfloat
+    print("")
+    print(("> " + mfloat))
     # Get float number
     mfloat_nb = re.findall("(\d+)$", mfloat)[0]
     # Set the path for the float
@@ -107,7 +108,7 @@ def generate(mfloat, datapath, filterdate):
     files_to_copy += glob.glob(mfloat_path_source + mfloat_nb + "_*[.]MER")
     files_to_copy += glob.glob(mfloat_path_source + mfloat_nb + "_*[.]S41")
 
-    if mfloat in filterDate.keys():
+    if mfloat in list(filterDate.keys()):
         begin = filterDate[mfloat][0]
         end = filterDate[mfloat][1]
         files_to_copy = [f for f in files_to_copy if begin <= utils.get_date_from_file_name(f) <= end]
@@ -126,19 +127,21 @@ def generate(mfloat, datapath, filterdate):
     mdives =[]
     files_to_delete = list()
 
-    try:
-        mdives = process(mfloat_path_processed, mfloat, begin, end)
-    except:
-        mdives = []
-        print "Error on process"
-    else:
-        # Clean directories
-        files_to_delete += glob.glob(mfloat_path_processed + mfloat_nb + "_*[.][0-9][0-9][0-9]")
-        files_to_delete += glob.glob(mfloat_path_processed + mfloat_nb + "_*[.]BIN")
-        files_to_delete += glob.glob(mfloat_path_processed + mfloat_nb + "_*[.]LOG")
-        files_to_delete += glob.glob(mfloat_path_processed + mfloat_nb + "_*[.]MER")
-        files_to_delete += glob.glob(mfloat_path_processed + mfloat_nb + "_*[.]S41")
-        files_to_delete += glob.glob(mfloat_path_processed + mfloat + "*")
+    mdives = process(mfloat_path_processed, mfloat, begin, end)
+
+    #try:
+        #mdives = process(mfloat_path_processed, mfloat, begin, end)
+    #except:
+        #mdives = []
+        #print("Error on process")
+    #else:
+    # Clean directories
+    #files_to_delete += glob.glob(mfloat_path_processed + mfloat_nb + "_*[.][0-9][0-9][0-9]")
+    #files_to_delete += glob.glob(mfloat_path_processed + mfloat_nb + "_*[.]BIN")
+    #files_to_delete += glob.glob(mfloat_path_processed + mfloat_nb + "_*[.]LOG")
+    #files_to_delete += glob.glob(mfloat_path_processed + mfloat_nb + "_*[.]MER")
+    #files_to_delete += glob.glob(mfloat_path_processed + mfloat_nb + "_*[.]S41")
+    #files_to_delete += glob.glob(mfloat_path_processed + mfloat + "*")
 
     for f in files_to_delete:
         os.remove(f)
@@ -165,14 +168,14 @@ def main():
                 vitals.merge_vitals(os.path.join(root,dir),str(buoy_dir.group(1))+".vit");
                 buoys_dir_paths.append(os.path.join(root,dir))
 
-    print buoys_dir_paths
+    print(buoys_dir_paths)
     # Search Profiler floats at root directory
     for buoy_dir in buoys_dir_paths :
         mfloats = [p.split("/")[-1][:-4] for p in glob.glob(buoy_dir + "/[0-9][0-9][0-9].[0-9][0-9][0-9]-*.vit")]
         # For each Mermaid float
         for mfloat in mfloats:
-            print ""
-            print "> " + mfloat
+            print("")
+            print(("> " + mfloat))
 
             # Get float number
             mfloat_nb = re.findall("(\d+)$", mfloat)[0]
@@ -193,7 +196,7 @@ def main():
                     files_to_copy += glob.glob( buoy_dir + "/" + mfloat_nb + "*." + extension)
             files_to_copy += glob.glob(buoy_dir + "/" + mfloat_nb + "*.MER")
             files_to_copy += glob.glob(buoy_dir + "/" + mfloat_nb + "*.S41")
-            if mfloat in filterDate.keys():
+            if mfloat in list(filterDate.keys()):
                 begin = filterDate[mfloat][0]
                 end = filterDate[mfloat][1]
                 files_to_copy = [f for f in files_to_copy if begin <= utils.get_date_from_file_name(f) <= end]
@@ -208,10 +211,10 @@ def main():
             for f in files_to_copy:
                 shutil.copy(f, mfloat_src_path)
 
-            try:
-                generate(mfloat,outputPath,filterDate);
-            except:
-                print "error on process"
+            #try:
+            generate(mfloat,outputPath,filterDate);
+            #except:
+                #print("error on process")
 
 
 if __name__ == "__main__":

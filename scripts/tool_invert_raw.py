@@ -40,20 +40,20 @@ def invert_raw():
         ######################################
         freq_file = glob.glob(file_path + "*_freq")
         if len(freq_file) > 1 :
-            print "warning : more than one freq file in folder"
+            print("warning : more than one freq file in folder")
         if len(freq_file) == 0 :
-            print "warning no freq file discovered use :" + str(sampling_freq)
+            print(("warning no freq file discovered use :" + str(sampling_freq)))
         else :
             content = "40.000000"
             with open(freq_file[0], "r") as f:
                 content = f.read()
             sampling_freq = float(content)
-            print "Sampling used : " + str(sampling_freq)
+            print(("Sampling used : " + str(sampling_freq)))
         files_nb = len(catch_files)
         file_offset = 1
         for catch_file in catch_files :
-            print catch_file
-            print "File nb : " + str(file_offset) + "/" + str(files_nb)
+            print(catch_file)
+            print(("File nb : " + str(file_offset) + "/" + str(files_nb)))
             date = UTCDateTime(re.findall(".*([0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}_[0-9]{2}_[0-9]{2}\.[0-9]{6})",catch_file)[0])
             rawdata = numpy.fromfile(catch_file, numpy.int32)
             ######################################

@@ -1,10 +1,10 @@
 import os
 import shutil
 import glob
-import dives
-import events
+from . import dives
+from . import events
 import re
-import utils
+from . import utils
 from obspy import UTCDateTime
 import datetime
 
@@ -80,33 +80,33 @@ def main():
             mdives = [dive for dive in mdives if begin <= dive.date <= end]
 
     # Software version
-    print ""
-    print "Software version"
+    print("")
+    print("Software version")
     for dive in mdives:
         if dive.is_init:
             formatted_log = dive.log_content #utils.format_log(dive.log_content)
-            print re.findall(".+soft.+", formatted_log)[0]
+            print((re.findall(".+soft.+", formatted_log)[0]))
 
     # Find errors and warnings
-    print ""
-    print "List of errors"
+    print("")
+    print("List of errors")
     for dive in mdives:
         if dive.is_complete_dive:
             formatted_log = dive.log_content #utils.format_log(dive.log_content)
             for err in re.findall(".+<ERR>.+", formatted_log):
-                print err
+                print(err)
 
-    print ""
-    print "List of warnings"
+    print("")
+    print("List of warnings")
     for dive in mdives:
         if dive.is_complete_dive:
             formatted_log = dive.log_content #utils.format_log(dive.log_content)
             for wrn in re.findall(".+<WRN>.+", formatted_log):
-                print wrn
+                print(wrn)
 
     # Synchronisations GPS
-    print ""
-    print "Synchronisations GPS"
+    print("")
+    print("Synchronisations GPS")
     pps_detect_list = list()
     gpsack_list = list()
     gpsoff_list = list()
@@ -121,16 +121,16 @@ def main():
 
     if len(pps_detect_list) != len(gpsack_list) and len(gpsack_list) != len(gpsoff_list) \
             and len(gpsoff_list) != len(position_list):
-        print "LENGTH ERROR !!!!"
+        print("LENGTH ERROR !!!!")
     else:
         for pps_detect in pps_detect_list:
-            print pps_detect
+            print(pps_detect)
         for gpsack in gpsack_list:
-            print gpsack
+            print(gpsack)
         for gpsoff in gpsoff_list:
-            print gpsoff
+            print(gpsoff)
         for position in position_list:
-            print position
+            print(position)
 
     # Get dive number
     dive_nb = 0
@@ -139,8 +139,8 @@ def main():
             dive_nb += 1
 
     # Temps de pompe pour le bladder full
-    print ""
-    print "Temps de pompe pour le bladder full (s):"
+    print("")
+    print("Temps de pompe pour le bladder full (s):")
     temps_bladder_full = list()
     for dive in mdives:
         if dive.is_complete_dive:
@@ -149,14 +149,14 @@ def main():
             bdf_time = int(UTCDateTime(bladder_full_date) - UTCDateTime(start_filling_date))
             temps_bladder_full.append(bdf_time)
     for bdft in temps_bladder_full:
-        print bdft
+        print(bdft)
     temps_bladder_full_moyen = int(float(sum(temps_bladder_full)) / dive_nb)
-    print "Temps moyen (s): " + str(temps_bladder_full_moyen)
-    print "Temps moyen (h:min:s): 00:" + str(temps_bladder_full_moyen/60) + ":" + str(temps_bladder_full_moyen % 60)
+    print(("Temps moyen (s): " + str(temps_bladder_full_moyen)))
+    print(("Temps moyen (h:min:s): 00:" + str(temps_bladder_full_moyen/60) + ":" + str(temps_bladder_full_moyen % 60)))
 
     # Consommation de la pompe pendant le bladder full
-    print ""
-    print "Consommation de la pompe pendant le bladder full (amperes):"
+    print("")
+    print("Consommation de la pompe pendant le bladder full (amperes):")
     amp_val_list = list()
     for dive in mdives:
         if dive.is_complete_dive:
@@ -174,13 +174,13 @@ def main():
                         max_amp = amp_val
                         max_pwr = str(bfp_date) + ": " + str(round(float(amp_val) / 1000000., 2)) + "A"
             # Pour chaque plongee on affiche la valeur de courant max et on enrigstre sa valeur dans une liste
-            print max_pwr
+            print(max_pwr)
             amp_val_list += [max_amp]
-    print "Consommation moyenne: " + str(round(float(sum(amp_val_list)) / len(amp_val_list) / 1000000., 2)) + "A"
+    print(("Consommation moyenne: " + str(round(float(sum(amp_val_list)) / len(amp_val_list) / 1000000., 2)) + "A"))
 
     # Temps de bypass
-    print ""
-    print "Temps de bypass (s):"
+    print("")
+    print("Temps de bypass (s):")
     temps_bypass = []
     nb_ouverture_secondaire_bypass = []
     for dive in mdives:
@@ -193,20 +193,20 @@ def main():
             temps_bypass += [bypass_first + sum(bypass_second)]
             nb_ouverture_secondaire_bypass += [len(bypass_second)]
     for tb in temps_bypass:
-        print tb / 1000
-    print "Nombre d'ouvreture secondaires: " + str(nb_ouverture_secondaire_bypass)
+        print((tb / 1000))
+    print(("Nombre d'ouvreture secondaires: " + str(nb_ouverture_secondaire_bypass)))
     # print "Temps total (s): " + str(sum(temps_bypass)/1000)
     temps_bypass_moyen = int(float(sum(temps_bypass)) / dive_nb)/1000
-    print "Temps moyen (s): " + str(temps_bypass_moyen)
+    print(("Temps moyen (s): " + str(temps_bypass_moyen)))
 
     # Rapport (temps pour le bladder full) / (temps de bypass)
-    print ""
-    print "Rapport (temps pour le bladder full) / (temps de bypass):"
-    print str(round(float(temps_bladder_full_moyen) / float(temps_bypass_moyen), 1))
+    print("")
+    print("Rapport (temps pour le bladder full) / (temps de bypass):")
+    print((str(round(float(temps_bladder_full_moyen) / float(temps_bypass_moyen), 1))))
 
     # Temps de pompe en plongee
-    print ""
-    print "Temps de pompe en plongee (s):"
+    print("")
+    print("Temps de pompe en plongee (s):")
     temps_pompe = []
     for dive in mdives:
         if dive.is_complete_dive:
@@ -217,13 +217,13 @@ def main():
             temps_pompe += [temps_total_pompe_par_plongee]
     # print "Temps total (s): " + str(sum(temps_pompe)/1000)
     for tp in temps_pompe:
-        print round(float(tp) / 1000, 3)
+        print((round(float(tp) / 1000, 3)))
     temps_pompe_moyen = int(float(sum(temps_pompe)) / dive_nb)/1000
-    print "Temps moyen (s): " + str(temps_pompe_moyen)
+    print(("Temps moyen (s): " + str(temps_pompe_moyen)))
 
     # Temps de valve
-    print ""
-    print "Temps de valve (s):"
+    print("")
+    print("Temps de valve (s):")
     temps_valve = []
     for dive in mdives:
         if dive.is_complete_dive:
@@ -233,14 +233,14 @@ def main():
             temps_valve += [temps_total_valve_par_plongee]
     # print "Temps total (ms): " + str(sum(temps_valve))
     for tv in temps_valve:
-        print round(float(tv) / 1000, 3)
+        print((round(float(tv) / 1000, 3)))
     temps_valve_moyen = float(sum(temps_valve)) / dive_nb / 1000
-    print "Temps moyen (s): " + str(round(temps_valve_moyen, 3))
+    print(("Temps moyen (s): " + str(round(temps_valve_moyen, 3))))
 
     # Rapport (temps pour le bladder full) / (temps de bypass)
-    print ""
-    print "Rapport (temps de pompe en plongee) / (temps de valve):"
-    print str(round(float(temps_pompe_moyen) / float(temps_valve_moyen), 1))
+    print("")
+    print("Rapport (temps de pompe en plongee) / (temps de valve):")
+    print((str(round(float(temps_pompe_moyen) / float(temps_valve_moyen), 1))))
 
     # Clean directories
     for f in glob.glob(mfloat_path + "/" + mfloat + "*"):
