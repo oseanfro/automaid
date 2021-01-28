@@ -127,9 +127,9 @@ def decrypt_one(path,LOG_card,WARN_card,ERR_card,version):
                     #Process head
                     idString = "0x"+"{0:0{1}X}".format(id,4)+"UL"
                     binaryinfo = "{0:08b}".format(infos)
-                    type = "00"
+                    logtype = "00"
                     argformat = "00"
-                    type = binaryinfo[-2:]
+                    logtype = binaryinfo[-2:]
                     argformat = binaryinfo[-4:-2]
                     if argformat != "00":
                         continue
@@ -146,12 +146,12 @@ def decrypt_one(path,LOG_card,WARN_card,ERR_card,version):
 
                     decrypt_card={}
                     type_string = ""
-                    if type == "00":
+                    if logtype == "00":
                         decrypt_card = LOG_card
-                    elif type == "01":
+                    elif logtype == "01":
                         type_string = "<WARN>"
                         decrypt_card = WARN_card
-                    elif type == "10":
+                    elif logtype == "10":
                         type_string = "<ERR>"
                         decrypt_card = ERR_card
                     else :
@@ -278,18 +278,15 @@ def decrypt_one(path,LOG_card,WARN_card,ERR_card,version):
                                     if len(ArgByte) != ArgSize :
                                         print("err:TYPE11")
                                         break;
+                                    if ArgByte[ArgSize-1] == 0 :
+                                        ArgByte = ArgByte[:-1]
+                                    Arg = ArgByte
                                     try :
-                                        Arg = struct.unpack('{0:d}s'.format(ArgSize), ArgByte)[0]
+                                        Arg = Arg.decode('ascii', 'ignore')
                                     except :
                                         print("err:TYPE11")
-
-                                    if Arg[ArgSize-1] == 0 :
-                                        Arg = Arg[:-1]
                                     #replace none ascii characters
-                                    Arg.decode('utf-8', 'replace')
-
                                 #print (ArgSize)
-                                #print (Arg)
                                 #print ("Format : " + str(Formats[argIndex]) + "\r\n")
                                 try :
                                     if "%.*s" in Formats[argIndex]:
@@ -360,7 +357,6 @@ def decrypt_all(path):
                         elif decryptcard["TYPE"] == "ERR":
                             ERRcard = decryptcard["DECRYPTCARD"]
                     #print file
-                    Log_file = decrypt_one(file,LOGcard,WARNcard,ERRcard,file_version)
                     try :
                         Log_file = decrypt_one(file,LOGcard,WARNcard,ERRcard,file_version)
                     except:

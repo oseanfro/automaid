@@ -126,22 +126,19 @@ def generate(mfloat, datapath, filterdate):
 
     mdives =[]
     files_to_delete = list()
-
-    mdives = process(mfloat_path_processed, mfloat, begin, end)
-
-    #try:
-        #mdives = process(mfloat_path_processed, mfloat, begin, end)
-    #except:
-        #mdives = []
-        #print("Error on process")
-    #else:
+    try:
+        mdives = process(mfloat_path_processed, mfloat, begin, end)
+    except:
+        mdives = []
+        print("Error on process")
+    else:
     # Clean directories
-    #files_to_delete += glob.glob(mfloat_path_processed + mfloat_nb + "_*[.][0-9][0-9][0-9]")
-    #files_to_delete += glob.glob(mfloat_path_processed + mfloat_nb + "_*[.]BIN")
-    #files_to_delete += glob.glob(mfloat_path_processed + mfloat_nb + "_*[.]LOG")
-    #files_to_delete += glob.glob(mfloat_path_processed + mfloat_nb + "_*[.]MER")
-    #files_to_delete += glob.glob(mfloat_path_processed + mfloat_nb + "_*[.]S41")
-    #files_to_delete += glob.glob(mfloat_path_processed + mfloat + "*")
+        files_to_delete += glob.glob(mfloat_path_processed + mfloat_nb + "_*[.][0-9][0-9][0-9]")
+        files_to_delete += glob.glob(mfloat_path_processed + mfloat_nb + "_*[.]BIN")
+        files_to_delete += glob.glob(mfloat_path_processed + mfloat_nb + "_*[.]LOG")
+        files_to_delete += glob.glob(mfloat_path_processed + mfloat_nb + "_*[.]MER")
+        files_to_delete += glob.glob(mfloat_path_processed + mfloat_nb + "_*[.]S41")
+        files_to_delete += glob.glob(mfloat_path_processed + mfloat + "*")
 
     for f in files_to_delete:
         os.remove(f)
@@ -211,10 +208,10 @@ def main():
             for f in files_to_copy:
                 shutil.copy(f, mfloat_src_path)
 
-            #try:
-            generate(mfloat,outputPath,filterDate);
-            #except:
-                #print("error on process")
+            try:
+                generate(mfloat,outputPath,filterDate);
+            except:
+                print("error on process")
 
 
 if __name__ == "__main__":
