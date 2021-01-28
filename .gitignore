@@ -1,3 +1,6 @@
 server/
+IMU/
 processed/
 *.tags
+*.tags_swap
+scripts/__pychache__/

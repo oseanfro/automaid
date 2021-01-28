@@ -205,7 +205,7 @@ class Event:
         icdf24_v103ec_test = os.path.join(automaid_dir, 'bin/icdf24_v103ec_test')
         icdf24_v103_test = os.path.join(automaid_dir, 'bin/icdf24_v103_test')
         icdf24_data = os.path.join(automaid_dir, "bin/wtcoeffs.icdf24_" + self.scales)
-        with open(wtcoeffsname, 'w') as f:
+        with open(wtcoeffsname, 'wb') as f:
             f.write(self.binary)
         # Do icd24
         if edge_correction == "1":
@@ -412,4 +412,4 @@ class Event:
 
         # Save stream object
         stream.write(export_path_sac, format='SAC')
-        stream.write(export_path_msd, format='MSEED')
+        stream.write(export_path_msd, format='MSEED',encoding='STEIM1')

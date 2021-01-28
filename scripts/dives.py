@@ -103,14 +103,15 @@ class Dive:
         if self.mmd_name:
             try:
                 # Read the Mermaid environment associated to the dive
-                with open(self.base_path + self.mmd_name, "r") as f:
+                with open(self.base_path + self.mmd_name, "rb") as f:
                     content = f.read()
             except IOError:
                 print(("manque le fichier " + self.mmd_name))
                 self.mmd_name = None
                 self.events = []
             else:
-                self.mmd_environment = re.findall("<ENVIRONMENT>.+</PARAMETERS>", content, re.DOTALL)[0]
+                header = content.split(b'</PARAMETERS>')[0].decode("utf-8")
+                self.mmd_environment = re.findall("<ENVIRONMENT>.+", header, re.DOTALL)[0]
                 # Get list of events associated to the dive
                 self.events = events.get_events_between(self.date, self.end_date)
                 # For each event
