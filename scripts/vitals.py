@@ -166,7 +166,8 @@ class Emergency:
                     self.date = utils.totimestamp(datetime.datetime.strptime(line_buoy.group(1), "%Y-%m-%dT%H:%M:%S"))
                 else:
                     self.date = utils.totimestamp(datetime.datetime.strptime(line_buoy.group(1), "%Y%m%d-%Hh%Mmn%S"))
-                self.cause = line_buoy.group(3)
+
+                self.cause = line_buoy.group(3).decode('ascii', 'ignore')
                 self._state = "In_progress"
             else:
                 self._state = "Interrupted"
