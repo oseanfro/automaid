@@ -380,6 +380,7 @@ class Event:
         # Check if file exist
         export_path_sac = export_path + self.get_export_file_name() + ".sac"
         export_path_msd = export_path + self.get_export_file_name() + ".mseed"
+        export_path_wav = export_path + self.get_export_file_name() + ".wav"
         if os.path.exists(export_path_sac) and os.path.exists(export_path_msd):
             return
 
@@ -413,3 +414,4 @@ class Event:
         # Save stream object
         stream.write(export_path_sac, format='SAC')
         stream.write(export_path_msd, format='MSEED',encoding='STEIM1')
+        stream.write(export_path_wav, format='WAV', framerate=self.decimated_fs)
