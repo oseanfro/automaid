@@ -3,4 +3,5 @@ IMU/
 processed/
 *.tags
 *.tags_swap
-scripts/__pychache__/
+scripts/__pycache__/
+*.pyc
