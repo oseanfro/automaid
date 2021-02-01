@@ -41,13 +41,12 @@ class Vitals:
         self.divepath = []
         self.deployed = False
     def split(self,line,mdives,path,filterDate):
-        line_buoy = re.match(".* >>> BUOY (\d+) (.*) <<<",line)
+        line_buoy = re.match(".* >>> BUOY (\d+) (\d+-\d+-\d+T\d+:\d+:\d+) <<<",line)
         line_coord = re.match(".*: ([NS])(\d+)deg(\d+\.\d+)mn, ([EW])(\d+)deg(\d+\.\d+)mn",line)
         line_dop = re.match(".* hdop (.*), vdop (.*)",line)
         line_bat = re.match(".* Vbat (\d+)mV \(min (\d+)mV\)",line)
         line_Pint = re.match(".* Pint (\d+)Pa",line)
         line_Pext = re.match(".* Pext (-?\d+)mbar \(range (-?\d+)mbar\)",line)
-        line_emerg = re.match(".* EMERGENCY .*",line)
         begin = 0
         end = 0
         buffdate = 0
@@ -67,7 +66,7 @@ class Vitals:
             self.deployed = True
         if line_buoy:
             if  self.date is None:
-                self.date = utils.totimestamp(datetime.datetime.strptime(line_buoy.group(2), "%Y-%m-%dT%H:%M:%S"))
+                self.date = utils.totimestamp(buffdate)
                 for dive in mdives:
                     if (self.date <= dive.end_date.timestamp and self.date >= dive.date.timestamp):
                         divefiles = os.listdir(path + "/" + self.buoy + "/processed/" + dive.directory_name)
