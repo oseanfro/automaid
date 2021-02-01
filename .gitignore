@@ -1,3 +1,5 @@
 server/
 processed/
 *.tags
+*.pyc
+*.tags_swap
