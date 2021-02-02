@@ -7,6 +7,7 @@ import profile
 import events
 import decrypt
 import vitals
+import databases
 import kml
 import re
 import utils
@@ -155,6 +156,15 @@ def main():
     # Create ouput directory
     if not os.path.exists(outputPath):
         os.mkdir(outputPath)
+
+    # Update databases
+    print "****************"
+    print "Update databases"
+    print "****************"
+    absFilePath = os.path.abspath(__file__)
+    scriptpath, scriptfilename = os.path.split(absFilePath)
+    database_path = os.path.join(scriptpath,"databases")
+    databases.update(database_path)
 
     # Search Profiler by folder name
     buoys_dir_paths=[os.path.join("../",dataPath)]
