@@ -1,5 +1,6 @@
 server/
 processed/
+scripts/bin/wtcoeffs*
 *.tags
 *.pyc
 scripts/*.pyc

@@ -23,6 +23,7 @@ def update(path):
                 if database["Name"]:
                     try:
                         new_req = requests.get('http://164.132.96.221/databases/'+database["Name"])
+                        database["data"] = new_req.json()
                         if new_req.status_code != 200 :
                             print "Error " + str(new_req.status_code) + " when get " + database["Name"]
                             network = 0
@@ -43,7 +44,7 @@ def update(path):
                 if database["Name"]:
                     database_path = os.path.join(path,database["Name"])
                     with open(database_path, 'w') as databasefile:
-                        json.dump(new_req.json(), databasefile)
+                        json.dump(database["data"], databasefile)
 
 if __name__ == "__main__":
     update("./databases/")
