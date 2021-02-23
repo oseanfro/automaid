@@ -22,6 +22,11 @@ redo = "True"
 
 # main process
 def process(mfloat_path, mfloat, begin, end):
+    absFilePath = os.path.abspath(__file__)
+    scriptpath, scriptfilename = os.path.split(absFilePath)
+    statisticspath = os.path.join(scriptpath,"statistics")
+    if not os.path.exists(statisticspath) :
+        os.mkdir(statisticspath)
     # Concatenate LOG and BIN files that need it
     utils.concatenate_files(mfloat_path)
     # Decrypt all BIN files
@@ -65,6 +70,7 @@ def process(mfloat_path, mfloat, begin, end):
         if events_plotly:
             dive.generate_events_plotly()
         dive.generate_events_sac()
+        dive.generate_statistics(statisticspath)
         dive.generate_profile_plotly(generate_csv_file)
 
     # Plot vital data

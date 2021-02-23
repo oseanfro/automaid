@@ -468,6 +468,15 @@ class Dive:
             else :
                 event.plot(self.export_path)
 
+    def generate_statistics(self,csv_path):
+        csv_filename = os.path.join(csv_path,"stats.csv")
+        for event in self.events:
+            row = [self.station_name] + event.statistics()
+            with open(csv_filename, mode='ab') as csv_file:
+                csv_file = csv.writer(csv_file, delimiter=';', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+                csv_file.writerow(row)
+
+
     def generate_events_sac(self):
         for event in self.events:
             if not event.is_stanford_event():

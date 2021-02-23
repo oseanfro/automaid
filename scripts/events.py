@@ -51,6 +51,8 @@ class Event:
     header = None
     binary = None
     data = None
+    dataMax = None
+    dataMin = None
     date = None
     measured_fs = None   # Measured sampling frequency
     decimated_fs = None  # Sampling frequency of the received data
@@ -168,9 +170,13 @@ class Event:
         if not self.is_stanford_event() :
             if self.requested:
                 # For a requested event
-                rec_file_date = re.findall("FNAME=(\d{4}-\d{2}-\d{2}T\d{2}_\d{2}_\d{2}\.\d{6})", self.header)
                 sample_offset = re.findall("SMP_OFFSET=(\d+)", self.header)
-                rec_file_date = UTCDateTime.strptime(rec_file_date[0], "%Y-%m-%dT%H_%M_%S.%f")
+                rec_file_date = re.findall("FNAME=(\d{4}-\d{2}-\d{2}T\d{2}_\d{2}_\d{2}\.\d{6})", self.header)
+                if len(rec_file_date) <= 0 :
+                    rec_file_date = re.findall("FNAME=(\d{4}-\d{2}-\d{2}T\d{2}_\d{2}_\d{2})", self.header)
+                    rec_file_date = UTCDateTime.strptime(rec_file_date[0], "%Y-%m-%dT%H_%M_%S")
+                else:
+                    rec_file_date = UTCDateTime.strptime(rec_file_date[0], "%Y-%m-%dT%H_%M_%S.%f")
                 sample_offset = float(sample_offset[0])
                 self.date = rec_file_date + sample_offset/self.measured_fs
             else:
@@ -195,6 +201,8 @@ class Event:
         # If scales == -1 this is a raw signal, just convert binary data to numpy array of int32
         if self.scales == "-1":
             self.data = numpy.frombuffer(self.binary, numpy.int32)
+            self.dataMax = numpy.amax(self.data)
+            self.dataMin = numpy.amin(self.data)
             return
         # Get additional information to invert wavelet
         normalized = re.findall(" NORMALIZED=(\d+)", self.environment)[0]
@@ -222,6 +230,8 @@ class Event:
                                     wtcoeffsname])
         # Read icd24 data
         self.data = numpy.fromfile(icdf24_data, numpy.int32)
+        self.dataMax = numpy.amax(self.data)
+        self.dataMin = numpy.amin(self.data)
 
     def get_export_file_name(self):
         export_file_name = UTCDateTime.strftime(UTCDateTime(self.date), "%Y%m%dT%H%M%S") + "." + self.file_name
@@ -237,6 +247,9 @@ class Event:
             else:
                 export_file_name = export_file_name + ".WLT" + self.scales
         return export_file_name
+
+    def statistics(self):
+        return [UTCDateTime.strftime(UTCDateTime(self.date), "%Y%m%dT%H%M%S"),self.dataMax, self.dataMin]
 
     def __get_figure_title(self):
         title = "" + self.date.isoformat() \
@@ -380,6 +393,7 @@ class Event:
         # Check if file exist
         export_path_sac = export_path + self.get_export_file_name() + ".sac"
         export_path_msd = export_path + self.get_export_file_name() + ".mseed"
+        export_path_wav = export_path + self.get_export_file_name() + ".wav"
         if os.path.exists(export_path_sac) and os.path.exists(export_path_msd):
             return
 
@@ -413,3 +427,4 @@ class Event:
         # Save stream object
         stream.write(export_path_sac, format='SAC')
         stream.write(export_path_msd, format='MSEED')
+        stream.write(export_path_wav, format='WAV', framerate=self.decimated_fs)

@@ -1,6 +1,8 @@
 server/
 processed/
-scripts/bin/wtcoeffs*
+scripts/tool_invert_mer*
+scripts/tool_invert_raw*
+scripts/statistics*
 *.tags
 *.pyc
 scripts/*.pyc

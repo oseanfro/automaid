@@ -6,6 +6,7 @@ def invert_main():
     mer_file_path = "tool_invert_mer/"
     mevents = events.Events(mer_file_path)
     for event in mevents.events:
+        print event.file_name
         with open(mer_file_path + event.file_name, 'r') as f:
             content = f.read()
         environment = re.findall("<ENVIRONMENT>.+</PARAMETERS>", content, re.DOTALL)[0]
