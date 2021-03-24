@@ -12,6 +12,7 @@ import kml
 import re
 import utils
 import sys
+import traceback
 
 from configuration import dataPath
 from configuration import events_plotly
@@ -128,9 +129,11 @@ def generate(mfloat, datapath, filterdate):
     files_to_delete = list()
     try:
         mdives = process(mfloat_path_processed, mfloat, begin, end)
-    except:
+    except Exception as e :
+        # Just print(e) is cleaner and more likely what you want,
+        # but if you insist on printing message specifically whenever possible...
+        traceback.print_exc()
         mdives = []
-        print("Error on process")
     else:
     # Clean directories
         files_to_delete += glob.glob(mfloat_path_processed + mfloat_nb + "_*[.][0-9][0-9][0-9]")
@@ -207,11 +210,12 @@ def main():
             # Copy files
             for f in files_to_copy:
                 shutil.copy(f, mfloat_src_path)
-
             try:
                 generate(mfloat,outputPath,filterDate);
-            except:
-                print("error on process")
+            except Exception as e :
+                # Just print(e) is cleaner and more likely what you want,
+                # but if you insist on printing message specifically whenever possible...
+                traceback.print_exc()
 
 
 if __name__ == "__main__":
