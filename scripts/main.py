@@ -12,6 +12,7 @@ import kml
 import re
 import utils
 import sys
+import traceback
 
 from configuration import dataPath
 from configuration import events_plotly
@@ -137,7 +138,7 @@ def generate(mfloat, datapath, filterdate):
         mdives = process(mfloat_path_processed, mfloat, begin, end)
     except:
         mdives = []
-        print "Error on process"
+        traceback.print_exc()
     else:
         # Clean directories
         files_to_delete += glob.glob(mfloat_path_processed + mfloat_nb + "_*[.][0-9][0-9][0-9]")
@@ -170,7 +171,7 @@ def main():
     absFilePath = os.path.abspath(__file__)
     scriptpath, scriptfilename = os.path.split(absFilePath)
     database_path = os.path.join(scriptpath,"databases")
-    databases.update(database_path)
+    #databases.update(database_path)
 
     # Search Profiler by folder name
     buoys_dir_paths=[os.path.join("../",dataPath)]
@@ -227,7 +228,7 @@ def main():
             try:
                 generate(mfloat,outputPath,filterDate);
             except:
-                print "error on process"
+                traceback.print_exc()
 
 
 if __name__ == "__main__":
