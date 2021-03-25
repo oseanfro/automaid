@@ -501,7 +501,7 @@ def get_dives(path, events, profiles):
         try:
             dives.append(Dive(path, log_name, events, profiles))
         except :
-            traceback.exc()
+            traceback.print_exc()
     return dives
 
 # Concatenate .000 files .LOG files in the path

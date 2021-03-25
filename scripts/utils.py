@@ -4,6 +4,7 @@ import glob
 from obspy import UTCDateTime
 import plotly.graph_objs as graph
 from datetime import datetime, timedelta
+import traceback
 
 
 #
@@ -84,6 +85,7 @@ def find_timestamped_values(regexp, content):
                 d = UTCDateTime(int(timestamp_catch[0]))
                 last_value = int(timestamp_catch[0])
             except:
+                traceback.print_exc()
                 d = UTCDateTime(last_value)
             timestamped_values.append([v, d])
     return timestamped_values
@@ -104,6 +106,7 @@ def find_timestampedUTC_values(regexp, content):
                 d = UTCDateTime(str(timestamp_catch[0]), iso8601=True)
                 last_value = timestamp_catch[0]
             except:
+                traceback.print_exc()
                 d = UTCDateTime(last_value)
             timestamped_values.append([v, d])
     return timestamped_values
