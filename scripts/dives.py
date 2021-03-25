@@ -8,6 +8,7 @@ import plotly.offline as plotly
 import utils
 from obspy import UTCDateTime
 import gps
+import traceback
 
 
 # Log class to manipulate log files
@@ -500,7 +501,7 @@ def get_dives(path, events, profiles):
         try:
             dives.append(Dive(path, log_name, events, profiles))
         except :
-            print "wrong format"
+            traceback.exc()
     return dives
 
 # Concatenate .000 files .LOG files in the path
