@@ -3,7 +3,12 @@ import shutil
 import glob
 import datetime
 
-import dives
+try :
+    import dives
+except:
+    import automaid.dives as dives
+
+
 import profile
 import events
 import decrypt
@@ -129,7 +134,7 @@ def generate(mfloat, datapath, filterdate):
     files_to_delete = list()
     try:
         mdives = process(mfloat_path_processed, mfloat, begin, end)
-    except Exception as e :
+    except:
         # Just print(e) is cleaner and more likely what you want,
         # but if you insist on printing message specifically whenever possible...
         traceback.print_exc()
@@ -212,7 +217,7 @@ def main():
                 shutil.copy(f, mfloat_src_path)
             try:
                 generate(mfloat,outputPath,filterDate);
-            except Exception as e :
+            except:
                 # Just print(e) is cleaner and more likely what you want,
                 # but if you insist on printing message specifically whenever possible...
                 traceback.print_exc()

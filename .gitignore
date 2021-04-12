@@ -5,3 +5,6 @@ processed/
 *.tags_swap
 scripts/__pycache__/
 *.pyc
+scripts/tool_invert_mer/
+scripts/tool_invert_raw/
+scripts/statistics/

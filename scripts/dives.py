@@ -7,7 +7,9 @@ import plotly.graph_objs as graph
 import plotly.offline as plotly
 import utils
 from obspy import UTCDateTime
+import traceback
 import gps
+import configuration
 
 
 # Log class to manipulate log files
@@ -139,7 +141,7 @@ class Dive:
         if self.s41_name:
             try:
                 # Read the Mermaid environment associated to the dive
-                with open(self.base_path + self.s41_name, "r") as f:
+                with open(self.base_path + self.s41_name, "r", encoding='latin1') as f:
                     content = f.read()
             except IOError:
                 print(("manque le fichier " + self.s41_name))
@@ -268,36 +270,45 @@ class Dive:
         # Find minimum and maximum for Y axis of vertical lines
         minimum = min(p_val) + 0.05 * min(p_val)
         maximum = 0
-        # Add bypass lines
-        bypass = [bp[1] for bp in bypass]
-        bypass_line = utils.plotly_vertical_shape(bypass,
-                                                  ymin=minimum,
-                                                  ymax=maximum,
-                                                  name="bypass",
-                                                  color="blue")
-        # Add valve lines
-        valve = [vv[1] for vv in valve]
-        valve_line = utils.plotly_vertical_shape(valve,
-                                                 ymin=minimum,
-                                                 ymax=maximum,
-                                                 name="valve",
-                                                 color="green")
-        # Add pump lines
-        pump = [pp[1] for pp in pump]
-        pump_line = utils.plotly_vertical_shape(pump,
-                                                ymin=minimum,
-                                                ymax=maximum,
-                                                name="pump",
-                                                color="orange")
 
-        # Add mermaid events lines
-        mermaid_events = [pp[1] for pp in mermaid_events]
-        mermaid_events_line = utils.plotly_vertical_shape(mermaid_events,
-                                                          ymin=minimum,
-                                                          ymax=maximum,
-                                                          name="MERMAID events",
-                                                          color="purple")
-        data = [bypass_line, valve_line, pump_line,mermaid_events_line, depth_line]
+        data = [depth_line]
+        if configuration.bypass_ploted :
+            # Add bypass lines
+            bypass = [bp[1] for bp in bypass]
+            bypass_line = utils.plotly_vertical_shape(bypass,
+                                                      ymin=minimum,
+                                                      ymax=maximum,
+                                                      name="bypass",
+                                                      color="blue")
+            data.append(bypass_line)
+        if configuration.valve_ploted :
+            # Add valve lines
+            valve = [vv[1] for vv in valve]
+            valve_line = utils.plotly_vertical_shape(valve,
+                                                     ymin=minimum,
+                                                     ymax=maximum,
+                                                     name="valve",
+                                                     color="green")
+            data.append(valve_line)
+        if configuration.pump_ploted :
+            # Add pump lines
+            pump = [pp[1] for pp in pump]
+            pump_line = utils.plotly_vertical_shape(pump,
+                                                    ymin=minimum,
+                                                    ymax=maximum,
+                                                    name="pump",
+                                                    color="orange")
+            data.append(pump_line)
+
+        if configuration.mermaid_ploted :
+            # Add mermaid events lines
+            mermaid_events = [pp[1] for pp in mermaid_events]
+            mermaid_events_line = utils.plotly_vertical_shape(mermaid_events,
+                                                              ymin=minimum,
+                                                              ymax=maximum,
+                                                              name="MERMAID events",
+                                                              color="purple")
+            data.append(mermaid_events_line)
 
         layout = graph.Layout(title=self.directory_name + '/' + self.log_name,
                               xaxis=dict(
@@ -492,6 +503,7 @@ def get_dives(path, events, profiles):
         try:
             dives.append(Dive(path, log_name, events, profiles))
         except :
+            traceback.print_exc()
             print("wrong format")
     return dives
 

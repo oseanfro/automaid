@@ -26,7 +26,7 @@ class Profiles:
         profile_files = glob.glob(base_path + "*.S41")
         for profile_file in profile_files:
             file_name = profile_file.split("/")[-1]
-            with open(profile_file, "r") as f:
+            with open(profile_file, "r",encoding='latin1') as f:
                 content = f.read()
             header = content.split("</PILOTS>\r\n")[0]
             if len(content.split("</PILOTS>\r\n")) > 1 :

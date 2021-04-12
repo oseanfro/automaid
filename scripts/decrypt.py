@@ -6,6 +6,7 @@ import struct
 import json
 import re
 import time
+import traceback
 
 #1:CLIENT
 #2:SUPERUSERS
@@ -122,6 +123,7 @@ def decrypt_one(path,LOG_card,WARN_card,ERR_card,version):
                         infos = struct.unpack('<B', INFOSbytes)[0]
                         dataSize = struct.unpack('<B', DATASIZEbytes)[0]
                     except :
+                        traceback.print_exc()
                         print("err:header")
 
                     #Process head
@@ -201,6 +203,7 @@ def decrypt_one(path,LOG_card,WARN_card,ERR_card,version):
                                 ArgInfos=struct.unpack('<B', ARGINFOSByte)[0]
                                 ArgSize = struct.unpack('<B', ARGSIZEByte)[0]
                             except :
+                                traceback.print_exc()
                                 print("err:INFOSSIZE")
 
                             #Process Argument Head
@@ -224,6 +227,7 @@ def decrypt_one(path,LOG_card,WARN_card,ERR_card,version):
                                         try :
                                             Arg = struct.unpack('<i', ArgByte)[0]
                                         except :
+                                            traceback.print_exc()
                                             print("err:TYPE00SIZE04")
                                     elif ArgSize == 2:
                                         ArgByte = f.read(2)
@@ -233,6 +237,7 @@ def decrypt_one(path,LOG_card,WARN_card,ERR_card,version):
                                         try :
                                             Arg = struct.unpack('<h', ArgByte)[0]
                                         except :
+                                            traceback.print_exc()
                                             print("err:TYPE00SIZE02")
                                     elif ArgSize == 1:
                                         ArgByte = f.read(1)
@@ -242,6 +247,7 @@ def decrypt_one(path,LOG_card,WARN_card,ERR_card,version):
                                         try :
                                             Arg = struct.unpack('<b', ArgByte)[0]
                                         except :
+                                            traceback.print_exc()
                                             print("err:TYPE00SIZE01")
                                 elif ArgType == "01":
                                     # unsigned integer
@@ -253,6 +259,7 @@ def decrypt_one(path,LOG_card,WARN_card,ERR_card,version):
                                         try :
                                             Arg = struct.unpack('<I', ArgByte)[0]
                                         except :
+                                            traceback.print_exc()
                                             print("err:TYPE01SIZE04")
                                     elif ArgSize == 2:
                                         ArgByte = f.read(2)
@@ -262,6 +269,7 @@ def decrypt_one(path,LOG_card,WARN_card,ERR_card,version):
                                         try :
                                             Arg = struct.unpack('<H', ArgByte)[0]
                                         except :
+                                            traceback.print_exc()
                                             print("err:TYPE01SIZE02")
                                     elif ArgSize == 1:
                                         ArgByte = f.read(1)
@@ -271,6 +279,7 @@ def decrypt_one(path,LOG_card,WARN_card,ERR_card,version):
                                         try :
                                             Arg = struct.unpack('<B', ArgByte)[0]
                                         except :
+                                            traceback.print_exc()
                                             print("err:TYPE01SIZE01")
                                 elif ArgType == "11":
                                     # string
@@ -284,6 +293,7 @@ def decrypt_one(path,LOG_card,WARN_card,ERR_card,version):
                                     try :
                                         Arg = Arg.decode('ascii', 'ignore')
                                     except :
+                                        traceback.print_exc()
                                         print("err:TYPE11")
                                     #replace none ascii characters
                                 #print (ArgSize)
@@ -294,6 +304,7 @@ def decrypt_one(path,LOG_card,WARN_card,ERR_card,version):
                                     else :
                                         string += (Formats[argIndex] % Arg)
                                 except :
+                                    traceback.print_exc()
                                     print("error format")
                             else :
                                 #print ("Format : " + str(Formats[argIndex]) + "\r\n")

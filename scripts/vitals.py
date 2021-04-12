@@ -269,7 +269,7 @@ def sortdictbyname(value):
 
 def plot_battery_voltage(vital_file_path, vital_file_name, begin, end):
     # Read file
-    with open(vital_file_path + vital_file_name, "r") as f:
+    with open(vital_file_path + vital_file_name, "r",encoding='latin1') as f:
         content = f.read()
 
     # Find battery values
@@ -333,7 +333,7 @@ def plot_battery_voltage(vital_file_path, vital_file_name, begin, end):
 
 def plot_internal_pressure(vital_file_path, vital_file_name, begin, end):
     # Read file
-    with open(vital_file_path + vital_file_name, "r") as f:
+    with open(vital_file_path + vital_file_name, "r",encoding='latin1') as f:
         content = f.read()
 
     # Find battery values
@@ -389,7 +389,7 @@ def plot_internal_pressure(vital_file_path, vital_file_name, begin, end):
 
 def plot_pressure_offset(vital_file_path, vital_file_name, begin, end):
     # Read file
-    with open(vital_file_path + vital_file_name, "r") as f:
+    with open(vital_file_path + vital_file_name, "r",encoding='latin1') as f:
         content = f.read()
 
     # Find battery values

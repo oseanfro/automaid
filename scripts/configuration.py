@@ -10,6 +10,12 @@ dataPath = "server"
 # Generate CSV with RAW data
 generate_csv_file = False
 
+# Plot actionners
+bypass_ploted = True
+valve_ploted = True
+pump_ploted = True
+mermaid_ploted = True
+
 # Set a time range of analysis for a specific float
 filterDate = {
     "452.112-N-0000": (datetime.datetime(2100, 1, 1), datetime.datetime(2100, 1, 1)),

@@ -12,7 +12,7 @@ rm -rf $REMOVE_PROCESS
 fi
 
 cd $AUTOMAID_LINK
-python ./scripts/main.py 2>&1
+python3 ./scripts/main.py 2>&1
 
 echo "finished"
 

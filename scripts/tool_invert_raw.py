@@ -100,6 +100,7 @@ def invert_raw():
             # Save stream object
             stream.write(catch_file + ".sac", format='SAC')
             stream.write(catch_file + ".mseed", format='MSEED')
+            stream.write(catch_file + ".wav", format='WAV', framerate=sampling_freq)
             file_offset = file_offset + 1
     else :
         ######################################
