@@ -2,11 +2,11 @@ import os
 import shutil
 import sys
 import glob
-from . import dives
-from . import events
-from . import profile
+import dives
+import events
+import profile
 import re
-from . import utils
+import utils
 from obspy import UTCDateTime
 import datetime
 
@@ -26,10 +26,10 @@ def dive(mfloat,date_begin,date_end):
         for f in glob.glob("../processed/"+ mfloat +"/processed/*/*.MER.env"):
             shutil.copy(f, mfloat_path)
 
-        for f in glob.glob("../processed/"+ mfloat +"/processed/*.LOG.h"):
+        for f in glob.glob("../processed/"+ mfloat +"/*.LOG.h"):
             shutil.move(f, f[0:len(f)-2])
 
-        for f in glob.glob("../processed/"+ mfloat +"/processed/*.MER.env"):
+        for f in glob.glob("../processed/"+ mfloat +"/*.MER.env"):
             sp=f.split(".")
             shutil.move(f, "../processed/"+ mfloat +"/"+sp[5]+".MER")
 
@@ -131,7 +131,7 @@ def dive(mfloat,date_begin,date_end):
                 print((str(UTCDateTime(dive.date).isoformat()) + " : " + str(bdf_time)))
         temps_bladder_full_moyen = int(float(sum(temps_bladder_full)) / dive_nb)
         print(("Temps moyen (s): " + str(temps_bladder_full_moyen)))
-        print(("Temps moyen (h:min:s): 00:" + str(temps_bladder_full_moyen/60) + ":" + str(temps_bladder_full_moyen % 60)))
+        print(("Temps moyen (h:min:s): 00:" + str(round(temps_bladder_full_moyen/60)) + ":" + str(temps_bladder_full_moyen % 60)))
 
         # Consommation de la pompe pendant le bladder full
         print("")
@@ -254,4 +254,4 @@ def dive(mfloat,date_begin,date_end):
 
 
 if __name__ == "__main__":
-    dive("465.152-R-0004",19800101,21000101)
+    dive("452.210-P-0014",datetime.datetime(2021, 4, 12),datetime.datetime(3000, 1, 1))

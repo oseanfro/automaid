@@ -493,7 +493,9 @@ class Dive:
 # Create dives object
 def get_dives(path, events, profiles):
     # Get the list of log files
-    log_names = glob.glob(path + "*.LOG*")
+    log_names = glob.glob(path + "*.LOG")
+    if len(log_names) == 0 :
+        log_names = glob.glob(path + "*.LOG.h")
     log_names = [x.split("/")[-1] for x in log_names]
     log_names.sort()
     # Create Dive objects
