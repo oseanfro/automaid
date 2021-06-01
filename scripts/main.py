@@ -5,17 +5,21 @@ import datetime
 
 try :
     import dives
+    import utils
+    import profile
+    import events
+    import decrypt
+    import vitals
 except:
     import automaid.dives as dives
-
-
-import profile
-import events
-import decrypt
-import vitals
+    import automaid.utils
+    import automaid.profile
+    import automaid.events
+    import automaid.decrypt
+    import automaid.vitals
+    
 import kml
 import re
-import utils
 import sys
 import traceback
 

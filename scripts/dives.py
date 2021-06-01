@@ -29,8 +29,11 @@ class Dive:
     profiles = None
     s41_name = None
     s41_environment = None
+    s41_start = None
     events = None
     station_name = None
+    cycle_nb = None
+    soft_version = None
     station_number = None
     gps_list = None
     gps_list_is_complete = None
@@ -85,16 +88,30 @@ class Dive:
 
         # Get the station name
         if self.is_dive or self.is_init:
-            self.station_name = re.findall("board (.+)", utils.split_log_lines(self.log_content)[0])
-            if len(self.station_name) == 0:
-                self.station_name = re.findall("board (.+)", utils.split_log_lines(self.log_content)[1])
-            if len(self.station_name) == 0:
-                self.station_name = re.findall("buoy (.+)", utils.split_log_lines(self.log_content)[0])
-            if len(self.station_name) == 0:
-                self.station_name = re.findall("buoy (.+)", utils.split_log_lines(self.log_content)[1])
-            self.station_name = self.station_name[0]
-            self.station_number = self.station_name.split("-")[-1]
+            self.station_name = []
+            self.soft_version = []
+            self.cycle_nb = []
+            log_splitted = utils.split_log_lines(self.log_content)
+            for line in log_splitted:
+                if len(self.station_name) == 0 :
+                    self.station_name = re.findall("board (.+)", line)
+                    if len(self.station_name) == 0:
+                        self.station_name = re.findall("buoy (.+)", line)
+                if len(self.soft_version) == 0 :
+                    self.soft_version = re.findall("soft \w* ?\d{3}\.\d{3}\.\d{3}[\.]?[_]?[V]?(.+)",line)
+                if len(self.cycle_nb) == 0 :
+                    self.cycle_nb = re.findall("cycle (\d+)", line)
+                if (len(self.station_name) > 0) and (len(self.soft_version) > 0) and (len(self.cycle_nb) > 0):
+                    self.station_name = self.station_name[0]
+                    self.cycle_nb = self.cycle_nb[0]
+                    self.soft_version = self.soft_version[0]
+                    self.station_number = self.station_name.split("-")[-1]
+                    break
 
+
+        print(self.station_name)
+        print(self.soft_version)
+        print(self.cycle_nb)
         # Find the .MER file of the ascent
         catch = re.findall("bytes in (\w+/\w+\.MER)", self.log_content)
         if len(catch) > 0:
@@ -147,13 +164,16 @@ class Dive:
                 print(("manque le fichier " + self.s41_name))
                 self.s41_name = None
             else:
-                self.s41_environment = re.findall(
-                    "<PARAMETERS>.+</PILOTS>", content, re.DOTALL)[0]
-                self.profiles = profiles.get_profiles_between(
-                    self.date, self.end_date)
+                self.s41_environment = re.findall("<PARAMETERS>.+</PILOTS>", content, re.DOTALL)[0]
+                self.profiles = profiles.get_profiles_between(self.date, self.end_date)
+                s41_date = utils.find_timestamped_values("\[SBE41 *, *\d+\]Speed start detected", self.log_content)
+                if len(s41_date) == len(self.profiles):
+                    index = 0
+                    for profile in self.profiles :
+                        profile.start_date = s41_date[index][1]
+                        index = index + 1
         # Find the position of the float
-        self.gps_list = gps.get_gps_list(
-            self.log_content, self.mmd_environment, self.mmd_name)
+        self.gps_list = gps.get_gps_list(self.log_content, self.mmd_environment, self.mmd_name)
         self.gps_list_is_complete = False
         if self.is_complete_dive:
             # Check that the last GPS fix of the list correspond to the ascent position

@@ -1,6 +1,7 @@
 server/
 IMU/
 processed/
+tree.json
 *.tags
 *.tags_swap
 scripts/__pycache__/
@@ -8,3 +9,6 @@ scripts/__pycache__/
 scripts/tool_invert_mer/
 scripts/tool_invert_raw/
 scripts/statistics/
+scripts/netCDF/
+scripts/bin/wtcoeffs*
+scripts/bin/icdf24*
