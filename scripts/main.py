@@ -23,11 +23,6 @@ redo = "True"
 
 # main process
 def process(mfloat_path, mfloat, begin, end):
-    absFilePath = os.path.abspath(__file__)
-    scriptpath, scriptfilename = os.path.split(absFilePath)
-    statisticspath = os.path.join(scriptpath,"statistics")
-    if not os.path.exists(statisticspath) :
-        os.mkdir(statisticspath)
     # Concatenate LOG and BIN files that need it
     utils.concatenate_files(mfloat_path)
     # Decrypt all BIN files
@@ -71,7 +66,6 @@ def process(mfloat_path, mfloat, begin, end):
         if events_plotly:
             dive.generate_events_plotly()
         dive.generate_events_sac()
-        dive.generate_statistics(statisticspath)
         dive.generate_profile_plotly(generate_csv_file)
 
     # Plot vital data
@@ -155,6 +149,14 @@ def generate(mfloat, datapath, filterdate):
 
 # generate as a script (python automaid.py)
 def main():
+    # Update databases
+    print "******************"
+    print " Update databases "
+    print "******************"
+    absFilePath = os.path.abspath(__file__)
+    scriptpath, scriptfilename = os.path.split(absFilePath)
+    database_path = os.path.join(scriptpath,"databases")
+    databases.update(database_path)
     # Set working directory in "scripts"
     if "scripts" in os.listdir("."):
         os.chdir("scripts")
@@ -163,16 +165,6 @@ def main():
     # Create ouput directory
     if not os.path.exists(outputPath):
         os.mkdir(outputPath)
-
-    # Update databases
-    print "****************"
-    print "Update databases"
-    print "****************"
-    absFilePath = os.path.abspath(__file__)
-    scriptpath, scriptfilename = os.path.split(absFilePath)
-    database_path = os.path.join(scriptpath,"databases")
-    databases.update(database_path)
-
     # Search Profiler by folder name
     buoys_dir_paths=[os.path.join("../",dataPath)]
     for root, dirs, files in os.walk(os.path.join("../",dataPath)):

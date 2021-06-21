@@ -427,4 +427,4 @@ class Event:
         # Save stream object
         stream.write(export_path_sac, format='SAC')
         stream.write(export_path_msd, format='MSEED')
-        stream.write(export_path_wav, format='WAV', framerate=self.decimated_fs)
+        #stream.write(export_path_wav, format='WAV', framerate=self.decimated_fs)
