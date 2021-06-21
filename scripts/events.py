@@ -294,9 +294,9 @@ class Event:
     def plotly_stanford(self, export_path):
         # Check if file exist
         export_path = export_path + self.get_export_file_name() + ".html"
-        print(export_path)
         if os.path.exists(export_path):
             return
+        print(export_path)
         win_sz = re.findall("WINDOW_LEN=(\d+)", self.environment, re.DOTALL)
         dt = numpy.dtype([('perc50', numpy.int8)])
         x_split = numpy.array_split(self.data,2)
@@ -335,6 +335,7 @@ class Event:
         export_path = export_path + self.get_export_file_name() + ".png"
         if os.path.exists(export_path):
             return
+        print(export_path)
         # Plot frequency image
         plt.figure(figsize=(9, 4))
         plt.title(self.__get_figure_title(), fontsize=12)
@@ -355,6 +356,7 @@ class Event:
         print(export_path)
         if os.path.exists(export_path):
             return
+        print(export_path)
         win_sz = re.findall("WINDOW_LEN=(\d+)", self.environment, re.DOTALL)
         dt = numpy.dtype([('perc50', numpy.int8)])
         x_split = numpy.array_split(self.data,2)
@@ -383,7 +385,6 @@ class Event:
         export_path_wav = export_path + self.get_export_file_name() + ".wav"
         if os.path.exists(export_path_sac) and os.path.exists(export_path_msd):
             return
-
         # Check if the station location have been calculated
         if self.station_loc is None and not force_without_loc:
             print((self.get_export_file_name() + ": Skip sac/mseed generation, wait the next ascent to compute location"))
@@ -412,6 +413,9 @@ class Event:
         stream = Stream(traces=[trace])
 
         # Save stream object
+        print(export_path_sac)
         stream.write(export_path_sac, format='SAC')
+        print(export_path_msd)
         stream.write(export_path_msd, format='MSEED',encoding='STEIM1')
+        print(export_path_wav)
         stream.write(export_path_wav, format='WAV', framerate=self.decimated_fs)

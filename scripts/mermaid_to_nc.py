@@ -46,7 +46,6 @@ def putNString(var,string,nb,varlen):
     putStringArray(var,[string]*nb,varlen)
 
 
-
 def create_nc_multi_prof_c_file_3_1(mfloat_nc_path,mdives,mevents,ms41s):
         multiProfCFilePath = mfloat_nc_path + "_prof.nc"
         print(multiProfCFilePath)
@@ -74,7 +73,8 @@ def create_nc_multi_prof_c_file_3_1(mfloat_nc_path,mdives,mevents,ms41s):
         nProfDim = file_cdf.createDimension('N_PROF', ms41s.get_N_PROF());
         nParamDim = file_cdf.createDimension('N_PARAM', ms41s.get_N_PARAMS());
         nLevelsDim = file_cdf.createDimension('N_LEVELS', ms41s.get_N_LEVELS());
-        # N_CALIB dimension is processed and created later
+
+        nCalibDim = file_cdf.createDimension('N_CALIB',1);
         nHistoryDim = file_cdf.createDimension('N_HISTORY',1);
 
 
@@ -90,6 +90,7 @@ def create_nc_multi_prof_c_file_3_1(mfloat_nc_path,mdives,mevents,ms41s):
         string256DimSize = len(string256Dim)
         dateTimeDimSize = len(dateTimeDim)
         nHistoryDimSize = len(nHistoryDim)
+        nCalibDimSize = len(nCalibDim)
 
         print(nProfDimSize)
         ##################################################################################################
@@ -334,7 +335,7 @@ def create_nc_multi_prof_c_file_3_1(mfloat_nc_path,mdives,mevents,ms41s):
         historyDateVar.setncattr('long_name','Date the history record was created')
         historyDateVar.setncattr('conventions','YYYYMMDDHHMISS')
 
-        historyActionVar = file_cdf.createVariable('HISTORY_ACTION','S1',('N_HISTORY','N_PROF','DATE_TIME'),fill_value=' ')
+        historyActionVar = file_cdf.createVariable('HISTORY_ACTION','S1',('N_HISTORY','N_PROF','STRING4'),fill_value=' ')
         historyActionVar.setncattr('long_name','Action performed on data')
         historyActionVar.setncattr('conventions','Argo reference table 7')
 
@@ -388,7 +389,7 @@ def create_nc_multi_prof_c_file_3_1(mfloat_nc_path,mdives,mevents,ms41s):
         for dive in mdives :
             if dive.s41_name :
                 for profile in dive.profiles:
-                    if profile.binaverageoutput > 0:
+                    if int(profile.binaverageoutput) > 0:
                         verticalSamplingScheme.append("Primary sampling: averaged")
                     else :
                         verticalSamplingScheme.append("Primary sampling: discrete")
@@ -407,17 +408,17 @@ def create_nc_multi_prof_c_file_3_1(mfloat_nc_path,mdives,mevents,ms41s):
                     if profile.data_pressure:
                         dataPressureResized = profile.data_pressure
                         for x in range(len(dataPressureResized),nLevelsDimSize):
-                            dataPressureResized.append(numpy.float64(99999.0))
+                            dataPressureResized.append(np.float64(99999.0))
                         press_data.append(dataPressureResized)
                     if profile.data_salinity:
                         dataSalinityResized = profile.data_salinity
                         for x in range(len(dataSalinityResized),nLevelsDimSize):
-                            dataSalinityResized.append(numpy.float64(99999.0))
+                            dataSalinityResized.append(np.float64(99999.0))
                         salinity_data.append(dataSalinityResized)
                     if profile.data_temperature:
                         dataTemperatureResized = profile.data_temperature
                         for x in range(len(dataTemperatureResized),nLevelsDimSize):
-                            dataTemperatureResized.append(numpy.float64(99999.0))
+                            dataTemperatureResized.append(np.float64(99999.0))
                         temp_data.append(dataTemperatureResized)
 
                     if dive.gps_list_is_complete:
@@ -477,21 +478,21 @@ def create_nc_multi_prof_c_file_3_1(mfloat_nc_path,mdives,mevents,ms41s):
         for param in ms41s.get_PARAMS() :
             if param["PARAM_NAME"] == "PRES":
                 profParamVar["PRES"][:] = press_data
-                putString(profParamQcVar["PRES"],nProfDimSize*'0',nProfDimSize)
+                putNString(profParamQcVar["PRES"],nLevelsDimSize*'0',nProfDimSize,nLevelsDimSize)
                 profParamAdjVar["PRES"][:] = [[param["FILL_VALUE"]] * nLevelsDimSize] * nProfDimSize
-                putString(profParamAdjQcVar["PRES"],nProfDimSize*'0',nProfDimSize)
+                putNString(profParamAdjQcVar["PRES"],nLevelsDimSize*'0',nProfDimSize,nLevelsDimSize)
                 profParamAdjErrVar["PRES"][:] = [[param["FILL_VALUE"]] * nLevelsDimSize] * nProfDimSize
             if param["PARAM_NAME"] == "TEMP":
                 profParamVar["TEMP"][:] = temp_data
-                putString(profParamQcVar["TEMP"],nProfDimSize*'0',nProfDimSize)
+                putNString(profParamQcVar["TEMP"],nLevelsDimSize*'0',nProfDimSize,nLevelsDimSize)
                 profParamAdjVar["TEMP"][:] = [[param["FILL_VALUE"]] * nLevelsDimSize] * nProfDimSize
-                putString(profParamAdjQcVar["TEMP"],nProfDimSize*'0',nProfDimSize)
+                putNString(profParamAdjQcVar["TEMP"],nLevelsDimSize*'0',nProfDimSize,nLevelsDimSize)
                 profParamAdjErrVar["TEMP"][:] = [[param["FILL_VALUE"]] * nLevelsDimSize] * nProfDimSize
             if param["PARAM_NAME"] == "PSAL":
                 profParamVar["PSAL"][:] = salinity_data
-                putString(profParamQcVar["PSAL"],nProfDimSize*'0',nProfDimSize)
+                putNString(profParamQcVar["PSAL"],nLevelsDimSize*'0',nProfDimSize,nLevelsDimSize)
                 profParamAdjVar["PSAL"][:] = [[param["FILL_VALUE"]] * nLevelsDimSize] * nProfDimSize
-                putString(profParamAdjQcVar["PSAL"],nProfDimSize*'0',nProfDimSize)
+                putNString(profParamAdjQcVar["PSAL"],nLevelsDimSize*'0',nProfDimSize,nLevelsDimSize)
                 profParamAdjErrVar["PSAL"][:] = [[param["FILL_VALUE"]] * nLevelsDimSize] * nProfDimSize
 
         # 2.2.6 Calibration information for each profile
@@ -516,6 +517,11 @@ def mermaid_to_nc(mfloat,date_begin,date_end) :
     mfloat_path = outputPath + mfloat + "/"
     mfloat_src_path = mfloat_path + "source/"
     mfloat_processed_path = mfloat_path + "processed/"
+    mfloat_input_path = serverPath + mfloat + "/"
+
+    if not os.path.exists(mfloat_input_path):
+        print(mfloat_input_path + " doesn't exists")
+        return
     # Get float number
     mfloat_nb = re.findall("(\d+)$", mfloat)[0]
     # Create buoy directory
@@ -535,15 +541,15 @@ def mermaid_to_nc(mfloat,date_begin,date_end) :
     # Copy appropriate files in the directory and remove files outside of the time range
     files_to_copy = list()
     # All separated files, BIN files for V2, LOG files for V1, MERMAID files, SBE41 files
-    files_to_copy += glob.glob(serverPath + mfloat_nb + "_*[.][0-9][0-9][0-9]")
-    files_to_copy += glob.glob(serverPath + mfloat_nb + "_*[.]BIN")
-    files_to_copy += glob.glob(serverPath + mfloat_nb + "_*[.]LOG")
-    files_to_copy += glob.glob(serverPath + mfloat_nb + "_*[.]MER")
-    files_to_copy += glob.glob(serverPath + mfloat_nb + "_*[.]S41")
+    files_to_copy += glob.glob(mfloat_input_path + mfloat_nb + "_*[.][0-9][0-9][0-9]")
+    files_to_copy += glob.glob(mfloat_input_path + mfloat_nb + "_*[.]BIN")
+    files_to_copy += glob.glob(mfloat_input_path + mfloat_nb + "_*[.]LOG")
+    files_to_copy += glob.glob(mfloat_input_path + mfloat_nb + "_*[.]MER")
+    files_to_copy += glob.glob(mfloat_input_path + mfloat_nb + "_*[.]S41")
     #Filter Date
     files_to_copy = [f for f in files_to_copy if date_begin <= utils.get_date_from_file_name(f) <= date_end]
     # Add .vit and .out files and .cmd files
-    files_to_copy += glob.glob(serverPath + mfloat + "*")
+    files_to_copy += glob.glob(mfloat_input_path + mfloat + "*")
 
     # Copy files
     for f in files_to_copy:

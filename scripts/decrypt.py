@@ -7,11 +7,12 @@ import json
 import re
 import time
 import traceback
+import utils
 
 #1:CLIENT
 #2:SUPERUSERS
 #3:ADMINISTRATOR
-user_level = 1
+user_level = 3
 
 # Get database name with link file and version read on file
 def get_database_version(file_version,model) :
@@ -29,9 +30,7 @@ def get_database_version(file_version,model) :
             file_major = int(file_version[0])
         if file_version[1] :
             file_minor = int(file_version[1])
-        print(("file version : " + str(file_major) +"."+ str(file_minor)))
         for database in databases :
-            #print "Model : " + str(database["Model"])
             if not database["Model"] or (model == database["Model"]):
                 database_minor_max = 2147483647
                 database_major_max = 2147483647
@@ -42,14 +41,9 @@ def get_database_version(file_version,model) :
                     databaseMax_version = database["MaxVersion"].split(".")
                     database_major_max = int(databaseMax_version[0])
                     database_minor_max = int(databaseMax_version[1])
-                #print "MAJOR MAX : " + str(database_major_max)
-                #print "MAJOR MIN : " + str(database_major_min)
-                #print "MINOR MAX : " +str(database_minor_max)
-                #print "MINOR MIN : " +str(database_minor_min)
                 if ((file_major > database_major_min) and (file_major < database_minor_max)) \
                 or ((file_major >= database_major_min) and (file_major <= database_major_max) \
                 and (file_minor >= database_minor_min) and (file_minor <= database_minor_max)) :
-                    print((database["Name"]))
                     return database["Name"]
                 #print "\r\n"
         print(("No Database available for : " + str(file_version)))
@@ -321,22 +315,15 @@ def decrypt_one(path,LOG_card,WARN_card,ERR_card,version):
 # Decrypt all BIN files in a path
 def decrypt_all(path):
     # Generate List of BINS file
-    #print path
     files_to_decrypt = glob.glob(path + "*.BIN")
-    #print files_to_decrypt
     for file in files_to_decrypt :
         # Get version line
         print(file)
-
         with open(file, "r", errors='replace') as f:
             version = f.readline()
-
-        print(version)
         # Get version
         catch = re.findall("<BDD ([0-9]{3})\.[0-9]{3}\.[0-9]{3}_?V?([0-9]*\.[0-9]+)-?.*>", version)
-        #print catch
         if len(catch) > 0:
-            print(catch)
             # Get database file path
             absFilePath = os.path.abspath(__file__)
             scriptpath, scriptfilename = os.path.split(absFilePath)
@@ -348,7 +335,6 @@ def decrypt_all(path):
                 file_major = file_version[0]
             if file_version[1] :
                 file_minor = file_version[1]
-
             file_version = file_major+'.'+file_minor
             model = 0
             if catch[-1][0] == "589" :
@@ -358,8 +344,26 @@ def decrypt_all(path):
                 database_file_path = os.path.join(scriptpath,"databases",database_file)
                 if os.path.exists(database_file_path):
                     # Read and Parse Database file
+                    database =""
                     with open(database_file_path,"r") as f:
-                        decryptlist = json.loads(f.read())
+                        database = f.read()
+                    bin = b''
+                    with open(file,"rb") as bin_file:
+                        bin = bin_file.read()
+                    currentbinMd5 = utils.get_md5_from_bytes(bin)
+                    currentdatabaseMd5 = utils.get_md5_from_string(database)
+                    oldbinMd5 = ""
+                    olddatabaseMd5 = ""
+                    if os.path.exists(file.replace(".BIN",".baseMd5")):
+                        with open(file.replace(".BIN",".baseMd5"),"r") as f:
+                            olddatabaseMd5 = f.read()
+                    if os.path.exists(file.replace(".BIN",".md5")):
+                        with open(file.replace(".BIN",".md5"),"r") as f:
+                            oldbinMd5 = f.read()
+
+                    if (currentbinMd5 == oldbinMd5) and (currentdatabaseMd5 == olddatabaseMd5) :
+                        return
+                    decryptlist = json.loads(database)
                     for decryptcard in decryptlist:
                         if decryptcard["TYPE"] == "LOG":
                             LOGcard = decryptcard["DECRYPTCARD"]
@@ -367,15 +371,18 @@ def decrypt_all(path):
                             WARNcard = decryptcard["DECRYPTCARD"]
                         elif decryptcard["TYPE"] == "ERR":
                             ERRcard = decryptcard["DECRYPTCARD"]
-                    #print file
                     try :
                         Log_file = decrypt_one(file,LOGcard,WARNcard,ERRcard,file_version)
                     except:
                         print(("FORMAT ERROR :" +str(file)))
                     else:
+                        print((file.replace(".BIN",".LOG")))
                         with open(file.replace(".BIN",".LOG"),"w") as f:
                             f.write(Log_file)
-                            print((file.replace(".BIN",".LOG")))
+                        with open(file.replace(".BIN",".md5"),"w") as f:
+                            f.write(currentbinMd5)
+                        with open(file.replace(".BIN",".baseMd5"),"w") as f:
+                            f.write(currentdatabaseMd5)
                 else:
                     print(("No database : " + str(database_file_path)))
 

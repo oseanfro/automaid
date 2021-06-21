@@ -214,13 +214,27 @@ class Dive:
     def generate_datetime_log(self):
         # Check if file exist
         export_path = self.export_path + self.log_name + ".h"
-        if os.path.exists(export_path):
-            return
+        export_path_md5 = self.export_path + self.log_name + ".md5"
+
+        md5Current = utils.get_md5_from_string(self.log_content)
+        md5Old = ""
+        if os.path.exists(export_path_md5) and os.path.exists(export_path):
+            with open(export_path_md5, "r") as f:
+                md5Old = f.read()
+            if md5Current == md5Old:
+                print(md5Current)
+                return
+        if os.path.exists(export_path_md5) :
+            os.remove(export_path_md5)
+        if os.path.exists(export_path) :
+            os.remove(export_path)
         # Generate log with formatted date
         formatted_log = utils.format_log(self.log_content)
         # Write file
         with open(export_path, "w") as f:
             f.write(formatted_log)
+        with open(export_path_md5, mode='w') as md5_file:
+            md5_file.write(md5Current)
 
     def generate_mermaid_environment_file(self):
         # Check if there is a Mermaid file
@@ -228,11 +242,25 @@ class Dive:
             return
         # Check if file exist
         export_path = self.export_path + self.log_name + "." + self.mmd_name + ".env"
-        if os.path.exists(export_path):
-            return
+        export_path_md5 = self.export_path + self.log_name + "." + self.mmd_name + ".md5"
+
+        md5Current = utils.get_md5_from_string(self.mmd_environment)
+        md5Old = ""
+        if os.path.exists(export_path_md5) and os.path.exists(export_path):
+            with open(export_path_md5, "r") as f:
+                md5Old = f.read()
+            if md5Current == md5Old:
+                print(md5Current)
+                return
+        if os.path.exists(export_path_md5) :
+            os.remove(export_path_md5)
+        if os.path.exists(export_path) :
+            os.remove(export_path)
         # Write file
         with open(export_path, "w") as f:
             f.write(self.mmd_environment)
+        with open(export_path_md5, mode='w') as md5_file:
+            md5_file.write(md5Current)
 
     def generate_s41_environment_file(self):
         # Check if there is a Mermaid file
@@ -240,20 +268,47 @@ class Dive:
             return
         # Check if file exist
         export_path = self.export_path + self.log_name + "." + self.s41_name + ".params"
-        if os.path.exists(export_path):
-            return
+        export_path_md5 = self.export_path + self.log_name + "." + self.s41_name + ".md5"
+
+        md5Current = utils.get_md5_from_string(self.s41_environment)
+        md5Old = ""
+        if os.path.exists(export_path_md5) and os.path.exists(export_path):
+            with open(export_path_md5, "r") as f:
+                md5Old = f.read()
+            if md5Current == md5Old:
+                print(md5Current)
+                return
+        if os.path.exists(export_path_md5) :
+            os.remove(export_path_md5)
+        if os.path.exists(export_path) :
+            os.remove(export_path)
         # Write file
         with open(export_path, "w") as f:
             f.write(self.s41_environment)
+        with open(export_path_md5, mode='w') as md5_file:
+            md5_file.write(md5Current)
 
     def generate_dive_plotly(self, csv_file):
-        # Check if file exist
-        export_path = self.export_path + self.log_name[:-4] + '.html'
-        if os.path.exists(export_path):
-            return
         # If the float is not diving don't plot anything
         if not self.is_dive:
             return
+        # Check if data are same
+        export_path = self.export_path + self.log_name[:-4] + '.html'
+        export_path_md5 = self.export_path + self.log_name[:-4] + ".md5"
+
+        md5Current = utils.get_md5_from_string(self.log_content)
+        md5Old = ""
+        if os.path.exists(export_path_md5) and os.path.exists(export_path):
+            with open(export_path_md5, "r") as f:
+                md5Old = f.read()
+            if md5Current == md5Old:
+                print(md5Current)
+                return
+        if os.path.exists(export_path_md5) :
+            os.remove(export_path_md5)
+        if os.path.exists(export_path) :
+            os.remove(export_path)
+        print(export_path)
         # Search pressure values
         pressure = utils.find_timestamped_values(
             "]P\s*(\+?\-?\d+)mbar", self.log_content)
@@ -341,6 +396,9 @@ class Dive:
         plotly.plot({'data': data, 'layout': layout},
                     filename=export_path,
                     auto_open=False)
+
+        with open(export_path_md5, mode='w') as md5_file:
+            md5_file.write(md5Current)
 
     def correct_events_clock_drift(self):
         # Return if there is no events
@@ -523,10 +581,12 @@ def get_dives(path, events, profiles):
     for log_name in log_names:
         print(log_name)
         try:
-            dives.append(Dive(path, log_name, events, profiles))
+            dive = Dive(path, log_name, events, profiles)
         except :
             traceback.print_exc()
             print("wrong format")
+        else :
+            dives.append(dive)
     return dives
 
 # Concatenate .000 files .LOG files in the path

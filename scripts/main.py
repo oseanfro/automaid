@@ -10,6 +10,7 @@ try :
     import events
     import decrypt
     import vitals
+    import databases
 except:
     import automaid.dives as dives
     import automaid.utils
@@ -17,7 +18,8 @@ except:
     import automaid.events
     import automaid.decrypt
     import automaid.vitals
-    
+    import automaid.databases
+
 import kml
 import re
 import sys
@@ -32,11 +34,6 @@ redo = "True"
 
 # main process
 def process(mfloat_path, mfloat, begin, end):
-    # Concatenate LOG and BIN files that need it
-    utils.concatenate_files(mfloat_path)
-    # Decrypt all BIN files
-    decrypt.decrypt_all(mfloat_path)
-
     # Build list of all mermaid events recorded by the float
     mevents = events.Events(mfloat_path)
     # Build list of all profiles recorded
@@ -104,16 +101,17 @@ def generate(mfloat, datapath, filterdate):
     # Create directory for the source float
     if not os.path.exists(mfloat_path_source):
         os.mkdir(mfloat_path_source)
-    # Remove old processed
-    if os.path.exists(mfloat_path_processed):
-        shutil.rmtree(mfloat_path_processed)
-    # Create processed directory
-    os.mkdir(mfloat_path_processed)
+    # Create processed
+    if not os.path.exists(mfloat_path_processed):
+        os.mkdir(mfloat_path_processed)
+
+    # Concatenate LOG and BIN files that need it
+    utils.concatenate_files(mfloat_path_source)
+    # Decrypt all BIN files
+    decrypt.decrypt_all(mfloat_path_source)
     # Copy appropriate files in the directory and remove files outside of the time range
     files_to_copy = list()
     # All separated files, BIN files for V2, LOG files for V1, MERMAID files, SBE41 files
-    files_to_copy += glob.glob(mfloat_path_source + mfloat_nb + "_*[.][0-9][0-9][0-9]")
-    files_to_copy += glob.glob(mfloat_path_source + mfloat_nb + "_*[.]BIN")
     files_to_copy += glob.glob(mfloat_path_source + mfloat_nb + "_*[.]LOG")
     files_to_copy += glob.glob(mfloat_path_source + mfloat_nb + "_*[.]MER")
     files_to_copy += glob.glob(mfloat_path_source + mfloat_nb + "_*[.]S41")
@@ -145,8 +143,6 @@ def generate(mfloat, datapath, filterdate):
         mdives = []
     else:
     # Clean directories
-        files_to_delete += glob.glob(mfloat_path_processed + mfloat_nb + "_*[.][0-9][0-9][0-9]")
-        files_to_delete += glob.glob(mfloat_path_processed + mfloat_nb + "_*[.]BIN")
         files_to_delete += glob.glob(mfloat_path_processed + mfloat_nb + "_*[.]LOG")
         files_to_delete += glob.glob(mfloat_path_processed + mfloat_nb + "_*[.]MER")
         files_to_delete += glob.glob(mfloat_path_processed + mfloat_nb + "_*[.]S41")
@@ -167,6 +163,12 @@ def main():
     # Create ouput directory
     if not os.path.exists(outputPath):
         os.mkdir(outputPath)
+
+    # Update databases
+    absFilePath = os.path.abspath(__file__)
+    scriptpath, scriptfilename = os.path.split(absFilePath)
+    database_path = os.path.join(scriptpath,"databases")
+    databases.update(database_path)
 
     # Search Profiler by folder name
     buoys_dir_paths=[os.path.join("../",dataPath)]
@@ -199,7 +201,7 @@ def main():
                 os.mkdir(mfloat_src_path)
 
             # Copy appropriate files in the directory and remove files outside of the time range
-            extensions = ["000", "001", "002", "003", "004", "005", "LOG", "BIN"]
+            extensions = ["[0-9][0-9][0-9]", "LOG", "BIN"]
             files_to_copy = list()
             for extension in extensions:
                     files_to_copy += glob.glob( buoy_dir + "/" + mfloat_nb + "*." + extension)

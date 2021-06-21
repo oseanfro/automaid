@@ -7,14 +7,14 @@ DATABASE_LINK_NAME="Databases.json"
 
 def update(path):
     network = 1
-    print "************************"
-    print "****Update Databases****"
-    print "************************"
+    print ("************************")
+    print ("****Update Databases****")
+    print ("************************")
     link_path = os.path.join(path,DATABASE_LINK_NAME)
     try:
-        request = requests.get('http://164.132.96.221/databases/'+DATABASE_LINK_NAME)
+        request = requests.get('http://mermaid.osean.fr/databases/'+DATABASE_LINK_NAME)
     except Exception as e:
-        print "Exception: \""+ str(e) + "\" detected when get " + DATABASE_LINK_NAME
+        print ("Exception: \""+ str(e) + "\" detected when get " + DATABASE_LINK_NAME)
         network = 0
     else:
         if request.status_code == 200 :
@@ -22,16 +22,16 @@ def update(path):
             for database in database_list :
                 if database["Name"]:
                     try:
-                        new_req = requests.get('http://164.132.96.221/databases/'+database["Name"])
+                        new_req = requests.get('http://mermaid.osean.fr/databases/'+database["Name"])
                         database["data"] = new_req.json()
                         if new_req.status_code != 200 :
-                            print "Error " + str(new_req.status_code) + " when get " + database["Name"]
+                            print ("Error " + str(new_req.status_code) + " when get " + database["Name"])
                             network = 0
                     except Exception as e:
-                        print "Exception: \""+ str(e) + "\" detected when get " + str(database["Name"])
+                        print ("Exception: \""+ str(e) + "\" detected when get " + str(database["Name"]))
                         network = 0
         else:
-            print "Error " + str(request.status_code) + " when get " + DATABASE_LINK_NAME
+            print ("Error " + str(request.status_code) + " when get " + DATABASE_LINK_NAME)
             network = 0
 
         if network > 0:

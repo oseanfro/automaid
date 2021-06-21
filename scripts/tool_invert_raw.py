@@ -15,7 +15,7 @@ from obspy import UTCDateTime
 ######################################
 
 file_path = "tool_invert_raw/"
-sampling_file = "tool_invert_raw/2019-10-10_freq"
+sampling_file = "tool_invert_raw/2021-05-21_freq"
 mode = "Binary"
 
 ######################################

@@ -4,6 +4,7 @@ import glob
 from obspy import UTCDateTime
 import plotly.graph_objs as graph
 from datetime import datetime, timedelta
+import hashlib
 
 
 #
@@ -13,50 +14,67 @@ from datetime import datetime, timedelta
 # Concatenate .000 files .LOG and .BIN files in the path
 def concatenate_files(path):
     #LOG FILES
-    log_files = glob.glob(path + "*.LOG")
-    log_files = [x.split("/")[-1] for x in log_files]
+    log_files_path = glob.glob(path + "*.LOG")
+    log_files_path_filtered = list()
+    bin_files_path = glob.glob(path + "*.BIN")
 
-    for log_file in log_files:
+    for log_file_path in log_files_path:
+        ok_file = True
+        for bin_file_path in bin_files_path:
+            if bin_file_path[:-4] == log_file_path[:-4]:
+                ok_file = False
+                break
+        if ok_file :
+            log_files_path_filtered.append(log_file_path)
+
+
+
+    for log_file_path in log_files_path_filtered:
         logstring = ""
-        files_to_merge = glob.glob(path + log_file[:-4] +".*")
-        files_to_merge = [x.split("/")[-1] for x in files_to_merge]
+        files_to_merge = glob.glob(log_file_path[:-4] +".[0-9][0-9][0-9]")
+        files_to_merge += log_files_path
         files_to_merge.sort()
-        for file_to_merge in files_to_merge :
-            if file_to_merge[-3:].isdigit():
-                with open(path + file_to_merge, "r") as fl:
-                    # We assume that files are sorted in a correct order
-                    logstring += fl.read()
-            else :
-                if len(logstring) > 0:
-                    # If log extension is not a digit and the log string is not empty
-                    # we need to add it at the end of the file
-                    with open(path + file_to_merge, "r") as fl:
+        if len(files_to_merge) > 1:
+            for file_to_merge in files_to_merge :
+                if file_to_merge[-3:].isdigit():
+                    with open(file_to_merge, "r") as fl:
+                        # We assume that files are sorted in a correct order
                         logstring += fl.read()
-                    with open(path + file_to_merge, "w") as fl:
-                        fl.write(logstring)
-                    logstring = ""
+                else :
+                    if len(logstring) > 0:
+                        # If log extension is not a digit and the log string is not empty
+                        # we need to add it at the end of the file
+                        with open(file_to_merge, "r") as fl:
+                            logstring += fl.read()
+                        with open(file_to_merge, "w") as fl:
+                            fl.write(logstring)
+                        logstring = ""
+
+    print(bin_files_path)
     #BIN FILES
-    bin_files = glob.glob(path + "*.BIN")
-    bin_files = [x.split("/")[-1] for x in bin_files]
-    for bin_file in bin_files:
+    for bin_file_path in bin_files_path:
         bin = b''
-        files_to_merge = glob.glob(path + bin_file[:-4] +".*")
-        files_to_merge = [x.split("/")[-1] for x in files_to_merge]
+        print(bin_file_path[:-4])
+        files_to_merge = list(glob.glob(bin_file_path[:-4] +".[0-9][0-9][0-9]"))
+        print(files_to_merge)
+        files_to_merge.append(bin_file_path)
         files_to_merge.sort()
-        for file_to_merge in files_to_merge :
-            if file_to_merge[-3:].isdigit():
-                with open(path + file_to_merge, "rb") as fl:
-                    # We assume that files are sorted in a correct order
-                    bin += fl.read()
-            else :
-                if len(bin) > 0:
-                    # If log extension is not a digit and the log string is not empty
-                    # we need to add it at the end of the file
-                    with open(path + file_to_merge, "rb") as fl:
+        print(files_to_merge)
+        if len(files_to_merge) > 1:
+            for file_to_merge in files_to_merge :
+                if file_to_merge[-3:].isdigit():
+                    with open(file_to_merge, "rb") as fl:
+                        # We assume that files are sorted in a correct order
                         bin += fl.read()
-                    with open(path + file_to_merge, "wb") as fl:
-                        fl.write(bin)
-                    bin = b''
+                else :
+                    if len(bin) > 0:
+                        # If log extension is not a digit and the log string is not empty
+                        # we need to add it at the end of the file
+                        with open(file_to_merge, "rb") as fl:
+                            bin += fl.read()
+                        with open(file_to_merge, "wb") as fl:
+                            fl.write(bin)
+                        bin = b''
 
 
 # Split logs in several lines
@@ -162,6 +180,14 @@ def get_date_from_file_name(filename):
     hexdate = re.findall("(.+\d+_)?([A-Z0-9]+)\.(BIN|LOG|MER|S41|[0-9]{3})", filename)[0][1]
     timestamp = int(hexdate, 16)
     return UTCDateTime(timestamp)
+
+
+def get_md5_from_bytes(bytes):
+    result = hashlib.md5(bytes)
+    return result.hexdigest()
+def get_md5_from_string(string):
+    result = hashlib.md5(string.encode())
+    return result.hexdigest()
 
 
 #

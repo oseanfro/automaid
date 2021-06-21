@@ -1,5 +1,6 @@
 server/
 IMU/
+ARGO/
 processed/
 tree.json
 *.tags
