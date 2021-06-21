@@ -1,3 +1,4 @@
+ARGO/
 server/
 processed/
 scripts/tool_invert_mer*
@@ -6,4 +7,6 @@ scripts/statistics*
 *.tags
 *.pyc
 scripts/*.pyc
+scripts/netCDF/
+tree.json
 *.tags_swap

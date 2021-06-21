@@ -12,7 +12,7 @@ def update(path):
     print "************************"
     link_path = os.path.join(path,DATABASE_LINK_NAME)
     try:
-        request = requests.get('http://164.132.96.221/databases/'+DATABASE_LINK_NAME)
+        request = requests.get('http://mermaid.osean.fr/databases/'+DATABASE_LINK_NAME,timeout=10)
     except Exception as e:
         print "Exception: \""+ str(e) + "\" detected when get " + DATABASE_LINK_NAME
         network = 0
@@ -22,7 +22,7 @@ def update(path):
             for database in database_list :
                 if database["Name"]:
                     try:
-                        new_req = requests.get('http://164.132.96.221/databases/'+database["Name"])
+                        new_req = requests.get('http://mermaid.osean.fr/databases/'+database["Name"],timeout=10)
                         database["data"] = new_req.json()
                         if new_req.status_code != 200 :
                             print "Error " + str(new_req.status_code) + " when get " + database["Name"]

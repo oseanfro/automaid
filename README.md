@@ -5,7 +5,7 @@ classify data, correct clock drifts, interpolate float positions and
 then generates seismic SAC files, plots seismic events and dives and
 generates KML, HTML, and PNG files.
 
-Written by Sebastien Bonnieux. Maintained by Frederik J. Simons and Joel D. Simon. 
+Written by Sebastien Bonnieux. Maintained by Frederik J. Simons and Joel D. Simon.
 
 ### 1. INSTALLATION
 
@@ -30,13 +30,13 @@ An easy installation procedure is described here:
 * Make sure you are in the `bash` shell!
 
 * Activate the environment:  
-`source activate pymaid`
+`conda activate pymaid`
 * Install obspy:  
 `conda install obspy`
 * Install plotly 2.7.0:  
 `conda install plotly=2.7.0`
 * Quit the virtual environment:  
-`source deactivate`
+`conda deactivate`
 
 In addition to the Python 2.7 installation it is necessary to compile,
 using `make` the wavelet inversion programs located in
@@ -46,16 +46,16 @@ must be in the "bin" directory and must be named `icdf24_v103_test` and
 
 ### 2. USAGE
 
-To use the application: 
+To use the application:
 
 * Copy files from your Mermaid server into the "server" directory:  
-`scp username@host:\{"*.LOG","*.MER","*.vit"\} server`
+`scp username@host:\{"*.LOG","*.BIN","*.MER","*.vit"\} server`
 * Activate the virtual environment:  
-`source activate pymaid`
+`conda activate pymaid`
 * Run the main.py file in the "scripts" directory:  
 `python scripts/main.py`
 * Quit the virtual environment:  
-`source deactivate`
+`conda deactivate`
 
 You will be getting the processed files into the directory `processed`.
 You may have to remove some error-prone log files and create some
@@ -65,11 +65,10 @@ as we go along.
 The "main.py" file can be edited to select some options:
 
 * A date range between which to process the data can be chosen with
-the `begin` and `end` variables. 
+the `begin` and `end` variables.
 * A "redo" flag can be set to True in order to restart the processing
 of data for each launch of the script. This flag force the deletion
 of the content of the content of the `processed` directory.
 * A `events_plotly` flag allow the user to plot interactive figures
 of events in a html page. This kind of plot can be disabled to save
 disk space.
-

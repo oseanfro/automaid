@@ -171,7 +171,7 @@ def main():
     absFilePath = os.path.abspath(__file__)
     scriptpath, scriptfilename = os.path.split(absFilePath)
     database_path = os.path.join(scriptpath,"databases")
-    #databases.update(database_path)
+    databases.update(database_path)
 
     # Search Profiler by folder name
     buoys_dir_paths=[os.path.join("../",dataPath)]
