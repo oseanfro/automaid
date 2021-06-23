@@ -76,15 +76,15 @@ def mermaid_to_nc(mfloat,date_begin,date_end) :
     # Build list of all profiles recorded
     ms41s = profile.Profiles(mfloat_src_path)
     # Process data for each dive
-    mdives = dives.get_dives(mfloat_src_path, mevents, ms41s)
-    mfloat_nc_path = mfloat_processed_path + mfloat
+    mdives = dives.Dives(mfloat_src_path, mevents, ms41s)
+    mfloat_nc_path = mfloat_processed_path
     mfloat_nc_profiles_path = mfloat_processed_path + "profiles/"
     if not os.path.exists(mfloat_nc_profiles_path):
         os.mkdir(mfloat_nc_profiles_path)
-    mfloat_nc_profiles_path+=mfloat
 
-    mermaid_to_multi_profile.create_nc_multi_prof_c_file_3_1(mfloat_nc_path,mdives,mevents,ms41s)
-    mermaid_to_mono_profile.create_nc_mono_prof_c_file_3_1(mfloat_nc_profiles_path,mdives,mevents,ms41s)
+    FloatWmoID = mfloat
+    mermaid_to_multi_profile.create_nc_multi_prof_c_file_3_1(FloatWmoID,mfloat_nc_path,mdives,mevents,ms41s)
+    mermaid_to_mono_profile.create_nc_mono_prof_c_file_3_1(FloatWmoID,mfloat_nc_profiles_path,mdives,mevents,ms41s)
 
 if __name__ == "__main__":
     #mermaid_to_nc("452.020-P-0051",datetime(2020, 7, 8),datetime(2020, 10, 30))

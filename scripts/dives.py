@@ -568,6 +568,41 @@ class Dive:
         return (list[len(list) - 3])
 
 
+class Dives:
+    dives = None
+    def __init__(self, path=None, events=None, profiles=None):
+        if not path or not events or not profiles:
+            return
+        log_names = glob.glob(path + "*.LOG")
+        if len(log_names) == 0 :
+            log_names = glob.glob(path + "*.LOG.h")
+        log_names = [x.split("/")[-1] for x in log_names]
+        log_names.sort()
+        # Create Dive objects
+        self.dives = list()
+        for log_name in log_names:
+            print(log_name)
+            try:
+                dive = Dive(path, log_name, events, profiles)
+            except :
+                traceback.print_exc()
+                print("wrong format")
+            else :
+                self.dives.append(dive)
+    def get_cycle_nb() :
+        cycle_nb = 0
+        for dive in self.dives :
+            if dive.is_complete_dive :
+                cycle_nb = cycle_nb + 1
+        return cycle_nb
+    def get_position_nb() :
+        position_nb = 0
+        for dive in self.dives :
+            position_nb = position_nb + len(dive.gps_list)
+        return position_nb
+
+
+
 # Create dives object
 def get_dives(path, events, profiles):
     # Get the list of log files
@@ -588,6 +623,7 @@ def get_dives(path, events, profiles):
         else :
             dives.append(dive)
     return dives
+
 
 # Concatenate .000 files .LOG files in the path
 def concatenate_log_files(path):

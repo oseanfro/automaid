@@ -42,13 +42,15 @@ def putNString(var,string,nb,varlen):
     putStringArray(var,[string]*nb,varlen)
 
 
-def create_nc_mono_prof_c_file_3_1(mfloat_nc_path,mdives,mevents,ms41s):
+def create_nc_mono_prof_c_file_3_1(FloatWmoID,mfloat_nc_path,mdives,mevents,ms41s):
         profile_nb = 0;
-        for dive in mdives :
+        for dive in mdives.dives :
             if dive.s41_name :
                 for profile in dive.profiles:
-
-                    profCFilePath = mfloat_nc_path + "_"+f"{profile_nb:03}"+".nc"
+                    if profile_nb < 1000 :
+                        profCFilePath = mfloat_nc_path + "R" +FloatWmoID + "_"+f"{profile_nb:03}"+".nc"
+                    else :
+                        profCFilePath = mfloat_nc_path + "R" +FloatWmoID + "_"+f"{profile_nb:04}"+".nc"
                     print(profCFilePath)
                     #information to retrieve from a possible existing multi-profile file
                     if os.path.exists(profCFilePath):
@@ -71,7 +73,8 @@ def create_nc_mono_prof_c_file_3_1(mfloat_nc_path,mdives,mevents,ms41s):
                     string2Dim = file_cdf.createDimension('STRING2', 2);
                     nProfDim = file_cdf.createDimension('N_PROF', 1);
                     nParamDim = file_cdf.createDimension('N_PARAM', ms41s.get_N_PARAMS());
-                    nLevelsDim = file_cdf.createDimension('N_LEVELS', ms41s.get_N_LEVELS());
+                    nLevelsDim = file_cdf.createDimension('N_LEVELS', len(profile.data_pressure));
+                    print(len(profile.data_pressure))
 
                     nCalibDim = file_cdf.createDimension('N_CALIB',1);
                     nHistoryDim = file_cdf.createDimension('N_HISTORY',1);
@@ -397,18 +400,21 @@ def create_nc_mono_prof_c_file_3_1(mfloat_nc_path,mdives,mevents,ms41s):
                     else :
                         configMissionNumber.append(3)
 
+                    dataPressureResized = []
+                    dataSalinityResized = []
+                    dataTemperatureResized = []
                     if profile.data_pressure:
-                        dataPressureResized = profile.data_pressure
+                        dataPressureResized = profile.data_pressure[:]
                         for x in range(len(dataPressureResized),nLevelsDimSize):
                             dataPressureResized.append(np.float64(99999.0))
                         press_data.append(dataPressureResized)
                     if profile.data_salinity:
-                        dataSalinityResized = profile.data_salinity
+                        dataSalinityResized = profile.data_salinity[:]
                         for x in range(len(dataSalinityResized),nLevelsDimSize):
                             dataSalinityResized.append(np.float64(99999.0))
                         salinity_data.append(dataSalinityResized)
                     if profile.data_temperature:
-                        dataTemperatureResized = profile.data_temperature
+                        dataTemperatureResized = profile.data_temperature[:]
                         for x in range(len(dataTemperatureResized),nLevelsDimSize):
                             dataTemperatureResized.append(np.float64(99999.0))
                         temp_data.append(dataTemperatureResized)

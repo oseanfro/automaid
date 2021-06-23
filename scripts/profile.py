@@ -200,7 +200,6 @@ class Profile:
                     else:
                         self.data_salinity.append(45.0)
 
-
     def plotly_temperature(self, export_path, csv_file):
         if list(self.data):
             # Check if file exist

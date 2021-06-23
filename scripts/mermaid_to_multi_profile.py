@@ -41,8 +41,8 @@ def putString(var,string,varlen):
 def putNString(var,string,nb,varlen):
     putStringArray(var,[string]*nb,varlen)
 
-def create_nc_multi_prof_c_file_3_1(mfloat_nc_path,mdives,mevents,ms41s):
-        multiProfCFilePath = mfloat_nc_path + "_prof.nc"
+def create_nc_multi_prof_c_file_3_1(FloatWmoID,mfloat_nc_path,mdives,mevents,ms41s):
+        multiProfCFilePath = mfloat_nc_path + FloatWmoID + "_prof.nc"
         print(multiProfCFilePath)
 
         #information to retrieve from a possible existing multi-profile file
@@ -381,7 +381,7 @@ def create_nc_multi_prof_c_file_3_1(mfloat_nc_path,mdives,mevents,ms41s):
         longitude = []
         verticalSamplingScheme = []
         configMissionNumber = []
-        for dive in mdives :
+        for dive in mdives.dives :
             if dive.s41_name :
                 for profile in dive.profiles:
                     if int(profile.binaverageoutput) > 0:
@@ -400,22 +400,27 @@ def create_nc_multi_prof_c_file_3_1(mfloat_nc_path,mdives,mevents,ms41s):
                     else :
                         configMissionNumber.append(3)
 
+                    print (len(profile.data_pressure))
+                    dataPressureResized = []
+                    dataSalinityResized = []
+                    dataTemperatureResized = []
                     if profile.data_pressure:
-                        dataPressureResized = profile.data_pressure
+                        dataPressureResized = profile.data_pressure[:]
                         for x in range(len(dataPressureResized),nLevelsDimSize):
                             dataPressureResized.append(np.float64(99999.0))
                         press_data.append(dataPressureResized)
                     if profile.data_salinity:
-                        dataSalinityResized = profile.data_salinity
+                        dataSalinityResized = profile.data_salinity[:]
                         for x in range(len(dataSalinityResized),nLevelsDimSize):
                             dataSalinityResized.append(np.float64(99999.0))
                         salinity_data.append(dataSalinityResized)
                     if profile.data_temperature:
-                        dataTemperatureResized = profile.data_temperature
+                        dataTemperatureResized = profile.data_temperature[:]
                         for x in range(len(dataTemperatureResized),nLevelsDimSize):
                             dataTemperatureResized.append(np.float64(99999.0))
                         temp_data.append(dataTemperatureResized)
 
+                    print (len(profile.data_pressure))
                     if dive.gps_list_is_complete:
                         gps = dive.gps_list[-1]
                         print(gps.date)
