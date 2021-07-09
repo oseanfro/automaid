@@ -70,6 +70,8 @@ class Profiles:
         # Initialize event list (if list is declared above, then elements of the previous instance are kept in memory)
         self.profiles = list()
         self.params = [PSAL_PARAMS,PRES_PARAMS,TEMP_PARAMS]
+        if not base_path :
+            return
         # Read all S41 files and find profiles associated to the dive
         profile_files = glob.glob(base_path + "*.S41")
         for profile_file in profile_files:
@@ -102,7 +104,6 @@ class Profiles:
 
 class Profile:
     date = None
-    start_date = None
     old_version = None
     file_name = None
     header = None

@@ -49,17 +49,12 @@ def concatenate_files(path):
                         with open(file_to_merge, "w") as fl:
                             fl.write(logstring)
                         logstring = ""
-
-    print(bin_files_path)
     #BIN FILES
     for bin_file_path in bin_files_path:
         bin = b''
-        print(bin_file_path[:-4])
         files_to_merge = list(glob.glob(bin_file_path[:-4] +".[0-9][0-9][0-9]"))
-        print(files_to_merge)
         files_to_merge.append(bin_file_path)
         files_to_merge.sort()
-        print(files_to_merge)
         if len(files_to_merge) > 1:
             for file_to_merge in files_to_merge :
                 if file_to_merge[-3:].isdigit():
@@ -86,6 +81,18 @@ def split_log_lines(content):
     return splitted
 
 
+def find_timestamped_value(regexp, line):
+    v = 0
+    d = UTCDateTime(0)
+    value_catch = re.findall(regexp, line)
+    if len(value_catch) > 0:
+        timestamp_catch = re.findall("(\d+):", line)
+        if len(timestamp_catch) > 0 :
+            v = value_catch[0]
+            d = UTCDateTime(int(timestamp_catch[0]))
+            return [v, d]
+    return []
+
 # Search timestamps for a specific keyword
 def find_timestamped_values(regexp, content):
     timestamped_values = list()
@@ -105,7 +112,6 @@ def find_timestamped_values(regexp, content):
                 d = UTCDateTime(last_value)
             timestamped_values.append([v, d])
     return timestamped_values
-
 
 def find_timestampedUTC_values(regexp, content):
     timestamped_values = list()
@@ -262,3 +268,15 @@ def totimestamp(dt, epoch = datetime(1970,1,1)):
     td = dt - epoch
     # return td.total_seconds()
     return (td.microseconds + (td.seconds + td.days * 86400) * 10**6) / 10**6
+
+def toJuld(utcdatetime, reference = UTCDateTime("1950-01-01T00:00:00")):
+    if isinstance(utcdatetime,UTCDateTime):
+        # Calculates the time difference in seconds between two UTCDateTime objects.
+        # The time difference is given as float data type and may also contain a negative number.
+        diff = utcdatetime - reference
+        return diff/86400.0
+
+    else :
+        print("Wrong parameter need UTCDATETIME instance")
+        print(type(utcdatetime))
+        return

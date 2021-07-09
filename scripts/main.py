@@ -6,7 +6,7 @@ import datetime
 try :
     import dives
     import utils
-    import profile
+    import sbe41_profile
     import events
     import decrypt
     import vitals
@@ -37,12 +37,13 @@ def process(mfloat_path, mfloat, begin, end):
     # Build list of all mermaid events recorded by the float
     mevents = events.Events(mfloat_path)
     # Build list of all profiles recorded
-    ms41s = profile.Profiles(mfloat_path)
+    ms41s = sbe41_profile.Profiles(mfloat_path)
     # Process data for each dive
-    mdives = dives.get_dives(mfloat_path, mevents, ms41s)
+    mdives = dives.Dives(mfloat_path, mevents, ms41s)
+
 
     # Compute files for each dive
-    for dive in mdives:
+    for dive in mdives.get_dives():
         # Create the directory
         if not os.path.exists(dive.export_path):
             os.mkdir(dive.export_path)
@@ -56,18 +57,18 @@ def process(mfloat_path, mfloat, begin, end):
         dive.generate_dive_plotly(generate_csv_file)
 
     # Compute clock drift correction for each event
-    for dive in mdives:
+    for dive in mdives.get_dives():
         dive.correct_events_clock_drift()
 
     # Compute location of mermaid float for each event (because the station is moving)
     # the algorithm use gps information in the next dive to estimate surface drift
     i = 0
-    while i < len(mdives) - 1:
-        mdives[i].compute_events_station_location(mdives[i + 1])
+    while i < len(mdives.get_dives()) - 1:
+        mdives.get_dives()[i].compute_events_station_location(mdives.get_dives()[i + 1])
         i += 1
 
     # Generate plot and sac files
-    for dive in mdives:
+    for dive in mdives.get_dives():
         dive.generate_events_plot()
         if events_plotly:
             dive.generate_events_plotly()
@@ -75,7 +76,7 @@ def process(mfloat_path, mfloat, begin, end):
         dive.generate_profile_plotly(generate_csv_file)
 
     # Plot vital data
-    kml.generate(mfloat_path, mfloat, mdives)
+    kml.generate(mfloat_path, mfloat, mdives.get_dives())
     vitals.plot_battery_voltage(mfloat_path, mfloat + ".vit", begin, end)
     vitals.plot_internal_pressure(mfloat_path, mfloat + ".vit", begin, end)
     vitals.plot_pressure_offset(mfloat_path, mfloat + ".vit", begin, end)

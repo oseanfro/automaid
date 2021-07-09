@@ -5,7 +5,7 @@ import decrypt
 import glob
 import dives
 import events
-import profile
+import sbe41_profile
 import re
 import utils
 import netCDF.init_values as init
@@ -15,9 +15,12 @@ from netCDF4 import stringtochar
 from datetime import datetime,timezone
 import numpy as np
 
+import argo
 import mermaid_to_nc_cfg as cfg
 import mermaid_to_mono_profile
 import mermaid_to_multi_profile
+import mermaid_to_trajectory
+import mermaid_to_metadata
 
 serverPath = "../server/"
 outputPath = "../ARGO/"
@@ -74,17 +77,24 @@ def mermaid_to_nc(mfloat,date_begin,date_end) :
     # Build list of all mermaid events recorded by the float
     mevents = events.Events(mfloat_src_path)
     # Build list of all profiles recorded
-    ms41s = profile.Profiles(mfloat_src_path)
+    ms41s = sbe41_profile.Profiles(mfloat_src_path)
     # Process data for each dive
     mdives = dives.Dives(mfloat_src_path, mevents, ms41s)
+    # Organise data as cycles
+    mCycles = argo.Cycles(mdives)
+
+    print(mCycles)
+
     mfloat_nc_path = mfloat_processed_path
     mfloat_nc_profiles_path = mfloat_processed_path + "profiles/"
     if not os.path.exists(mfloat_nc_profiles_path):
         os.mkdir(mfloat_nc_profiles_path)
 
     FloatWmoID = mfloat
-    mermaid_to_multi_profile.create_nc_multi_prof_c_file_3_1(FloatWmoID,mfloat_nc_path,mdives,mevents,ms41s)
-    mermaid_to_mono_profile.create_nc_mono_prof_c_file_3_1(FloatWmoID,mfloat_nc_profiles_path,mdives,mevents,ms41s)
+    #mermaid_to_multi_profile.create_nc_multi_prof_c_file_3_1(FloatWmoID,mfloat_nc_path,mCycles,ms41s)
+    #mermaid_to_mono_profile.create_nc_mono_prof_c_file_3_1(FloatWmoID,mfloat_nc_profiles_path,mCycles,ms41s)
+    #mermaid_to_trajectory.create_nc_trajectory_file_3_2(FloatWmoID,mfloat_nc_path,mCycles,ms41s)
+    mermaid_to_metadata.create_nc_metadata_3_1(FloatWmoID,mfloat_nc_path,mCycles,ms41s)
 
 if __name__ == "__main__":
     #mermaid_to_nc("452.020-P-0051",datetime(2020, 7, 8),datetime(2020, 10, 30))

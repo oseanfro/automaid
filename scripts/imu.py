@@ -3,7 +3,7 @@ import os
 import re
 import wave
 import shutil
-import profile
+import sbe41_profile
 import sys
 import utils
 import plotly.graph_objs as graph

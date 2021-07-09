@@ -150,7 +150,6 @@ class Event:
             self.measured_fs = float(fs_catch[0])
         else:
             self.measured_fs = 40
-        print(("MEASURE_FS="+str(self.measured_fs)))
 
         # Divide frequency by number of scales
         if not self.is_stanford_event() :
@@ -209,13 +208,13 @@ class Event:
             f.write(self.binary)
         # Do icd24
         if edge_correction == "1":
-            print("icdf24_v103ec_test")
+            #print("icdf24_v103ec_test")
             subprocess.check_output([icdf24_v103ec_test,
                                      self.scales,
                                      normalized,
                                      wtcoeffsname])
         else:
-            print("icdf24_v103_test")
+            #print("icdf24_v103_test")
             subprocess.check_output([icdf24_v103_test,
                                     self.scales,
                                     normalized,

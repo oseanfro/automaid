@@ -4,7 +4,7 @@ import sys
 import glob
 import dives
 import events
-import profile
+import sbe41_profile
 import re
 import utils
 from obspy import UTCDateTime
@@ -37,7 +37,7 @@ def dive(mfloat,date_begin,date_end):
         mevents = events.Events(mfloat_path)
 
         # Build list of all profiles recorded
-        ms41s = profile.Profiles(mfloat_path)
+        ms41s = sbe41_profile.Profiles(mfloat_path)
 
         # Process data for each dive
         mdives = dives.get_dives(mfloat_path, mevents, ms41s)

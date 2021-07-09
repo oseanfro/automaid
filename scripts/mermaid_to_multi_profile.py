@@ -5,7 +5,7 @@ import decrypt
 import glob
 import dives
 import events
-import profile
+import sbe41_profile
 import re
 import utils
 import netCDF.init_values as init
@@ -33,7 +33,7 @@ def create_dim_tuple(dimensions,value):
 def putStringArray(var,stringArray,varlen):
     nparray = np.array(stringArray,dtype=np.dtype(('S', varlen)))
     var[:] = stringtochar(nparray)
-    var._Encoding = 'ascii' # this enables automatic conversion
+    #var._Encoding = 'ascii' # this enables automatic conversion
 
 def putString(var,string,varlen):
     putStringArray(var,[string],varlen)
@@ -41,7 +41,7 @@ def putString(var,string,varlen):
 def putNString(var,string,nb,varlen):
     putStringArray(var,[string]*nb,varlen)
 
-def create_nc_multi_prof_c_file_3_1(FloatWmoID,mfloat_nc_path,mdives,mevents,ms41s):
+def create_nc_multi_prof_c_file_3_1(FloatWmoID,mfloat_nc_path,mCycles,ms41s):
         multiProfCFilePath = mfloat_nc_path + FloatWmoID + "_prof.nc"
         print(multiProfCFilePath)
 
@@ -184,7 +184,7 @@ def create_nc_multi_prof_c_file_3_1(FloatWmoID,mfloat_nc_path,mdives,mevents,ms4
         wmoInstTypeVar.setncattr('long_name', 'Coded instrument type');
         wmoInstTypeVar.setncattr('conventions', 'Argo reference table 8');
 
-        juldVar = file_cdf.createVariable('JULD','f8',('N_PROF',),fill_value=np.float64(999999.0))
+        juldVar = file_cdf.createVariable('JULD','f8',('N_PROF',),fill_value=np.float64(99999.0))
         juldVar.setncattr('long_name', 'Julian day (UTC) of the station relative to REFERENCE_DATE_TIME');
         juldVar.setncattr('standard_name', 'time');
         juldVar.setncattr('units', 'days since 1950-01-01 00:00:00 UTC');
@@ -198,13 +198,13 @@ def create_nc_multi_prof_c_file_3_1(FloatWmoID,mfloat_nc_path,mdives,mevents,ms4
         juldQcVar.setncattr('long_name', 'Quality on date and time');
         juldQcVar.setncattr('conventions', 'Argo reference table 2');
 
-        juldLocationVar = file_cdf.createVariable('JULD_LOCATION','f8',('N_PROF',),fill_value=np.float64(999999.0))
+        juldLocationVar = file_cdf.createVariable('JULD_LOCATION','f8',('N_PROF',),fill_value=np.float64(99999.0))
         juldLocationVar.setncattr('long_name', 'Julian day (UTC) of the location relative to REFERENCE_DATE_TIME');
         juldLocationVar.setncattr('units', 'days since 1950-01-01 00:00:00 UTC');
         juldLocationVar.setncattr('conventions', 'Relative julian days with decimal part (as parts of day)');
         juldLocationVar.setncattr('resolution', np.float64(1/86400)); # 1 second of resolution
 
-        latitudeVar = file_cdf.createVariable('LATITUDE','f8',('N_PROF',),fill_value=np.float64(999999.0))
+        latitudeVar = file_cdf.createVariable('LATITUDE','f8',('N_PROF',),fill_value=np.float64(99999.0))
         latitudeVar.setncattr('long_name', 'Latitude of the station, best estimate');
         latitudeVar.setncattr('standard_name', 'latitude');
         latitudeVar.setncattr('units', 'degree_north');
@@ -212,7 +212,7 @@ def create_nc_multi_prof_c_file_3_1(FloatWmoID,mfloat_nc_path,mdives,mevents,ms4
         latitudeVar.setncattr('valid_max', np.float64(90));
         latitudeVar.setncattr('axis', 'Y');
 
-        longitudeVar = file_cdf.createVariable('LONGITUDE','f8',('N_PROF',),fill_value=np.float64(999999.0))
+        longitudeVar = file_cdf.createVariable('LONGITUDE','f8',('N_PROF',),fill_value=np.float64(99999.0))
         longitudeVar.setncattr('long_name', 'Longitude of the station, best estimate');
         longitudeVar.setncattr('standard_name', 'longitude');
         longitudeVar.setncattr('units', 'degree_east');
@@ -375,32 +375,25 @@ def create_nc_multi_prof_c_file_3_1(FloatWmoID,mfloat_nc_path,mdives,mevents,ms4
         firmwareVersion = []
         cyclesNb = []
         julianDay = []
-        julianDayQc = []
         julianDayPosition = []
         latitude = []
         longitude = []
         verticalSamplingScheme = []
         configMissionNumber = []
-        for dive in mdives.dives :
-            if dive.s41_name :
-                for profile in dive.profiles:
-                    if int(profile.binaverageoutput) > 0:
+
+        for cycle in mCycles.list :
+            if cycle.sbe41ProfileFileName :
+                for profile in cycle.sbe41Profiles :
+                    if cycle.parameters.profile_sampling_method > 0:
                         verticalSamplingScheme.append("Primary sampling: averaged")
                     else :
                         verticalSamplingScheme.append("Primary sampling: discrete")
-                    floatSerial.append(dive.station_name)
-                    station_number.append(dive.station_number)
-                    firmwareVersion.append(dive.soft_version)
-                    cyclesNb.append(int(dive.cycle_nb))
-                    julianDay.append((profile.start_date - UTCDateTime("1950-01-01T00:00:00")) / 86400)
-                    if len(configMissionNumber) <= 0:
-                        configMissionNumber.append(1)
-                    elif len(configMissionNumber) <= 5:
-                        configMissionNumber.append(2)
-                    else :
-                        configMissionNumber.append(3)
-
-                    print (len(profile.data_pressure))
+                    floatSerial.append(cycle.station_name)
+                    station_number.append(cycle.station_number)
+                    firmwareVersion.append(cycle.soft_version)
+                    cyclesNb.append(cycle.cycleNb)
+                    julianDay.append(utils.toJuld(cycle.ascentStartTime))
+                    configMissionNumber.append(cycle.configMissionNumber)
                     dataPressureResized = []
                     dataSalinityResized = []
                     dataTemperatureResized = []
@@ -419,15 +412,10 @@ def create_nc_multi_prof_c_file_3_1(FloatWmoID,mfloat_nc_path,mdives,mevents,ms4
                         for x in range(len(dataTemperatureResized),nLevelsDimSize):
                             dataTemperatureResized.append(np.float64(99999.0))
                         temp_data.append(dataTemperatureResized)
-
-                    print (len(profile.data_pressure))
-                    if dive.gps_list_is_complete:
-                        gps = dive.gps_list[-1]
-                        print(gps.date)
-                        julianDayPosition.append((UTCDateTime(gps.date) - UTCDateTime("1950-01-01T00:00:00"))/ 86400)
-                        latitude.append(gps.latitude)
-                        longitude.append(gps.longitude)
-
+                    gps = cycle.locations[0]
+                    julianDayPosition.append(utils.toJuld(UTCDateTime(gps.date)))
+                    latitude.append(gps.latitude)
+                    longitude.append(gps.longitude)
 
         ##################################################################################################
         ###                                                                                             ##

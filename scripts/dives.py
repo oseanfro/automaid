@@ -2,15 +2,16 @@ import glob
 import os
 import csv
 import re
-import profile
+import sbe41_profile
 import plotly.graph_objs as graph
 import plotly.offline as plotly
 import utils
 from obspy import UTCDateTime
 import traceback
 import gps
+import arguments
 import configuration
-
+import argo
 
 # Log class to manipulate log files
 class Dive:
@@ -26,7 +27,6 @@ class Dive:
     log_content = None
     mmd_name = None
     mmd_environment = None
-    profiles = None
     s41_name = None
     s41_environment = None
     s41_start = None
@@ -41,6 +41,9 @@ class Dive:
     surface_reach_loc = None
     great_depth_reach_loc = None
     great_depth_leave_loc = None
+    argo_config = None
+    profiles = None
+    measures = None
 
     def __init__(self, base_path, log_name, events, profiles):
         self.base_path = base_path
@@ -71,7 +74,7 @@ class Dive:
         # Check if the log correspond to a complete dive
         self.is_complete_dive = False
         if self.is_dive:
-            catch = utils.find_timestamped_values("\[MAIN *, *\d+\]surface", self.log_content)
+            catch = utils.find_timestamped_values("\[LOGBIN *, *\d+\]\*\*\* switching to.*", self.log_content)
             if len(catch) > 0:
                 self.is_complete_dive = True
 
@@ -101,17 +104,19 @@ class Dive:
                     self.soft_version = re.findall("soft \w* ?\d{3}\.\d{3}\.\d{3}[\.]?[_]?[V]?(.+)",line)
                 if len(self.cycle_nb) == 0 :
                     self.cycle_nb = re.findall("cycle (\d+)", line)
-                if (len(self.station_name) > 0) and (len(self.soft_version) > 0) and (len(self.cycle_nb) > 0):
+                if self.is_dive and (len(self.station_name) > 0) and (len(self.soft_version) > 0) and (len(self.cycle_nb) > 0):
                     self.station_name = self.station_name[0]
                     self.cycle_nb = self.cycle_nb[0]
                     self.soft_version = self.soft_version[0]
                     self.station_number = self.station_name.split("-")[-1]
                     break
+                if self.is_init and (len(self.station_name) > 0) and (len(self.soft_version) > 0) :
+                    self.cycle_nb = 0
+                    self.station_name = self.station_name[0]
+                    self.soft_version = self.soft_version[0]
+                    self.station_number = self.station_name.split("-")[-1]
+                    break
 
-
-        print(self.station_name)
-        print(self.soft_version)
-        print(self.cycle_nb)
         # Find the .MER file of the ascent
         catch = re.findall("bytes in (\w+/\w+\.MER)", self.log_content)
         if len(catch) > 0:
@@ -129,6 +134,7 @@ class Dive:
                 self.mmd_name = None
                 self.events = []
             else:
+                content = re.sub(b'[^\x00-\x7F]+',b' ', content)
                 header = content.split(b'</PARAMETERS>')[0].decode("utf-8")
                 self.mmd_environment = re.findall("<ENVIRONMENT>.+", header, re.DOTALL)[0]
                 # Get list of events associated to the dive
@@ -153,7 +159,7 @@ class Dive:
         catch = re.findall("bytes in (\w+/\w+\.S41)", self.log_content)
         if len(catch) > 0:
             self.s41_name = catch[-1].replace("/", "_")
-        # If the dive contain a Mermaid file
+        # If the dive contain a sbe41 profile file
         self.profiles = list()
         if self.s41_name:
             try:
@@ -166,19 +172,13 @@ class Dive:
             else:
                 self.s41_environment = re.findall("<PARAMETERS>.+</PILOTS>", content, re.DOTALL)[0]
                 self.profiles = profiles.get_profiles_between(self.date, self.end_date)
-                s41_date = utils.find_timestamped_values("\[SBE41 *, *\d+\]Speed start detected", self.log_content)
-                if len(s41_date) == len(self.profiles):
-                    index = 0
-                    for profile in self.profiles :
-                        profile.start_date = s41_date[index][1]
-                        index = index + 1
         # Find the position of the float
         self.gps_list = gps.get_gps_list(self.log_content, self.mmd_environment, self.mmd_name)
         self.gps_list_is_complete = False
         if self.is_complete_dive:
             # Check that the last GPS fix of the list correspond to the ascent position
             surface_date = utils.find_timestamped_values("\[MAIN *, *\d+\]surface", self.log_content)
-            surface_date = UTCDateTime(surface_date[0][1])
+            surface_date = surface_date[-1][1]
             if len(self.gps_list) == 0:
                 print(("WARNING: No GPS synchronization at all for \"" \
                     + str(self.mmd_name) + "\", \"" + str(self.log_name) + "\""))
@@ -190,6 +190,8 @@ class Dive:
             else:
                 print(("WARNING: No GPS synchronization after surfacing for \"" \
                     + str(self.mmd_name) + "\", \"" + str(self.log_name) + "\""))
+        self.configuration = configuration.Configuration(self)
+
 
     def generateJSON(self):
         json_object = {}
@@ -222,7 +224,6 @@ class Dive:
             with open(export_path_md5, "r") as f:
                 md5Old = f.read()
             if md5Current == md5Old:
-                print(md5Current)
                 return
         if os.path.exists(export_path_md5) :
             os.remove(export_path_md5)
@@ -250,7 +251,6 @@ class Dive:
             with open(export_path_md5, "r") as f:
                 md5Old = f.read()
             if md5Current == md5Old:
-                print(md5Current)
                 return
         if os.path.exists(export_path_md5) :
             os.remove(export_path_md5)
@@ -276,7 +276,6 @@ class Dive:
             with open(export_path_md5, "r") as f:
                 md5Old = f.read()
             if md5Current == md5Old:
-                print(md5Current)
                 return
         if os.path.exists(export_path_md5) :
             os.remove(export_path_md5)
@@ -302,7 +301,6 @@ class Dive:
             with open(export_path_md5, "r") as f:
                 md5Old = f.read()
             if md5Current == md5Old:
-                print(md5Current)
                 return
         if os.path.exists(export_path_md5) :
             os.remove(export_path_md5)
@@ -586,21 +584,16 @@ class Dives:
                 dive = Dive(path, log_name, events, profiles)
             except :
                 traceback.print_exc()
-                print("wrong format")
+                print("Error when processing dive for LOG file :" + str(log_name))
             else :
                 self.dives.append(dive)
-    def get_cycle_nb() :
-        cycle_nb = 0
-        for dive in self.dives :
-            if dive.is_complete_dive :
-                cycle_nb = cycle_nb + 1
-        return cycle_nb
-    def get_position_nb() :
+    def get_position_nb(self) :
         position_nb = 0
         for dive in self.dives :
             position_nb = position_nb + len(dive.gps_list)
         return position_nb
-
+    def get_dives(self):
+        return self.dives
 
 
 # Create dives object
@@ -619,7 +612,7 @@ def get_dives(path, events, profiles):
             dive = Dive(path, log_name, events, profiles)
         except :
             traceback.print_exc()
-            print("wrong format")
+            print("Error when processing dive for LOG file :" + str(log_name))
         else :
             dives.append(dive)
     return dives
