@@ -132,26 +132,26 @@ class Sbe41_pilots :
         speeddetection = re.findall(" +speeddetection=(\d+).*",  dive.log_content)
         hexoutput = re.findall(" +hexoutput=(\d+).*",  dive.log_content)
         binaverageoutput = re.findall(" +binaverageoutput=(\d+).*",  dive.log_content)
-        manualprofilerate = re.findall(" +manualprofilerate=(\d+).*",  dive.log_content)
-        runningpumpbeforeprofile = re.findall(" +runningpumpbeforeprofile=(\d+).*",  dive.log_content)
-        speedstart = re.findall(" +speedstart=(\d+).*",  dive.log_content)
-        speedcontrol = re.findall(" +speedcontrol=(\d+).*",  dive.log_content)
+        manualprofilerate = re.findall(" +manualprofilerate=(\d+)s.*",  dive.log_content)
+        runningpumpbeforeprofile = re.findall(" +runningpumpbeforeprofile=(\d+)s.*",  dive.log_content)
+        speedstart = re.findall(" +speedstart=(\d+)mbar/s.*",  dive.log_content)
+        speedcontrol = re.findall(" +speedcontrol=(\d+)mbar/s.*",  dive.log_content)
         if len(continiousprofile) > 0 :
-            self.continiousprofile = int(continiousprofile[-1][0])
+            self.continiousprofile = int(continiousprofile[0])
         if len(speeddetection) > 0 :
-            self.speeddetection = int(speeddetection[-1][0])
+            self.speeddetection = int(speeddetection[0])
         if len(hexoutput) > 0 :
-            self.hexoutput = int(hexoutput[-1][0])
+            self.hexoutput = int(hexoutput[0])
         if len(binaverageoutput) > 0 :
-            self.binaverageoutput = int(binaverageoutput[-1][0])
+            self.binaverageoutput = int(binaverageoutput[0])
         if len(manualprofilerate) > 0 :
-            self.manualprofilerate = int(manualprofilerate[-1][0])
+            self.manualprofilerate = int(manualprofilerate[0])
         if len(runningpumpbeforeprofile) > 0 :
-            self.runningpumpbeforeprofile = int(runningpumpbeforeprofile[-1][0])
+            self.runningpumpbeforeprofile = int(runningpumpbeforeprofile[0])
         if len(speedstart) > 0 :
-            self.speedstart = int(speedstart[-1][0])
+            self.speedstart = int(speedstart[0])
         if len(speedcontrol) > 0 :
-            self.speedcontrol = int(speedcontrol[-1][0])
+            self.speedcontrol = int(speedcontrol[0])
 
 class Configuration :
     bypass_1st_ms=None

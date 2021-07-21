@@ -345,7 +345,7 @@ class Dive:
         maximum = 0
 
         data = [depth_line]
-        if configuration.bypass_ploted :
+        if arguments.bypass_ploted :
             # Add bypass lines
             bypass = [bp[1] for bp in bypass]
             bypass_line = utils.plotly_vertical_shape(bypass,
@@ -354,7 +354,7 @@ class Dive:
                                                       name="bypass",
                                                       color="blue")
             data.append(bypass_line)
-        if configuration.valve_ploted :
+        if arguments.valve_ploted :
             # Add valve lines
             valve = [vv[1] for vv in valve]
             valve_line = utils.plotly_vertical_shape(valve,
@@ -363,7 +363,7 @@ class Dive:
                                                      name="valve",
                                                      color="green")
             data.append(valve_line)
-        if configuration.pump_ploted :
+        if arguments.pump_ploted :
             # Add pump lines
             pump = [pp[1] for pp in pump]
             pump_line = utils.plotly_vertical_shape(pump,
@@ -373,7 +373,7 @@ class Dive:
                                                     color="orange")
             data.append(pump_line)
 
-        if configuration.mermaid_ploted :
+        if arguments.mermaid_ploted :
             # Add mermaid events lines
             mermaid_events = [pp[1] for pp in mermaid_events]
             mermaid_events_line = utils.plotly_vertical_shape(mermaid_events,

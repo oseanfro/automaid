@@ -69,7 +69,7 @@ class Profiles:
     def __init__(self, base_path=None):
         # Initialize event list (if list is declared above, then elements of the previous instance are kept in memory)
         self.profiles = list()
-        self.params = [PSAL_PARAMS,PRES_PARAMS,TEMP_PARAMS]
+        self.params = [PRES_PARAMS,TEMP_PARAMS,PSAL_PARAMS]
         if not base_path :
             return
         # Read all S41 files and find profiles associated to the dive

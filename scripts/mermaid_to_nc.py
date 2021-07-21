@@ -91,9 +91,9 @@ def mermaid_to_nc(mfloat,date_begin,date_end) :
         os.mkdir(mfloat_nc_profiles_path)
 
     FloatWmoID = mfloat
-    #mermaid_to_multi_profile.create_nc_multi_prof_c_file_3_1(FloatWmoID,mfloat_nc_path,mCycles,ms41s)
-    #mermaid_to_mono_profile.create_nc_mono_prof_c_file_3_1(FloatWmoID,mfloat_nc_profiles_path,mCycles,ms41s)
-    #mermaid_to_trajectory.create_nc_trajectory_file_3_2(FloatWmoID,mfloat_nc_path,mCycles,ms41s)
+    mermaid_to_multi_profile.create_nc_multi_prof_c_file_3_1(FloatWmoID,mfloat_nc_path,mCycles,ms41s)
+    mermaid_to_mono_profile.create_nc_mono_prof_c_file_3_1(FloatWmoID,mfloat_nc_profiles_path,mCycles,ms41s)
+    mermaid_to_trajectory.create_nc_trajectory_file_3_2(FloatWmoID,mfloat_nc_path,mCycles,ms41s)
     mermaid_to_metadata.create_nc_metadata_3_1(FloatWmoID,mfloat_nc_path,mCycles,ms41s)
 
 if __name__ == "__main__":

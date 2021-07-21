@@ -107,7 +107,7 @@ def create_nc_trajectory_file_3_2(FloatWmoID,mfloat_nc_path,mCycles,ms41s):
     formatVersionVar = file_cdf.createVariable('FORMAT_VERSION','S1',('STRING4',),fill_value=' ')
     formatVersionVar.setncattr('long_name', 'File format version')
 
-    handbookVersionVar = file_cdf.createVariable('HANDBOOK_VERSION','S1',('STRING64',),fill_value=' ')
+    handbookVersionVar = file_cdf.createVariable('HANDBOOK_VERSION','S1',('STRING4',),fill_value=' ')
     handbookVersionVar.setncattr('long_name', 'Data handbook version')
 
     referenceDateTimeVar = file_cdf.createVariable('REFERENCE_DATE_TIME','S1',('DATE_TIME',),fill_value=' ')
@@ -521,7 +521,7 @@ def create_nc_trajectory_file_3_2(FloatWmoID,mfloat_nc_path,mCycles,ms41s):
     dataModeVar.setncattr('long_name', 'Delayed mode or real time data');
     dataModeVar.setncattr('conventions', 'R : real time; D : delayed mode; A : real time with adjustment');
 
-    scientificCalibParameterVar = file_cdf.createVariable('PARAMETER','S1',('N_CALIB','N_PARAM','STRING256'),fill_value=' ')
+    scientificCalibParameterVar = file_cdf.createVariable('SCIENTIFIC_CALIB_PARAMETER','S1',('N_CALIB','N_PARAM','STRING256'),fill_value=' ')
     scientificCalibParameterVar.setncattr('long_name','List of parameters with calibration information')
     scientificCalibParameterVar.setncattr('conventions','Argo reference table 3')
 
@@ -801,7 +801,7 @@ def create_nc_trajectory_file_3_2(FloatWmoID,mfloat_nc_path,mCycles,ms41s):
     # 2.3.3 General information on the trajectory file
     putString(dataTypeVar,'Argo trajectory',string16DimSize)
     putString(formatVersionVar,'3.2',string4DimSize)
-    putString(handbookVersionVar,'1.2',string64DimSize)
+    putString(handbookVersionVar,'1.2',string4DimSize)
     putString(referenceDateTimeVar,'19500101000000',dateTimeDimSize)
     putString(dateCreationVar,currentDate,dateTimeDimSize)
     putString(dateUpdateVar,currentDate,dateTimeDimSize)
@@ -813,7 +813,7 @@ def create_nc_trajectory_file_3_2(FloatWmoID,mfloat_nc_path,mCycles,ms41s):
     putString(trajectoryParametersVar,param_names,string64DimSize)
     putString(dataCentreVar,cfg.history_institution,string2DimSize)
     putString(dataStateIndicatorVar,'0A',string4DimSize)
-    putString(platformTypeVar,'999',string32DimSize)
+    putString(platformTypeVar,'FLOAT',string32DimSize)
     putString(floatSerialNoVar,floatSerial,string32DimSize)
     putString(firmwareVersionVar,softVersion,string64DimSize)
     putString(wmoInstTypeVar,'999',string4DimSize)

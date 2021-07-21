@@ -25,10 +25,10 @@ import re
 import sys
 import traceback
 
-from configuration import dataPath
-from configuration import events_plotly
-from configuration import filterDate
-from configuration import generate_csv_file
+from arguments import dataPath
+from arguments import events_plotly
+from arguments import filterDate
+from arguments import generate_csv_file
 
 redo = "True"
 

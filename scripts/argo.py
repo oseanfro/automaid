@@ -20,7 +20,7 @@ class ConfigurationParameter:
             return True
 
 class ConfigurationParameters:
-    parametersList = None
+    list = None
     park_pressure_dbar = None
     park_pressure_mbar = None
     ascent_speed_mbar_per_s = None
@@ -56,7 +56,7 @@ class ConfigurationParameters:
     up_time_h = None
 
     def __init__(self, diveConfig=None):
-        self.parametersList=[]
+        self.list=[]
         self.park_pressure_dbar = None
         if not diveConfig :
             return
@@ -199,42 +199,42 @@ class ConfigurationParameters:
         if self.ascent_duration_s and self.connection_timeout_sec :
             self.up_time_h = np.float64((self.ascent_duration_s + self.connection_timeout_sec)/3600.0)
 
-        self.parametersList.append(ConfigurationParameter("CONFIG_AscentEndThreshold_dbar",self.ascent_end_threshold_dbar))
-        self.parametersList.append(ConfigurationParameter("CONFIG_AscentSamplingPeriod_seconds",self.sampling_period_s))
-        self.parametersList.append(ConfigurationParameter("CONFIG_AscentSpeed_cm/s",self.ascent_speed_mbar_per_s))
-        self.parametersList.append(ConfigurationParameter("CONFIG_AscentSpeedMin_cm/s",self.ascent_speed_min_mbar_per_s))
-        self.parametersList.append(ConfigurationParameter("CONFIG_AscentToSurfaceTimeOut_hours",self.ascent_to_surface_timeout_h))
-        self.parametersList.append(ConfigurationParameter("CONFIG_BuoyancyReductionFirstThreshold_dbar",self.buoyancy_reduction_first_threshold_dbar))
-        self.parametersList.append(ConfigurationParameter("CONFIG_BuoyancyReductionSecondThreshold_dbar",self.buoyancy_reduction_second_threshold_dbar))
-        self.parametersList.append(ConfigurationParameter("CONFIG_ConnectionTimeOut_seconds",self.connection_timeout_sec))
-        self.parametersList.append(ConfigurationParameter("CONFIG_Direction_NUMBER",1))
-        self.parametersList.append(ConfigurationParameter("CONFIG_CycleTime_hours",self.cycle_time_max_h))
-        self.parametersList.append(ConfigurationParameter("CONFIG_DescentToParkTimeOut_hours",self.descent_to_park_timeout_h))
-        self.parametersList.append(ConfigurationParameter("CONFIG_DescentToProfTimeOut_hours",self.descent_to_profile_timeout_h))
-        self.parametersList.append(ConfigurationParameter("CONFIG_DownTime_hours",self.down_time_h))
-        self.parametersList.append(ConfigurationParameter("CONFIG_ParkPressure_dbar",self.park_pressure_dbar))
-        self.parametersList.append(ConfigurationParameter("CONFIG_ProfilePressure_dbar",self.profile_pressure_dbar))
-        self.parametersList.append(ConfigurationParameter("CONFIG_ParkTime_hours",self.park_time_h))
-        self.parametersList.append(ConfigurationParameter("CONFIG_ProfileSamplingMethod_LOGICAL",self.profile_sampling_method))
-        self.parametersList.append(ConfigurationParameter("CONFIG_ProfileDepthInterval_dbar",self.depth_interval_dbar))
-        self.parametersList.append(ConfigurationParameter("CONFIG_ProfileBottomBinInterval_cbar",self.profile_bottom_bin_interval_cbar))
-        self.parametersList.append(ConfigurationParameter("CONFIG_ProfileBottomSlicesThickness_dbar",self.profile_bottom_slices_tickness_dbar))
-        self.parametersList.append(ConfigurationParameter("CONFIG_PressureThresholdDataReductionIntermediateToDeep_dbar",self.pressure_threshold_data_reduction_intermediate_to_deep_dbar))
-        self.parametersList.append(ConfigurationParameter("CONFIG_ProfileIncludeTransitionBin_LOGICAL",self.profile_include_transition_bin))
-        self.parametersList.append(ConfigurationParameter("CONFIG_ProfileIntermediateBinInterval_cbar",self.profile_intermediate_bin_interval_cbar))
-        self.parametersList.append(ConfigurationParameter("CONFIG_ProfileIntermediateSlicesThickness_dbar",self.profile_intermediate_slices_tickness_dbar))
-        self.parametersList.append(ConfigurationParameter("CONFIG_PressureThresholdDataReductionShallowToIntermediate_dbar",self.pressure_threshold_data_reduction_shallow_to_intermediate_dbar))
-        self.parametersList.append(ConfigurationParameter("CONFIG_ProfileSurfaceBinInterval_cbar",self.profile_surface_bin_interval_cbar))
-        self.parametersList.append(ConfigurationParameter("CONFIG_ProfileSurfaceSlicesThickness_dbar",self.profile_surface_slices_tickness_dbar))
-        self.parametersList.append(ConfigurationParameter("CONFIG_SurfaceTimeOut_hours",self.surface_timeout_h))
-        self.parametersList.append(ConfigurationParameter("CONFIG_UpTime_hours",self.up_time_h))
+        self.list.append(ConfigurationParameter("CONFIG_AscentEndThreshold_dbar",self.ascent_end_threshold_dbar))
+        self.list.append(ConfigurationParameter("CONFIG_AscentSamplingPeriod_seconds",self.sampling_period_s))
+        self.list.append(ConfigurationParameter("CONFIG_AscentSpeed_cm/s",self.ascent_speed_mbar_per_s))
+        self.list.append(ConfigurationParameter("CONFIG_AscentSpeedMin_cm/s",self.ascent_speed_min_mbar_per_s))
+        self.list.append(ConfigurationParameter("CONFIG_AscentToSurfaceTimeOut_hours",self.ascent_to_surface_timeout_h))
+        self.list.append(ConfigurationParameter("CONFIG_BuoyancyReductionFirstThreshold_dbar",self.buoyancy_reduction_first_threshold_dbar))
+        self.list.append(ConfigurationParameter("CONFIG_BuoyancyReductionSecondThreshold_dbar",self.buoyancy_reduction_second_threshold_dbar))
+        self.list.append(ConfigurationParameter("CONFIG_ConnectionTimeOut_seconds",self.connection_timeout_sec))
+        self.list.append(ConfigurationParameter("CONFIG_Direction_NUMBER",1))
+        self.list.append(ConfigurationParameter("CONFIG_CycleTime_hours",self.cycle_time_max_h))
+        self.list.append(ConfigurationParameter("CONFIG_DescentToParkTimeOut_hours",self.descent_to_park_timeout_h))
+        self.list.append(ConfigurationParameter("CONFIG_DescentToProfTimeOut_hours",self.descent_to_profile_timeout_h))
+        self.list.append(ConfigurationParameter("CONFIG_DownTime_hours",self.down_time_h))
+        self.list.append(ConfigurationParameter("CONFIG_ParkPressure_dbar",self.park_pressure_dbar))
+        self.list.append(ConfigurationParameter("CONFIG_ProfilePressure_dbar",self.profile_pressure_dbar))
+        self.list.append(ConfigurationParameter("CONFIG_ParkTime_hours",self.park_time_h))
+        self.list.append(ConfigurationParameter("CONFIG_ProfileSamplingMethod_LOGICAL",self.profile_sampling_method))
+        self.list.append(ConfigurationParameter("CONFIG_ProfileDepthInterval_dbar",self.depth_interval_dbar))
+        self.list.append(ConfigurationParameter("CONFIG_ProfileBottomBinInterval_cbar",self.profile_bottom_bin_interval_cbar))
+        self.list.append(ConfigurationParameter("CONFIG_ProfileBottomSlicesThickness_dbar",self.profile_bottom_slices_tickness_dbar))
+        self.list.append(ConfigurationParameter("CONFIG_PressureThresholdDataReductionIntermediateToDeep_dbar",self.pressure_threshold_data_reduction_intermediate_to_deep_dbar))
+        self.list.append(ConfigurationParameter("CONFIG_ProfileIncludeTransitionBin_LOGICAL",self.profile_include_transition_bin))
+        self.list.append(ConfigurationParameter("CONFIG_ProfileIntermediateBinInterval_cbar",self.profile_intermediate_bin_interval_cbar))
+        self.list.append(ConfigurationParameter("CONFIG_ProfileIntermediateSlicesThickness_dbar",self.profile_intermediate_slices_tickness_dbar))
+        self.list.append(ConfigurationParameter("CONFIG_PressureThresholdDataReductionShallowToIntermediate_dbar",self.pressure_threshold_data_reduction_shallow_to_intermediate_dbar))
+        self.list.append(ConfigurationParameter("CONFIG_ProfileSurfaceBinInterval_cbar",self.profile_surface_bin_interval_cbar))
+        self.list.append(ConfigurationParameter("CONFIG_ProfileSurfaceSlicesThickness_dbar",self.profile_surface_slices_tickness_dbar))
+        self.list.append(ConfigurationParameter("CONFIG_SurfaceTimeOut_hours",self.surface_timeout_h))
+        self.list.append(ConfigurationParameter("CONFIG_UpTime_hours",self.up_time_h))
     def __str__(self):
         str = ""
-        for parameter in self.parametersList :
+        for parameter in self.list :
             str += '{0}={1}\r\n'.format(parameter.name,parameter.value)
         return str
     def __NE__(self, other):
-        if self.parametersList == other.parametersList :
+        if self.list == other.list :
             return False
         else :
             return True
@@ -450,18 +450,27 @@ class Cycle :
         self.measures = list()
         self.logNames = list()
         self.parameters = ConfigurationParameters()
-        self.launchParameters = ConfigurationParameters()
-        self.configurationParameters = ConfigurationParameters()
         self.sbe41Profiles = sbe41_profile.Profiles()
         self.sbe41ProfileFileName = None
         self.sbe41ProfileEnvironnement = None
 
+class Mission:
+    missionNumber = None
+    parameters = None
+    configurationParameters = None
+    def __init__(self, missionNumber, parameters) :
+        self.missionNumber = missionNumber
+        self.parameters = parameters
+        self.configurationParameters = ConfigurationParameters()
+
 class Cycles :
     list = None
     parametersNb = None
-    launchParametersNb = None
     configurationParametersNb = None
-    missionsConfigurationParameters = None
+    launchingParametersNb = None
+    launchingParameters = None
+    missionsNb = None
+    missions = None
     def __init__(self,dives) :
         self.list = list()
         cycleNb = 0
@@ -514,7 +523,7 @@ class Cycles :
             cycle.soft_version = dive.soft_version
             if dive.configuration:
                 cycle.parameters = ConfigurationParameters(dive.configuration)
-                self.parametersNb = len(cycle.parameters.parametersList)
+                self.parametersNb = len(cycle.parameters.list)
             if measures.clockOffset:
                 cycle.clockOffset = measures.clockOffset
             if dive.configuration.stages :
@@ -524,8 +533,9 @@ class Cycles :
         self.list.append(cycle)
         cycleNb = cycleNb + 1
 
-        self.missionsConfigurationParameters = list()
-        self.missionsConfigurationParameters.append(self.list[0].parameters)
+        self.missions = list()
+        self.missionsNb = np.int32(0)
+        self.missions.append(Mission(self.missionsNb,self.list[0].parameters))
         # All parameters are launched by default
         indexLaunchParameters = [1] * self.parametersNb
         for cycle in self.list :
@@ -533,22 +543,22 @@ class Cycles :
             cycle.park_pressure_status = '7'
             cycle.park_pressure_dbar = cycle.parameters.park_pressure_dbar
 
-            # check if parameter never change during all missions
+            # Check if parameter never change during all missions
             indexParameter = 0
             while indexParameter < self.parametersNb:
-                for mission_config in self.missionsConfigurationParameters :
-                    if cycle.parameters.parametersList[indexParameter].value != mission_config.parametersList[indexParameter].value :
+                for mission in self.missions :
+                    if cycle.parameters.list[indexParameter].value != mission.parameters.list[indexParameter].value :
                         indexLaunchParameters[indexParameter] = 0
                 indexParameter = indexParameter + 1
 
-            #
+            # Detect new mission for each cycle
             newMission = True
             configMissionNumber = 0
-            for mission_config in self.missionsConfigurationParameters :
+            for mission in self.missions :
                 indexParameter = 0
                 sameNumber = 0
                 while indexParameter < self.parametersNb:
-                    if cycle.parameters.parametersList[indexParameter].value == mission_config.parametersList[indexParameter].value :
+                    if cycle.parameters.list[indexParameter].value == mission.parameters.list[indexParameter].value :
                         sameNumber = sameNumber + 1
                     indexParameter = indexParameter + 1
                 if sameNumber >= self.parametersNb :
@@ -556,23 +566,27 @@ class Cycles :
                     break
                 configMissionNumber = configMissionNumber + 1
             if newMission :
-                self.missionsConfigurationParameters.append(cycle.parameters)
+                self.missionsNb = np.int32(configMissionNumber)
+                self.missions.append(Mission(self.missionsNb,cycle.parameters))
             cycle.configMissionNumber = configMissionNumber
 
-        # split into 2 list with parameters that never change and mission parameters
-        for cycle in self.list :
+        # construct of configuration parameters by mission
+        for mission in self.missions :
             indexParameter = 0
-            cycle.launchParameters.parametersList = list()
-            cycle.configurationParameters.parametersList = list()
             while indexParameter < self.parametersNb:
-                if indexLaunchParameters[indexParameter] == 1 :
-                    cycle.launchParameters.parametersList.append(cycle.parameters.parametersList[indexParameter])
-                else :
-                    cycle.configurationParameters.parametersList.append(cycle.parameters.parametersList[indexParameter])
+                if indexLaunchParameters[indexParameter] != 1 :
+                    mission.configurationParameters.list.append(mission.parameters.list[indexParameter])
                 indexParameter = indexParameter + 1
-            self.launchParametersNb = len(cycle.launchParameters.parametersList)
-            self.configurationParametersNb = len(cycle.configurationParameters.parametersList)
+            self.configurationParametersNb = len(mission.configurationParameters.list)
 
+        # construct of launching parameters with last mission
+        self.launchingParameters = ConfigurationParameters()
+        indexParameter = 0
+        while indexParameter < self.parametersNb:
+            if indexLaunchParameters[indexParameter] == 1 :
+                self.launchingParameters.list.append(self.missions[-1].parameters.list[indexParameter])
+            indexParameter = indexParameter + 1
+        self.launchingParametersNb = len(self.launchingParameters.list)
 
 
     def __str__(self) :
@@ -597,8 +611,6 @@ class Cycles :
             str += 'REPRESENTATIVE_PARK_PRESSURE_STATUS={0}\r\n'.format(element.park_pressure_status)
             str += 'REPRESENTATIVE_PARK_PRESSURE={0}\r\n'.format(element.park_pressure_dbar)
             str += 'CONFIG_MISSION_NUMBER={0}\r\n'.format(element.configMissionNumber)
-            str += '\r\nCONFIGURATIONS PARAMETERS : \r\n{0}'.format(element.configurationParameters)
-            str += '\r\nLAUNCH CONFIGURATION PARAMETERS : \r\n{0}'.format(element.launchParameters)
         return str
     def get_N_CYCLE(self) :
         return len(self.list)

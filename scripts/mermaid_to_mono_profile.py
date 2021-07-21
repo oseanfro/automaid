@@ -76,7 +76,7 @@ def create_nc_mono_prof_c_file_3_1(FloatWmoID,mfloat_nc_path,mCycles,ms41s):
                     nLevelsDim = file_cdf.createDimension('N_LEVELS', len(profile.data_pressure));
 
                     nCalibDim = file_cdf.createDimension('N_CALIB',1);
-                    nHistoryDim = file_cdf.createDimension('N_HISTORY',1);
+                    nHistoryDim = file_cdf.createDimension('N_HISTORY',0);
 
                     nProfDimSize = len(nProfDim)
                     nParamDimSize = len(nParamDim)
@@ -119,7 +119,7 @@ def create_nc_mono_prof_c_file_3_1(FloatWmoID,mfloat_nc_path,mCycles,ms41s):
                     formatVersionVar = file_cdf.createVariable('FORMAT_VERSION','S1',('STRING4',),fill_value=' ')
                     formatVersionVar.setncattr('long_name', 'File format version')
 
-                    handbookVersionVar = file_cdf.createVariable('HANDBOOK_VERSION','S1',('STRING64',),fill_value=' ')
+                    handbookVersionVar = file_cdf.createVariable('HANDBOOK_VERSION','S1',('STRING4',),fill_value=' ')
                     handbookVersionVar.setncattr('long_name', 'Data handbook version')
 
                     referenceDateTimeVar = file_cdf.createVariable('REFERENCE_DATE_TIME','S1',('DATE_TIME',),fill_value=' ')
@@ -236,6 +236,7 @@ def create_nc_mono_prof_c_file_3_1(FloatWmoID,mfloat_nc_path,mCycles,ms41s):
                         profileGlobalParamQcVars[param["PARAM_NAME"]] = file_cdf.createVariable(ncParamName,'S1',('N_PROF',),fill_value=' ')
                         profileGlobalParamQcVars[param["PARAM_NAME"]].setncattr('long_name',"Global quality flag of {0} profile".format(param["PARAM_NAME"]))
                         profileGlobalParamQcVars[param["PARAM_NAME"]].setncattr('conventions','Argo reference table 2a')
+
 
                     verticalSamplingSchemeVar = file_cdf.createVariable('VERTICAL_SAMPLING_SCHEME','S1',('N_PROF','STRING256'),fill_value=' ')
                     verticalSamplingSchemeVar.setncattr('long_name', 'Vertical sampling scheme');
@@ -427,7 +428,7 @@ def create_nc_mono_prof_c_file_3_1(FloatWmoID,mfloat_nc_path,mCycles,ms41s):
 
                     putString(dataTypeVar,'Argo profile',string16DimSize)
                     putString(formatVersionVar,'3.1',string4DimSize)
-                    putString(handbookVersionVar,'1.2',string64DimSize)
+                    putString(handbookVersionVar,'1.2',string4DimSize)
                     putString(referenceDateTimeVar,'19500101000000',dateTimeDimSize)
                     putString(dateCreationVar,currentDate,dateTimeDimSize)
                     putString(dateUpdateVar,currentDate,dateTimeDimSize)
@@ -444,7 +445,7 @@ def create_nc_mono_prof_c_file_3_1(FloatWmoID,mfloat_nc_path,mCycles,ms41s):
                     putNString(dcReferenceVar,station_number,1,string32DimSize)
                     putNString(dataStateIndicatorVar,'0A',nProfDimSize,string4DimSize)
                     putString(dataModeVar,nProfDimSize*'R',nProfDimSize)
-                    putNString(platformTypeVar,'999',nProfDimSize,string32DimSize)
+                    putNString(platformTypeVar,'FLOAT',nProfDimSize,string32DimSize)
                     putNString(floatSerialNoVar,floatSerial,1,string32DimSize)
                     putNString(firmwareVersionVar,firmwareVersion,1,string64DimSize)
                     putNString(wmoInstTypeVar,'999',nProfDimSize,string4DimSize)
@@ -467,22 +468,14 @@ def create_nc_mono_prof_c_file_3_1(FloatWmoID,mfloat_nc_path,mCycles,ms41s):
                         if param["PARAM_NAME"] == "PRES":
                             profParamVar["PRES"][:] = press_data
                             putNString(profParamQcVar["PRES"],nLevelsDimSize*'0',nProfDimSize,nLevelsDimSize)
-                            profParamAdjVar["PRES"][:] = [[param["FILL_VALUE"]] * nLevelsDimSize] * nProfDimSize
-                            putNString(profParamAdjQcVar["PRES"],nLevelsDimSize*'0',nProfDimSize,nLevelsDimSize)
-                            profParamAdjErrVar["PRES"][:] = [[param["FILL_VALUE"]] * nLevelsDimSize] * nProfDimSize
                         if param["PARAM_NAME"] == "TEMP":
                             profParamVar["TEMP"][:] = temp_data
                             putNString(profParamQcVar["TEMP"],nLevelsDimSize*'0',nProfDimSize,nLevelsDimSize)
-                            profParamAdjVar["TEMP"][:] = [[param["FILL_VALUE"]] * nLevelsDimSize] * nProfDimSize
-                            putNString(profParamAdjQcVar["TEMP"],nLevelsDimSize*'0',nProfDimSize,nLevelsDimSize)
-                            profParamAdjErrVar["TEMP"][:] = [[param["FILL_VALUE"]] * nLevelsDimSize] * nProfDimSize
                         if param["PARAM_NAME"] == "PSAL":
                             profParamVar["PSAL"][:] = salinity_data
                             putNString(profParamQcVar["PSAL"],nLevelsDimSize*'0',nProfDimSize,nLevelsDimSize)
-                            profParamAdjVar["PSAL"][:] = [[param["FILL_VALUE"]] * nLevelsDimSize] * nProfDimSize
-                            putNString(profParamAdjQcVar["PSAL"],nLevelsDimSize*'0',nProfDimSize,nLevelsDimSize)
-                            profParamAdjErrVar["PSAL"][:] = [[param["FILL_VALUE"]] * nLevelsDimSize] * nProfDimSize
 
+                    putStringArray(parameterVar,[[param_names]*nCalibDimSize]*nProfDimSize,string16DimSize)
                     # 2.2.6 Calibration information for each profile
                     # filled with default values
 
