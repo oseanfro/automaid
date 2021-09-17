@@ -300,15 +300,15 @@ def create_nc_trajectory_file_3_2(FloatWmoID,mfloat_nc_path,mCycles,ms41s):
         paramStd[param["PARAM_NAME"]].setncattr('resolution', param["RESOLUTION"]);
 
 
-    axesErrorEllipsedMajorVar = file_cdf.createVariable('AXES_ERROR_ELLIPSE_MAJOR','f8',('N_MEASUREMENT',),fill_value=np.float64(99999.0))
+    axesErrorEllipsedMajorVar = file_cdf.createVariable('AXES_ERROR_ELLIPSE_MAJOR','f4',('N_MEASUREMENT',),fill_value=np.float32(99999.0))
     axesErrorEllipsedMajorVar.setncattr('long_name', 'Major axis of error ellipse from positioning system');
     axesErrorEllipsedMajorVar.setncattr('units', "meters");
 
-    axesErrorEllipsedMinorVar = file_cdf.createVariable('AXES_ERROR_ELLIPSE_MINOR','f8',('N_MEASUREMENT',),fill_value=np.float64(99999.0))
+    axesErrorEllipsedMinorVar = file_cdf.createVariable('AXES_ERROR_ELLIPSE_MINOR','f4',('N_MEASUREMENT',),fill_value=np.float32(99999.0))
     axesErrorEllipsedMinorVar.setncattr('long_name', 'Minor axis of error ellipse from positioning system');
     axesErrorEllipsedMinorVar.setncattr('units', "meters");
 
-    axesErrorEllipsedAngleVar = file_cdf.createVariable('AXES_ERROR_ELLIPSE_ANGLE','f8',('N_MEASUREMENT',),fill_value=np.float64(99999.0))
+    axesErrorEllipsedAngleVar = file_cdf.createVariable('AXES_ERROR_ELLIPSE_ANGLE','f4',('N_MEASUREMENT',),fill_value=np.float32(99999.0))
     axesErrorEllipsedAngleVar.setncattr('long_name', 'Angle of error ellipse from positioning system');
     axesErrorEllipsedAngleVar.setncattr('units', "Degrees (from North when heading East)");
 
@@ -497,7 +497,7 @@ def create_nc_trajectory_file_3_2(FloatWmoID,mfloat_nc_path,mCycles,ms41s):
     groundedVar.setncattr('long_name', 'Did the profiler touch the ground for that cycle?');
     groundedVar.setncattr('conventions', 'Argo reference table 20');
 
-    representativeParkPressureVar = file_cdf.createVariable('REPRESENTATIVE_PARK_PRESSURE','f8',('N_CYCLE',),fill_value=np.float64(99999.0))
+    representativeParkPressureVar = file_cdf.createVariable('REPRESENTATIVE_PARK_PRESSURE','f4',('N_CYCLE',),fill_value=np.float32(99999.0))
     representativeParkPressureVar.setncattr('long_name', 'Best pressure value during park phase');
     representativeParkPressureVar.setncattr('units', 'decibar');
 
@@ -570,7 +570,7 @@ def create_nc_trajectory_file_3_2(FloatWmoID,mfloat_nc_path,mCycles,ms41s):
     historyParameterVar.setncattr('long_name','Station parameter action is performed on')
     historyParameterVar.setncattr('conventions','Argo reference table 3')
 
-    historyPreviousValueVar = file_cdf.createVariable('HISTORY_PREVIOUS_VALUE','f8',('N_HISTORY',),fill_value=np.float64(99999.0))
+    historyPreviousValueVar = file_cdf.createVariable('HISTORY_PREVIOUS_VALUE','f4',('N_HISTORY',),fill_value=np.float32(99999.0))
     historyPreviousValueVar.setncattr('long_name','Parameter/Flag previous value before action')
 
     historyIndexDimensionVar = file_cdf.createVariable('HISTORY_INDEX_DIMENSION','S1',('N_HISTORY',),fill_value=' ')
@@ -702,25 +702,25 @@ def create_nc_trajectory_file_3_2(FloatWmoID,mfloat_nc_path,mCycles,ms41s):
             measurementCode.append(measure.code)
             pressure.append(measure.pressure)
             pressureQc += '0'
-            pressureAjusted.append(np.float64(99999.0))
+            pressureAjusted.append(np.float32(99999.0))
             pressureAjustedQc += '0'
-            pressureAjustedError.append(np.float64(99999.0))
-            pressureMed.append(np.float64(99999.0))
-            pressureStd.append(np.float64(99999.0))
+            pressureAjustedError.append(np.float32(99999.0))
+            pressureMed.append(np.float32(99999.0))
+            pressureStd.append(np.float32(99999.0))
             temperature.append(measure.temperature)
             temperatureQc += '0'
-            temperatureAjusted.append(np.float64(99999.0))
+            temperatureAjusted.append(np.float32(99999.0))
             temperatureAjustedQc += '0'
-            temperatureAjustedError.append(np.float64(99999.0))
-            temperatureMed.append(np.float64(99999.0))
-            temperatureStd.append(np.float64(99999.0))
+            temperatureAjustedError.append(np.float32(99999.0))
+            temperatureMed.append(np.float32(99999.0))
+            temperatureStd.append(np.float32(99999.0))
             salinity.append(measure.salinity)
             salinityQc += '0'
-            salinityAjusted.append(np.float64(99999.0))
+            salinityAjusted.append(np.float32(99999.0))
             salinityAjustedQc += '0'
-            salinityAjustedError.append(np.float64(99999.0))
-            salinityMed.append(np.float64(99999.0))
-            salinityStd.append(np.float64(99999.0))
+            salinityAjustedError.append(np.float32(99999.0))
+            salinityMed.append(np.float32(99999.0))
+            salinityStd.append(np.float32(99999.0))
             trajectoryParameterDataMode.append(ms41s.get_N_PARAMS() * 'R')
             juldDataMode += 'R'
         if cycle.descentStartTime :

@@ -340,15 +340,15 @@ def create_nc_multi_prof_c_file_3_1(FloatWmoID,mfloat_nc_path,mCycles,ms41s):
         historyParameterVar.setncattr('long_name','Station parameter action is performed on')
         historyParameterVar.setncattr('conventions','Argo reference table 3')
 
-        historyStartPresVar = file_cdf.createVariable('HISTORY_START_PRES','f8',('N_HISTORY','N_PROF'),fill_value=99999)
+        historyStartPresVar = file_cdf.createVariable('HISTORY_START_PRES','f4',('N_HISTORY','N_PROF'),fill_value=np.float32(99999.0))
         historyStartPresVar.setncattr('long_name','Start pressure action applied on')
         historyStartPresVar.setncattr('units','decibar')
 
-        historyStopPresVar = file_cdf.createVariable('HISTORY_STOP_PRES','f8',('N_HISTORY','N_PROF'),fill_value=99999)
+        historyStopPresVar = file_cdf.createVariable('HISTORY_STOP_PRES','f4',('N_HISTORY','N_PROF'),fill_value=np.float32(99999.0))
         historyStopPresVar.setncattr('long_name','Stop pressure action applied on')
         historyStopPresVar.setncattr('units','decibar')
 
-        historyPreviousValueVar = file_cdf.createVariable('HISTORY_PREVIOUS_VALUE','f8',('N_HISTORY','N_PROF'),fill_value=99999)
+        historyPreviousValueVar = file_cdf.createVariable('HISTORY_PREVIOUS_VALUE','f4',('N_HISTORY','N_PROF'),fill_value=np.float32(99999.0))
         historyPreviousValueVar.setncattr('long_name','Parameter/Flag previous value before action')
 
         historyQcTestVar = file_cdf.createVariable('HISTORY_QCTEST','S1',('N_HISTORY','N_PROF','STRING16'),fill_value=' ')
@@ -402,17 +402,17 @@ def create_nc_multi_prof_c_file_3_1(FloatWmoID,mfloat_nc_path,mCycles,ms41s):
                     if profile.data_pressure:
                         dataPressureResized = profile.data_pressure[:]
                         for x in range(len(dataPressureResized),nLevelsDimSize):
-                            dataPressureResized.append(np.float64(99999.0))
+                            dataPressureResized.append(np.float32(99999.0))
                         press_data.append(dataPressureResized)
                     if profile.data_salinity:
                         dataSalinityResized = profile.data_salinity[:]
                         for x in range(len(dataSalinityResized),nLevelsDimSize):
-                            dataSalinityResized.append(np.float64(99999.0))
+                            dataSalinityResized.append(np.float32(99999.0))
                         salinity_data.append(dataSalinityResized)
                     if profile.data_temperature:
                         dataTemperatureResized = profile.data_temperature[:]
                         for x in range(len(dataTemperatureResized),nLevelsDimSize):
-                            dataTemperatureResized.append(np.float64(99999.0))
+                            dataTemperatureResized.append(np.float32(99999.0))
                         temp_data.append(dataTemperatureResized)
                     gps = cycle.locations[0]
                     julianDayPosition.append(utils.toJuld(UTCDateTime(gps.date)))

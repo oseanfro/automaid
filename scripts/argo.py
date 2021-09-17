@@ -61,18 +61,18 @@ class ConfigurationParameters:
         if not diveConfig :
             return
         # get ascent speed
-        self.ascent_speed_mbar_per_s = np.float64(8.0)
+        self.ascent_speed_mbar_per_s = np.float32(8.0)
         if diveConfig.ascent_mbar_per_s :
-            self.ascent_speed_mbar_per_s = np.float64(diveConfig.ascent_mbar_per_s)
+            self.ascent_speed_mbar_per_s = np.float32(diveConfig.ascent_mbar_per_s)
         if diveConfig.sbe41_pilots :
-            self.ascent_speed_mbar_per_s = np.float64(diveConfig.sbe41_pilots.speedcontrol)
+            self.ascent_speed_mbar_per_s = np.float32(diveConfig.sbe41_pilots.speedcontrol)
         # get park pressure
         self.park_pressure_mbar = None
         self.park_pressure_dbar = None
         if diveConfig.stages :
             self.park_pressure_mbar = diveConfig.stages[0].pressure_ref_mbar
         if self.park_pressure_mbar :
-            self.park_pressure_dbar = np.float64(self.park_pressure_mbar/100.0)
+            self.park_pressure_dbar = np.float32(self.park_pressure_mbar/100.0)
         # get descent to profile timeout in seconds
         self.descent_to_profile_timeout_h = None
         # get profile pressure
@@ -82,47 +82,47 @@ class ConfigurationParameters:
             for stage in diveConfig.stages:
                 if stage.pressure_ref_mbar > self.park_pressure_mbar:
                     #Profile depth is not the same than park pressure
-                    self.descent_to_profile_timeout_h = np.float64(stage.duration_estimated_s/3600.0)
+                    self.descent_to_profile_timeout_h = np.float32(stage.duration_estimated_s/3600.0)
                     self.profile_pressure_mbar = stage.pressure_ref_mbar
         if self.profile_pressure_mbar :
-            self.profile_pressure_dbar = np.float64(self.profile_pressure_mbar/100.0)
+            self.profile_pressure_dbar = np.float32(self.profile_pressure_mbar/100.0)
         # get surface pressure
         self.surface_mbar = 500
         if diveConfig.surface_mbar :
             self.surface_mbar = diveConfig.surface_mbar
-        self.ascent_end_threshold_dbar = np.float64(self.surface_mbar/100.0)
+        self.ascent_end_threshold_dbar = np.float32(self.surface_mbar/100.0)
         # get sampling period in second
         self.sampling_period_s = None
         if diveConfig.sbe41_parameters :
             if int(diveConfig.sbe41_parameters.samplerate) == 1 :
-                self.sampling_period_s = np.float64(1)
+                self.sampling_period_s = np.float32(1)
             elif int(diveConfig.sbe41_parameters.samplerate) == 0 :
-                self.sampling_period_s = np.float64(2)
+                self.sampling_period_s = np.float32(2)
         # get speed min to start profile
         self.ascent_speed_min_mbar_per_s = None
         if diveConfig.sbe41_pilots :
-            self.ascent_speed_min_mbar_per_s = np.float64(diveConfig.sbe41_pilots.speedstart)
+            self.ascent_speed_min_mbar_per_s = np.float32(diveConfig.sbe41_pilots.speedstart)
         # get ascent to surface timeout in sec
         self.ascent_to_surface_timeout_h = None
         if diveConfig.stages :
             if diveConfig.stages[-1].stage_type == "surfacing" and diveConfig.stages[-1].scientific_type == "SBE41":
-                self.ascent_to_surface_timeout_h = np.float64(diveConfig.stages[-1].duration_estimated_s/3600.0)
+                self.ascent_to_surface_timeout_h = np.float32(diveConfig.stages[-1].duration_estimated_s/3600.0)
         # get buoyancy reduction firdt threshold
         self.buoyancy_reduction_first_threshold_dbar = None
         if diveConfig.far_mbar :
-            self.buoyancy_reduction_first_threshold_dbar = np.float64(diveConfig.far_mbar/100.0)
+            self.buoyancy_reduction_first_threshold_dbar = np.float32(diveConfig.far_mbar/100.0)
         # get buoyancy reduction second threshold
         self.buoyancy_reduction_second_threshold_dbar = None
         if diveConfig.near_mbar :
-            self.buoyancy_reduction_second_threshold_dbar = np.float64(diveConfig.near_mbar/100.0)
+            self.buoyancy_reduction_second_threshold_dbar = np.float32(diveConfig.near_mbar/100.0)
         # get connection timeout in seconds
         self.connection_timeout_sec = None
         if diveConfig.max_surface_delay_s :
-            self.connection_timeout_sec = np.float64(diveConfig.max_surface_delay_s)
+            self.connection_timeout_sec = np.float32(diveConfig.max_surface_delay_s)
         # get ascent duration in seconds
         self.ascent_duration_s = None
         if self.profile_pressure_mbar and self.ascent_speed_mbar_per_s :
-            self.ascent_duration_s = np.float64(self.profile_pressure_mbar) / np.float64(self.ascent_speed_mbar_per_s)
+            self.ascent_duration_s = np.float32(self.profile_pressure_mbar) / np.float32(self.ascent_speed_mbar_per_s)
         # get down time in seconds
         self.down_time_s = None
         self.down_time_h = None
@@ -132,20 +132,20 @@ class ConfigurationParameters:
             else :
                 self.down_time_s = diveConfig.stages[-1].expiration_date_s
         if self.down_time_s:
-            self.down_time_h = np.float64(self.down_time_s/3600.0)
+            self.down_time_h = np.float32(self.down_time_s/3600.0)
         # get cycle time max in seconds
         self.cycle_time_max_h = None
         if self.ascent_duration_s and self.down_time_s and self.connection_timeout_sec :
-            self.cycle_time_max_h = np.float64((self.down_time_s + self.ascent_duration_s + self.connection_timeout_sec)/3600.0)
+            self.cycle_time_max_h = np.float32((self.down_time_s + self.ascent_duration_s + self.connection_timeout_sec)/3600.0)
         # get descent to park timeout in seconds
         self.descent_to_park_timeout_h = None
         if diveConfig.stages :
-            self.descent_to_park_timeout_h = np.float64(diveConfig.stages[0].duration_estimated_s/3600.0)
+            self.descent_to_park_timeout_h = np.float32(diveConfig.stages[0].duration_estimated_s/3600.0)
         # get park time in seconds
         self.park_time_h = None
         if diveConfig.stages :
             if diveConfig.stages[1] and (diveConfig.stages[0].pressure_ref_mbar == diveConfig.stages[1].pressure_ref_mbar) :
-                self.park_time_h = np.float64(diveConfig.stages[1].duration_estimated_s/3600.0)
+                self.park_time_h = np.float32(diveConfig.stages[1].duration_estimated_s/3600.0)
         # get profile sampling methode
         self.profile_sampling_method = None
         if diveConfig.sbe41_pilots :
@@ -153,15 +153,15 @@ class ConfigurationParameters:
         # Target depth interval between final CTD samples when in the spot sampling mode.
         self.depth_interval_dbar = None
         if self.ascent_speed_mbar_per_s and self.sampling_period_s and self.profile_sampling_method == 0 :
-            self.depth_interval_dbar = np.float64((self.ascent_speed_mbar_per_s * self.sampling_period_s)/100.0)
+            self.depth_interval_dbar = np.float32((self.ascent_speed_mbar_per_s * self.sampling_period_s)/100.0)
         # Depth intervals for bottom depth (algorithm of data reduction).
         self.profile_bottom_bin_interval_cbar = None
         if diveConfig.sbe41_parameters :
-            self.profile_bottom_bin_interval_cbar = np.float64(diveConfig.sbe41_parameters.bottom_bin_interval*10.0)
+            self.profile_bottom_bin_interval_cbar = np.float32(diveConfig.sbe41_parameters.bottom_bin_interval*10.0)
         # Thickness of the slices for deep depths (algorithm of data reduction) (in dbars).
         self.profile_bottom_slices_tickness_dbar = None
         if diveConfig.sbe41_parameters :
-            self.profile_bottom_slices_tickness_dbar = np.float64(diveConfig.sbe41_parameters.bottom_bin_size)
+            self.profile_bottom_slices_tickness_dbar = np.float32(diveConfig.sbe41_parameters.bottom_bin_size)
         # Include transition bins between depth zones (shallow/intermediate/bottom) (Yes=1/No=0).
         self.profile_include_transition_bin = None
         if diveConfig.sbe41_parameters :
@@ -169,35 +169,35 @@ class ConfigurationParameters:
 
         self.profile_intermediate_bin_interval_cbar = None
         if diveConfig.sbe41_parameters :
-            self.profile_intermediate_bin_interval_cbar = np.float64(diveConfig.sbe41_parameters.middle_bin_interval*10.0)
+            self.profile_intermediate_bin_interval_cbar = np.float32(diveConfig.sbe41_parameters.middle_bin_interval*10.0)
 
         self.profile_intermediate_slices_tickness_dbar = None
         if diveConfig.sbe41_parameters :
-            self.profile_intermediate_slices_tickness_dbar = np.float64(diveConfig.sbe41_parameters.middle_bin_size)
+            self.profile_intermediate_slices_tickness_dbar = np.float32(diveConfig.sbe41_parameters.middle_bin_size)
 
         self.profile_surface_bin_interval_cbar = None
         if diveConfig.sbe41_parameters :
-            self.profile_surface_bin_interval_cbar = np.float64(diveConfig.sbe41_parameters.top_bin_interval*10.0)
+            self.profile_surface_bin_interval_cbar = np.float32(diveConfig.sbe41_parameters.top_bin_interval*10.0)
 
         self.profile_surface_slices_tickness_dbar = None
         if diveConfig.sbe41_parameters :
-            self.profile_surface_slices_tickness_dbar = np.float64(diveConfig.sbe41_parameters.top_bin_size)
+            self.profile_surface_slices_tickness_dbar = np.float32(diveConfig.sbe41_parameters.top_bin_size)
 
         self.pressure_threshold_data_reduction_shallow_to_intermediate_dbar = None
         if diveConfig.sbe41_parameters :
-            self.pressure_threshold_data_reduction_shallow_to_intermediate_dbar = np.float64(diveConfig.sbe41_parameters.top_bin_max)
+            self.pressure_threshold_data_reduction_shallow_to_intermediate_dbar = np.float32(diveConfig.sbe41_parameters.top_bin_max)
 
         self.pressure_threshold_data_reduction_intermediate_to_deep_dbar = None
         if diveConfig.sbe41_parameters :
-            self.pressure_threshold_data_reduction_intermediate_to_deep_dbar = np.float64(diveConfig.sbe41_parameters.middle_bin_max)
+            self.pressure_threshold_data_reduction_intermediate_to_deep_dbar = np.float32(diveConfig.sbe41_parameters.middle_bin_max)
 
         self.surface_timeout_h = None
         if self.connection_timeout_sec :
-            self.surface_timeout_h = np.float64(self.connection_timeout_sec/3600.0)
+            self.surface_timeout_h = np.float32(self.connection_timeout_sec/3600.0)
 
         self.up_time_h = None
         if self.ascent_duration_s and self.connection_timeout_sec :
-            self.up_time_h = np.float64((self.ascent_duration_s + self.connection_timeout_sec)/3600.0)
+            self.up_time_h = np.float32((self.ascent_duration_s + self.connection_timeout_sec)/3600.0)
 
         self.list.append(ConfigurationParameter("CONFIG_AscentEndThreshold_dbar",self.ascent_end_threshold_dbar))
         self.list.append(ConfigurationParameter("CONFIG_AscentSamplingPeriod_seconds",self.sampling_period_s))
@@ -257,15 +257,15 @@ class Measurement:
         if pressure :
             self.pressure = pressure
         else :
-            self.pressure = np.float64(99999.0)
+            self.pressure = np.float32(99999.0)
         if temperature :
             self.temperature = temperature
         else :
-            self.temperature = np.float64(99999.0)
+            self.temperature = np.float32(99999.0)
         if salinity :
             self.salinity = salinity
         else :
-            self.salinity = np.float64(99999.0)
+            self.salinity = np.float32(99999.0)
         if longitude :
             self.longitude = longitude
         else :
@@ -441,7 +441,7 @@ class Cycle :
         self.lastMessageTime = lmt
         self.transmissionEndTime = tet
         self.clockOffset = np.float64(99999.0)
-        self.park_pressure_dbar = np.float64(99999.0)
+        self.park_pressure_dbar = np.float32(99999.0)
         self.park_pressure_status = '7'
         self.configMissionNumber = 0;
         self.stages_nb = 0;

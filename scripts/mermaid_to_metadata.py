@@ -286,13 +286,13 @@ def create_nc_metadata_3_1(FloatWmoID,mfloat_nc_path,mCycles,ms41s):
     launchConfigParameterNameVar = file_cdf.createVariable('LAUNCH_CONFIG_PARAMETER_NAME','S1',('N_LAUNCH_CONFIG_PARAM','STRING128'),fill_value=' ')
     launchConfigParameterNameVar.setncattr('long_name', 'Name of configuration parameter at launch');
 
-    launchConfigParameterValueVar = file_cdf.createVariable('LAUNCH_CONFIG_PARAMETER_VALUE','f8',('N_LAUNCH_CONFIG_PARAM',),fill_value=np.float64(99999.0))
+    launchConfigParameterValueVar = file_cdf.createVariable('LAUNCH_CONFIG_PARAMETER_VALUE','f4',('N_LAUNCH_CONFIG_PARAM',),fill_value=np.float32(99999.0))
     launchConfigParameterValueVar.setncattr('long_name', 'Value of configuration parameter at launch');
 
     configParameterNameVar = file_cdf.createVariable('CONFIG_PARAMETER_NAME','S1',('N_CONFIG_PARAM','STRING128'),fill_value=' ')
     configParameterNameVar.setncattr('long_name', 'Name of configuration parameter');
 
-    configParameterValueVar = file_cdf.createVariable('CONFIG_PARAMETER_VALUE','f8',('N_MISSIONS','N_CONFIG_PARAM'),fill_value=np.float64(99999.0))
+    configParameterValueVar = file_cdf.createVariable('CONFIG_PARAMETER_VALUE','f4',('N_MISSIONS','N_CONFIG_PARAM'),fill_value=np.float32(99999.0))
     configParameterValueVar.setncattr('long_name', 'Value of configuration parameter');
 
     configMissionNumberVar = file_cdf.createVariable('CONFIG_MISSION_NUMBER','i4',('N_MISSIONS',),fill_value=np.int32(99999))
