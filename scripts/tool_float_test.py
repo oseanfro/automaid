@@ -8,7 +8,7 @@ from . import utils
 from obspy import UTCDateTime
 import datetime
 
-mfloat = "452.020-P-0050"
+mfloat = "465.152-R-0002"
 
 dataPath = "../server"
 # "server"

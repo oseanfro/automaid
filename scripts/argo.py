@@ -322,39 +322,39 @@ class Measurements:
                 currentPressure_mbar = int(pressure[0])
                 currentPressure_time = pressure[1]
 
-            # detect bypass line
+            #detect bypass line
             bypass = utils.find_timestamped_value(":\[BYPASS.+\].*opening.*[0-9]+ms", line)
             if len(bypass) > 0 :
                 self.list.append(Measurement(cycle_nb,mc-11,bypass[1],"Active bypass"))
-            # detect valve line
+            #detect valve line
             valve = utils.find_timestamped_value(":\[VALVE.+\].*opening.*[0-9]+ms", line)
             if len(valve) > 0 :
                 self.list.append(Measurement(cycle_nb,mc-11,valve[1],"Active valve"))
-            # detect pump line
+            #detect pump line
             pump = utils.find_timestamped_value(":\[PUMP.+\].*during.*[0-9]+ms", line)
             if len(pump) > 0 :
                 self.list.append(Measurement(cycle_nb,mc-11,pump[1],"Active pump"))
 
             if mc == 100 :
-                # detect Descent to park start Time (DST)
+                #detect Descent to park start Time (DST)
                 match = utils.find_timestamped_value(":\[DIVING.+\][0-9]+mbar reached .*", line)
                 if len(match) > 0 :
                     self.list.append(Measurement(cycle_nb,100,match[1],"Descent to park start Time (5 meters reached)"))
                     mc = 200
             elif mc == 200 :
-                # detect Descent end time (DET)
+                # detect Descent end time (DET)
                 tree_per_cent_threshold = dive.configuration.stages[0].pressure_ref_mbar - (dive.configuration.stages[0].pressure_ref_mbar/100*3)
                 if (len(pressure) > 0)  and (currentPressure_mbar >= tree_per_cent_threshold) :
                     self.list.append(Measurement(cycle_nb,200,currentPressure_time,"Descent end time (park zone detected)"))
                     mc = 300
             elif mc == 300 :
-                # detect park end time (PET)
+                # detect park end time (PET)
                 match = utils.find_timestamped_value(":\[MAIN.+\]stage\[1\] complete.*", line)
                 if len(match) > 0 :
                     self.list.append(Measurement(cycle_nb,300,match[1],"Park end time (second step finished)"))
                     mc = 400
             elif mc == 400 :
-                # detect deep descent end time (DDET)
+                # detect deep descent end time (DDET)
                 tree_per_cent_threshold = dive.configuration.stages[-2].pressure_ref_mbar - (dive.configuration.stages[-2].pressure_ref_mbar/100*3)
                 if (len(pressure) > 0)  and (currentPressure_mbar >= tree_per_cent_threshold) :
                     self.list.append(Measurement(cycle_nb,400,currentPressure_time,"Deep descent end time (3% of profile detected))"))
@@ -368,13 +368,13 @@ class Measurements:
                     self.list.append(Measurement(cycle_nb,400,match_deepest[1],"Deep descent end time (3rd step is finished)"))
                     mc = 500
             elif mc == 500 :
-                # detect ascent start time (AST)
+                # detect ascent start time (AST)
                 match = utils.find_timestamped_value(":\[SBE41.+\]Speed start detected.*", line)
                 if len(match) > 0 :
                     self.list.append(Measurement(cycle_nb,500,match[1],"Ascent start time (profile started)"))
                     mc = 600
             elif mc == 600 :
-                # detect end of ascent (AET)
+                # detect end of ascent (AET)
                 match = utils.find_timestamped_value(":\[STAGE.+\]The float reached the surface.*", line)
                 if len(match) > 0 :
                     self.list.append(Measurement(cycle_nb,600,match[1],"Ascent end time (profiler reach the surface)"))

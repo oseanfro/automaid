@@ -342,15 +342,15 @@ def create_nc_mono_prof_c_file_3_1(FloatWmoID,mfloat_nc_path,mCycles,ms41s):
                     historyParameterVar.setncattr('long_name','Station parameter action is performed on')
                     historyParameterVar.setncattr('conventions','Argo reference table 3')
 
-                    historyStartPresVar = file_cdf.createVariable('HISTORY_START_PRES','f8',('N_HISTORY','N_PROF'),fill_value=99999)
+                    historyStartPresVar = file_cdf.createVariable('HISTORY_START_PRES','f4',('N_HISTORY','N_PROF'),fill_value=np.float32(99999.0))
                     historyStartPresVar.setncattr('long_name','Start pressure action applied on')
                     historyStartPresVar.setncattr('units','decibar')
 
-                    historyStopPresVar = file_cdf.createVariable('HISTORY_STOP_PRES','f8',('N_HISTORY','N_PROF'),fill_value=99999)
+                    historyStopPresVar = file_cdf.createVariable('HISTORY_STOP_PRES','f4',('N_HISTORY','N_PROF'),fill_value=np.float32(99999.0))
                     historyStopPresVar.setncattr('long_name','Stop pressure action applied on')
                     historyStopPresVar.setncattr('units','decibar')
 
-                    historyPreviousValueVar = file_cdf.createVariable('HISTORY_PREVIOUS_VALUE','f8',('N_HISTORY','N_PROF'),fill_value=99999)
+                    historyPreviousValueVar = file_cdf.createVariable('HISTORY_PREVIOUS_VALUE','f4',('N_HISTORY','N_PROF'),fill_value=np.float32(99999.0))
                     historyPreviousValueVar.setncattr('long_name','Parameter/Flag previous value before action')
 
                     historyQcTestVar = file_cdf.createVariable('HISTORY_QCTEST','S1',('N_HISTORY','N_PROF','STRING16'),fill_value=' ')
