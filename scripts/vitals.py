@@ -41,17 +41,18 @@ class Vitals:
         self.divepath = []
         self.deployed = False
     def split(self,line,mdives,path,filterDate):
-        line_buoy = re.match(".* >>> BUOY (\d+) (\d+-\d+-\d+T\d+:\d+:\d+) <<<",line)
+        line_buoy = re.match(".* >>> BUOY (\d+) (.*) <<<",line)
         line_coord = re.match(".*: ([NS])(\d+)deg(\d+\.\d+)mn, ([EW])(\d+)deg(\d+\.\d+)mn",line)
         line_dop = re.match(".* hdop (.*), vdop (.*)",line)
         line_bat = re.match(".* Vbat (\d+)mV \(min (\d+)mV\)",line)
         line_Pint = re.match(".* Pint (\d+)Pa",line)
         line_Pext = re.match(".* Pext (-?\d+)mbar \(range (-?\d+)mbar\)",line)
+        line_emerg = re.match(".* EMERGENCY .*",line)
         begin = 0
         end = 0
         buffdate = 0
 
-        if self.buoy in filterDate.keys():
+        if self.buoy in list(filterDate.keys()):
             begin = filterDate[self.buoy][0]
             end = filterDate[self.buoy][1]
         else:
@@ -66,7 +67,7 @@ class Vitals:
             self.deployed = True
         if line_buoy:
             if  self.date is None:
-                self.date = utils.totimestamp(buffdate)
+                self.date = utils.totimestamp(datetime.datetime.strptime(line_buoy.group(2), "%Y-%m-%dT%H:%M:%S"))
                 for dive in mdives:
                     if (self.date <= dive.end_date.timestamp and self.date >= dive.date.timestamp):
                         divefiles = os.listdir(path + "/" + self.buoy + "/processed/" + dive.directory_name)
@@ -165,6 +166,7 @@ class Emergency:
                     self.date = utils.totimestamp(datetime.datetime.strptime(line_buoy.group(1), "%Y-%m-%dT%H:%M:%S"))
                 else:
                     self.date = utils.totimestamp(datetime.datetime.strptime(line_buoy.group(1), "%Y%m%d-%Hh%Mmn%S"))
+
                 self.cause = line_buoy.group(3).decode('ascii', 'ignore')
                 self._state = "In_progress"
             else:
@@ -267,7 +269,7 @@ def sortdictbyname(value):
 
 def plot_battery_voltage(vital_file_path, vital_file_name, begin, end):
     # Read file
-    with open(vital_file_path + vital_file_name, "r") as f:
+    with open(vital_file_path + vital_file_name, "r",encoding='latin1') as f:
         content = f.read()
 
     # Find battery values
@@ -331,7 +333,7 @@ def plot_battery_voltage(vital_file_path, vital_file_name, begin, end):
 
 def plot_internal_pressure(vital_file_path, vital_file_name, begin, end):
     # Read file
-    with open(vital_file_path + vital_file_name, "r") as f:
+    with open(vital_file_path + vital_file_name, "r",encoding='latin1') as f:
         content = f.read()
 
     # Find battery values
@@ -387,7 +389,7 @@ def plot_internal_pressure(vital_file_path, vital_file_name, begin, end):
 
 def plot_pressure_offset(vital_file_path, vital_file_name, begin, end):
     # Read file
-    with open(vital_file_path + vital_file_name, "r") as f:
+    with open(vital_file_path + vital_file_name, "r",encoding='latin1') as f:
         content = f.read()
 
     # Find battery values

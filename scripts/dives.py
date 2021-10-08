@@ -2,14 +2,16 @@ import glob
 import os
 import csv
 import re
-import profile
+import sbe41_profile
 import plotly.graph_objs as graph
 import plotly.offline as plotly
 import utils
 from obspy import UTCDateTime
-import gps
 import traceback
-
+import gps
+import arguments
+import configuration
+import argo
 
 # Log class to manipulate log files
 class Dive:
@@ -25,11 +27,13 @@ class Dive:
     log_content = None
     mmd_name = None
     mmd_environment = None
-    profiles = None
     s41_name = None
     s41_environment = None
+    s41_start = None
     events = None
     station_name = None
+    cycle_nb = None
+    soft_version = None
     station_number = None
     gps_list = None
     gps_list_is_complete = None
@@ -37,6 +41,9 @@ class Dive:
     surface_reach_loc = None
     great_depth_reach_loc = None
     great_depth_leave_loc = None
+    argo_config = None
+    profiles = None
+    measures = None
 
     def __init__(self, base_path, log_name, events, profiles):
         self.base_path = base_path
@@ -67,7 +74,7 @@ class Dive:
         # Check if the log correspond to a complete dive
         self.is_complete_dive = False
         if self.is_dive:
-            catch = utils.find_timestamped_values("\[MAIN *, *\d+\]surface", self.log_content)
+            catch = utils.find_timestamped_values("\[LOGBIN *, *\d+\]\*\*\* switching to.*", self.log_content)
             if len(catch) > 0:
                 self.is_complete_dive = True
 
@@ -84,15 +91,31 @@ class Dive:
 
         # Get the station name
         if self.is_dive or self.is_init:
-            self.station_name = re.findall("board (.+)", utils.split_log_lines(self.log_content)[0])
-            if len(self.station_name) == 0:
-                self.station_name = re.findall("board (.+)", utils.split_log_lines(self.log_content)[1])
-            if len(self.station_name) == 0:
-                self.station_name = re.findall("buoy (.+)", utils.split_log_lines(self.log_content)[0])
-            if len(self.station_name) == 0:
-                self.station_name = re.findall("buoy (.+)", utils.split_log_lines(self.log_content)[1])
-            self.station_name = self.station_name[0]
-            self.station_number = self.station_name.split("-")[-1]
+            self.station_name = []
+            self.soft_version = []
+            self.cycle_nb = []
+            log_splitted = utils.split_log_lines(self.log_content)
+            for line in log_splitted:
+                if len(self.station_name) == 0 :
+                    self.station_name = re.findall("board (.+)", line)
+                    if len(self.station_name) == 0:
+                        self.station_name = re.findall("buoy (.+)", line)
+                if len(self.soft_version) == 0 :
+                    self.soft_version = re.findall("soft \w* ?\d{3}\.\d{3}\.\d{3}[\.]?[_]?[V]?(.+)",line)
+                if len(self.cycle_nb) == 0 :
+                    self.cycle_nb = re.findall("cycle (\d+)", line)
+                if self.is_dive and (len(self.station_name) > 0) and (len(self.soft_version) > 0) and (len(self.cycle_nb) > 0):
+                    self.station_name = self.station_name[0]
+                    self.cycle_nb = self.cycle_nb[0]
+                    self.soft_version = self.soft_version[0]
+                    self.station_number = self.station_name.split("-")[-1]
+                    break
+                if self.is_init and (len(self.station_name) > 0) and (len(self.soft_version) > 0) :
+                    self.cycle_nb = 0
+                    self.station_name = self.station_name[0]
+                    self.soft_version = self.soft_version[0]
+                    self.station_number = self.station_name.split("-")[-1]
+                    break
 
         # Find the .MER file of the ascent
         catch = re.findall("bytes in (\w+/\w+\.MER)", self.log_content)
@@ -104,14 +127,16 @@ class Dive:
         if self.mmd_name:
             try:
                 # Read the Mermaid environment associated to the dive
-                with open(self.base_path + self.mmd_name, "r") as f:
+                with open(self.base_path + self.mmd_name, "rb") as f:
                     content = f.read()
             except IOError:
-                print "manque le fichier " + self.mmd_name
+                print(("manque le fichier " + self.mmd_name))
                 self.mmd_name = None
                 self.events = []
             else:
-                self.mmd_environment = re.findall("<ENVIRONMENT>.+</PARAMETERS>", content, re.DOTALL)[0]
+                content = re.sub(b'[^\x00-\x7F]+',b' ', content)
+                header = content.split(b'</PARAMETERS>')[0].decode("utf-8")
+                self.mmd_environment = re.findall("<ENVIRONMENT>.+", header, re.DOTALL)[0]
                 # Get list of events associated to the dive
                 self.events = events.get_events_between(self.date, self.end_date)
                 # For each event
@@ -134,40 +159,39 @@ class Dive:
         catch = re.findall("bytes in (\w+/\w+\.S41)", self.log_content)
         if len(catch) > 0:
             self.s41_name = catch[-1].replace("/", "_")
-        # If the dive contain a Mermaid file
+        # If the dive contain a sbe41 profile file
         self.profiles = list()
         if self.s41_name:
             try:
                 # Read the Mermaid environment associated to the dive
-                with open(self.base_path + self.s41_name, "r") as f:
+                with open(self.base_path + self.s41_name, "r", encoding='latin1') as f:
                     content = f.read()
             except IOError:
-                print "manque le fichier " + self.s41_name
+                print(("manque le fichier " + self.s41_name))
                 self.s41_name = None
             else:
-                self.s41_environment = re.findall(
-                    "<PARAMETERS>.+</PILOTS>", content, re.DOTALL)[0]
-                self.profiles = profiles.get_profiles_between(
-                    self.date, self.end_date)
+                self.s41_environment = re.findall("<PARAMETERS>.+</PILOTS>", content, re.DOTALL)[0]
+                self.profiles = profiles.get_profiles_between(self.date, self.end_date)
         # Find the position of the float
-        self.gps_list = gps.get_gps_list(
-            self.log_content, self.mmd_environment, self.mmd_name)
+        self.gps_list = gps.get_gps_list(self.log_content, self.mmd_environment, self.mmd_name)
         self.gps_list_is_complete = False
         if self.is_complete_dive:
             # Check that the last GPS fix of the list correspond to the ascent position
             surface_date = utils.find_timestamped_values("\[MAIN *, *\d+\]surface", self.log_content)
-            surface_date = UTCDateTime(surface_date[0][1])
+            surface_date = surface_date[-1][1]
             if len(self.gps_list) == 0:
-                print "WARNING: No GPS synchronization at all for \"" \
-                    + str(self.mmd_name) + "\", \"" + str(self.log_name) + "\""
+                print(("WARNING: No GPS synchronization at all for \"" \
+                    + str(self.mmd_name) + "\", \"" + str(self.log_name) + "\""))
             elif len(self.gps_list) > 1 and self.gps_list[-1].date > surface_date:
                 self.gps_list_is_complete = True
             elif self.gps_list[-1].date > surface_date:
-                print "WARNING: No GPS synchronization before diving for \"" \
-                    + str(self.mmd_name) + "\", \"" + str(self.log_name) + "\""
+                print(("WARNING: No GPS synchronization before diving for \"" \
+                    + str(self.mmd_name) + "\", \"" + str(self.log_name) + "\""))
             else:
-                print "WARNING: No GPS synchronization after surfacing for \"" \
-                    + str(self.mmd_name) + "\", \"" + str(self.log_name) + "\""
+                print(("WARNING: No GPS synchronization after surfacing for \"" \
+                    + str(self.mmd_name) + "\", \"" + str(self.log_name) + "\""))
+        self.configuration = configuration.Configuration(self)
+
 
     def generateJSON(self):
         json_object = {}
@@ -192,13 +216,26 @@ class Dive:
     def generate_datetime_log(self):
         # Check if file exist
         export_path = self.export_path + self.log_name + ".h"
-        if os.path.exists(export_path):
-            return
+        export_path_md5 = self.export_path + self.log_name + ".md5"
+
+        md5Current = utils.get_md5_from_string(self.log_content)
+        md5Old = ""
+        if os.path.exists(export_path_md5) and os.path.exists(export_path):
+            with open(export_path_md5, "r") as f:
+                md5Old = f.read()
+            if md5Current == md5Old:
+                return
+        if os.path.exists(export_path_md5) :
+            os.remove(export_path_md5)
+        if os.path.exists(export_path) :
+            os.remove(export_path)
         # Generate log with formatted date
         formatted_log = utils.format_log(self.log_content)
         # Write file
         with open(export_path, "w") as f:
             f.write(formatted_log)
+        with open(export_path_md5, mode='w') as md5_file:
+            md5_file.write(md5Current)
 
     def generate_mermaid_environment_file(self):
         # Check if there is a Mermaid file
@@ -206,11 +243,24 @@ class Dive:
             return
         # Check if file exist
         export_path = self.export_path + self.log_name + "." + self.mmd_name + ".env"
-        if os.path.exists(export_path):
-            return
+        export_path_md5 = self.export_path + self.log_name + "." + self.mmd_name + ".md5"
+
+        md5Current = utils.get_md5_from_string(self.mmd_environment)
+        md5Old = ""
+        if os.path.exists(export_path_md5) and os.path.exists(export_path):
+            with open(export_path_md5, "r") as f:
+                md5Old = f.read()
+            if md5Current == md5Old:
+                return
+        if os.path.exists(export_path_md5) :
+            os.remove(export_path_md5)
+        if os.path.exists(export_path) :
+            os.remove(export_path)
         # Write file
         with open(export_path, "w") as f:
             f.write(self.mmd_environment)
+        with open(export_path_md5, mode='w') as md5_file:
+            md5_file.write(md5Current)
 
     def generate_s41_environment_file(self):
         # Check if there is a Mermaid file
@@ -218,20 +268,45 @@ class Dive:
             return
         # Check if file exist
         export_path = self.export_path + self.log_name + "." + self.s41_name + ".params"
-        if os.path.exists(export_path):
-            return
+        export_path_md5 = self.export_path + self.log_name + "." + self.s41_name + ".md5"
+
+        md5Current = utils.get_md5_from_string(self.s41_environment)
+        md5Old = ""
+        if os.path.exists(export_path_md5) and os.path.exists(export_path):
+            with open(export_path_md5, "r") as f:
+                md5Old = f.read()
+            if md5Current == md5Old:
+                return
+        if os.path.exists(export_path_md5) :
+            os.remove(export_path_md5)
+        if os.path.exists(export_path) :
+            os.remove(export_path)
         # Write file
         with open(export_path, "w") as f:
             f.write(self.s41_environment)
+        with open(export_path_md5, mode='w') as md5_file:
+            md5_file.write(md5Current)
 
     def generate_dive_plotly(self, csv_file):
-        # Check if file exist
-        export_path = self.export_path + self.log_name[:-4] + '.html'
-        if os.path.exists(export_path):
-            return
         # If the float is not diving don't plot anything
         if not self.is_dive:
             return
+        # Check if data are same
+        export_path = self.export_path + self.log_name[:-4] + '.html'
+        export_path_md5 = self.export_path + self.log_name[:-4] + ".md5"
+
+        md5Current = utils.get_md5_from_string(self.log_content)
+        md5Old = ""
+        if os.path.exists(export_path_md5) and os.path.exists(export_path):
+            with open(export_path_md5, "r") as f:
+                md5Old = f.read()
+            if md5Current == md5Old:
+                return
+        if os.path.exists(export_path_md5) :
+            os.remove(export_path_md5)
+        if os.path.exists(export_path) :
+            os.remove(export_path)
+        print(export_path)
         # Search pressure values
         pressure = utils.find_timestamped_values(
             "]P\s*(\+?\-?\d+)mbar", self.log_content)
@@ -258,7 +333,7 @@ class Dive:
         if csv_file:
             p_date_format = [UTCDateTime.strftime(UTCDateTime(date), "%Y%m%dT%H%M%S") for date in p_date]
             csv_path = export_path.replace(".html",".csv")
-            rows = zip(p_date_format,p_val)
+            rows = list(zip(p_date_format,p_val))
             with open(csv_path, mode='w') as csv_file:
                 csv_file = csv.writer(csv_file, delimiter=';', quotechar='"', quoting=csv.QUOTE_MINIMAL)
                 for row in rows:
@@ -268,36 +343,45 @@ class Dive:
         # Find minimum and maximum for Y axis of vertical lines
         minimum = min(p_val) + 0.05 * min(p_val)
         maximum = 0
-        # Add bypass lines
-        bypass = [bp[1] for bp in bypass]
-        bypass_line = utils.plotly_vertical_shape(bypass,
-                                                  ymin=minimum,
-                                                  ymax=maximum,
-                                                  name="bypass",
-                                                  color="blue")
-        # Add valve lines
-        valve = [vv[1] for vv in valve]
-        valve_line = utils.plotly_vertical_shape(valve,
-                                                 ymin=minimum,
-                                                 ymax=maximum,
-                                                 name="valve",
-                                                 color="green")
-        # Add pump lines
-        pump = [pp[1] for pp in pump]
-        pump_line = utils.plotly_vertical_shape(pump,
-                                                ymin=minimum,
-                                                ymax=maximum,
-                                                name="pump",
-                                                color="orange")
 
-        # Add mermaid events lines
-        mermaid_events = [pp[1] for pp in mermaid_events]
-        mermaid_events_line = utils.plotly_vertical_shape(mermaid_events,
-                                                          ymin=minimum,
-                                                          ymax=maximum,
-                                                          name="MERMAID events",
-                                                          color="purple")
-        data = [bypass_line, valve_line, pump_line,mermaid_events_line, depth_line]
+        data = [depth_line]
+        if arguments.bypass_ploted :
+            # Add bypass lines
+            bypass = [bp[1] for bp in bypass]
+            bypass_line = utils.plotly_vertical_shape(bypass,
+                                                      ymin=minimum,
+                                                      ymax=maximum,
+                                                      name="bypass",
+                                                      color="blue")
+            data.append(bypass_line)
+        if arguments.valve_ploted :
+            # Add valve lines
+            valve = [vv[1] for vv in valve]
+            valve_line = utils.plotly_vertical_shape(valve,
+                                                     ymin=minimum,
+                                                     ymax=maximum,
+                                                     name="valve",
+                                                     color="green")
+            data.append(valve_line)
+        if arguments.pump_ploted :
+            # Add pump lines
+            pump = [pp[1] for pp in pump]
+            pump_line = utils.plotly_vertical_shape(pump,
+                                                    ymin=minimum,
+                                                    ymax=maximum,
+                                                    name="pump",
+                                                    color="orange")
+            data.append(pump_line)
+
+        if arguments.mermaid_ploted :
+            # Add mermaid events lines
+            mermaid_events = [pp[1] for pp in mermaid_events]
+            mermaid_events_line = utils.plotly_vertical_shape(mermaid_events,
+                                                              ymin=minimum,
+                                                              ymax=maximum,
+                                                              name="MERMAID events",
+                                                              color="purple")
+            data.append(mermaid_events_line)
 
         layout = graph.Layout(title=self.directory_name + '/' + self.log_name,
                               xaxis=dict(
@@ -311,6 +395,9 @@ class Dive:
                     filename=export_path,
                     auto_open=False)
 
+        with open(export_path_md5, mode='w') as md5_file:
+            md5_file.write(md5Current)
+
     def correct_events_clock_drift(self):
         # Return if there is no events
         if len(self.events) == 0:
@@ -322,20 +409,20 @@ class Dive:
             #       + str(self.mmd_name) + "\", \"" + str(self.log_name) + "\""
             return
         if not self.is_complete_dive:
-            print "WARNING: Events are not part of a complete dive, do not correct clock drift for \""\
-                  + str(self.mmd_name) + "\", \"" + str(self.log_name) + "\""
+            print(("WARNING: Events are not part of a complete dive, do not correct clock drift for \""\
+                  + str(self.mmd_name) + "\", \"" + str(self.log_name) + "\""))
             return
         if not self.gps_list_is_complete:
-            print "WARNING: GPS list is incomplete, do not correct clock drift for \""\
-                  + str(self.mmd_name) + "\", \"" + str(self.log_name) + "\""
+            print(("WARNING: GPS list is incomplete, do not correct clock drift for \""\
+                  + str(self.mmd_name) + "\", \"" + str(self.log_name) + "\""))
             return
         if self.gps_list[-2].clockfreq <= 0:
-            print "WARNING: Error with last gps synchronization before diving, do not correct clock drift for \""\
-                  + str(self.mmd_name) + "\", \"" + str(self.log_name) + "\""
+            print(("WARNING: Error with last gps synchronization before diving, do not correct clock drift for \""\
+                  + str(self.mmd_name) + "\", \"" + str(self.log_name) + "\""))
             return
         if self.gps_list[-1].clockfreq <= 0:
-            print "WARNING: Error with first gps synchronization after ascent, do not correct clock drift for \""\
-                  + str(self.mmd_name) + "\", \"" + str(self.log_name) + "\""
+            print(("WARNING: Error with first gps synchronization after ascent, do not correct clock drift for \""\
+                  + str(self.mmd_name) + "\", \"" + str(self.log_name) + "\""))
             return
 
         # Correct clock drift
@@ -351,22 +438,22 @@ class Dive:
 
         # Check if the dive contain enough gps fix
         if len(self.gps_list) <= 1:
-            print "WARNING: The current dive doesn't contain enough GPS fix,""" \
+            print(("WARNING: The current dive doesn't contain enough GPS fix,""" \
                   + " do not compute event location estimation for \"" \
-                  + str(self.mmd_name) + "\", \"" + str(self.log_name) + "\""
+                  + str(self.mmd_name) + "\", \"" + str(self.log_name) + "\""))
             return
 
         # Check if the next dive contain gps fix
         if len(next_dive.gps_list) <= 1:
-            print "WARNING: The next dive doesn't contain enough GPS fix,""" \
+            print(("WARNING: The next dive doesn't contain enough GPS fix,""" \
                   + " do not compute event location estimation for \"" \
-                  + str(self.mmd_name) + "\", \"" + str(self.log_name) + "\""
+                  + str(self.mmd_name) + "\", \"" + str(self.log_name) + "\""))
             return
 
         # Warning GPS list is incomplete, do not compute event location
         if not self.gps_list_is_complete:
-            print "WARNING: GPS list is incomplete, do not compute event location for \""\
-                  + str(self.mmd_name) + "\", \"" + str(self.log_name) + "\""
+            print(("WARNING: GPS list is incomplete, do not compute event location for \""\
+                  + str(self.mmd_name) + "\", \"" + str(self.log_name) + "\""))
             return
 
         # Divide gps in two list
@@ -469,15 +556,6 @@ class Dive:
             else :
                 event.plot(self.export_path)
 
-    def generate_statistics(self,csv_path):
-        csv_filename = os.path.join(csv_path,"stats.csv")
-        for event in self.events:
-            row = [self.station_name] + event.statistics()
-            with open(csv_filename, mode='ab') as csv_file:
-                csv_file = csv.writer(csv_file, delimiter=';', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-                csv_file.writerow(row)
-
-
     def generate_events_sac(self):
         for event in self.events:
             if not event.is_stanford_event():
@@ -488,21 +566,57 @@ class Dive:
         return (list[len(list) - 3])
 
 
+class Dives:
+    dives = None
+    def __init__(self, path=None, events=None, profiles=None):
+        if not path or not events or not profiles:
+            return
+        log_names = glob.glob(path + "*.LOG")
+        if len(log_names) == 0 :
+            log_names = glob.glob(path + "*.LOG.h")
+        log_names = [x.split("/")[-1] for x in log_names]
+        log_names.sort()
+        # Create Dive objects
+        self.dives = list()
+        for log_name in log_names:
+            print(log_name)
+            try:
+                dive = Dive(path, log_name, events, profiles)
+            except :
+                traceback.print_exc()
+                print("Error when processing dive for LOG file :" + str(log_name))
+            else :
+                self.dives.append(dive)
+    def get_position_nb(self) :
+        position_nb = 0
+        for dive in self.dives :
+            position_nb = position_nb + len(dive.gps_list)
+        return position_nb
+    def get_dives(self):
+        return self.dives
+
+
 # Create dives object
 def get_dives(path, events, profiles):
     # Get the list of log files
-    log_names = glob.glob(path + "*.LOG*")
+    log_names = glob.glob(path + "*.LOG")
+    if len(log_names) == 0 :
+        log_names = glob.glob(path + "*.LOG.h")
     log_names = [x.split("/")[-1] for x in log_names]
     log_names.sort()
     # Create Dive objects
     dives = list()
     for log_name in log_names:
-        print log_name
+        print(log_name)
         try:
-            dives.append(Dive(path, log_name, events, profiles))
+            dive = Dive(path, log_name, events, profiles)
         except :
             traceback.print_exc()
+            print("Error when processing dive for LOG file :" + str(log_name))
+        else :
+            dives.append(dive)
     return dives
+
 
 # Concatenate .000 files .LOG files in the path
 def concatenate_log_files(path):

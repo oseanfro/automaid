@@ -5,32 +5,83 @@ import sys
 import csv
 import glob
 import re
-import utils
+
+try :
+    import utils
+except:
+    import automaid.utils as utils
+
 import numpy
 from obspy import UTCDateTime
 import plotly.graph_objs as graph
 import plotly.offline as plotly
+import struct
+import traceback
 
 import matplotlib as mpl
 if os.environ.get('DISPLAY','') == '':
-    print "no display found. Using non-interactive Agg backend"
+    print("no display found. Using non-interactive Agg backend")
     mpl.use('agg',warn=False, force=True)
 import matplotlib.pyplot as plt
 
+PSAL_PARAMS = {"PARAM_NAME":"PSAL",
+    "LONG_NAME":"Practical salinity",
+    "STANDARD_NAME":"sea_water_salinity",
+    "NC_TYPE":"f4",
+    "FILL_VALUE":numpy.float32(99999.0),
+    "UNITS":"psu",
+    "VALID_MIN":2.0,
+    "VALID_MAX":41.0,
+    "C_FORMAT":"%3.4f",
+    "FORTRAN_FORMAT":"F3.4",
+    "RESOLUTION":0.0001,
+    "AXIS":"Y"}
+
+PRES_PARAMS = {"PARAM_NAME":"PRES",
+    "LONG_NAME":"Sea water pressure, equals 0 at sea-level",
+    "STANDARD_NAME":"sea_water_pressure",
+    "NC_TYPE":"f4",
+    "FILL_VALUE":numpy.float32(99999.0),
+    "UNITS":"decibar",
+    "VALID_MIN":0.0,
+    "VALID_MAX":12000.0,
+    "C_FORMAT":"%5.2f",
+    "FORTRAN_FORMAT":"F5.2",
+    "RESOLUTION":0.01,
+    "AXIS":"X"}
+
+TEMP_PARAMS = {"PARAM_NAME":"TEMP",
+    "LONG_NAME":"Sea temperature in-situ ITS-90 scale",
+    "STANDARD_NAME":"sea_water_temperature",
+    "NC_TYPE":"f4",
+    "FILL_VALUE":numpy.float32(99999.0),
+    "UNITS":"degree_Celsius",
+    "VALID_MIN":-2.5,
+    "VALID_MAX":40.0,
+    "C_FORMAT":"%3.4f",
+    "FORTRAN_FORMAT":"F3.4",
+    "RESOLUTION":0.0001,
+    "AXIS":"Y"}
+
 class Profiles:
-    events = None
+    profiles = None
+    params = None
     def __init__(self, base_path=None):
         # Initialize event list (if list is declared above, then elements of the previous instance are kept in memory)
         self.profiles = list()
+        self.params = [PRES_PARAMS,TEMP_PARAMS,PSAL_PARAMS]
+        if not base_path :
+            return
         # Read all S41 files and find profiles associated to the dive
         profile_files = glob.glob(base_path + "*.S41")
         for profile_file in profile_files:
             file_name = profile_file.split("/")[-1]
-            with open(profile_file, "r") as f:
+            with open(profile_file, "rb") as f:
                 content = f.read()
-            header = content.split("</PILOTS>\r\n")[0]
-            if len(content.split("</PILOTS>\r\n")) > 1 :
-                binary = content.split("</PILOTS>\r\n")[1]
+            splitted = content.split(b'</PILOTS>\r\n')
+            header = splitted[0].decode('latin1')
+            if len(splitted) > 1 :
+                binary = splitted[1]
                 self.profiles.append(Profile(file_name,header,binary))
     def get_profiles_between(self, begin, end):
         catched_profiles = list()
@@ -38,6 +89,18 @@ class Profiles:
             if begin < profile.date < end:
                 catched_profiles.append(profile)
         return catched_profiles
+    def get_N_LEVELS(self):
+        nlevel = 0
+        for profile in self.profiles:
+            if len(profile.data_pressure) > nlevel:
+                nlevel = len(profile.data_pressure)
+        return nlevel
+    def get_N_PROF(self):
+        return len(self.profiles)
+    def get_N_PARAMS(self):
+        return len(self.params)
+    def get_PARAMS(self):
+        return self.params
 
 class Profile:
     date = None
@@ -71,7 +134,7 @@ class Profile:
 
     def __init__(self, file_name, header, binary):
         self.file_name = file_name
-        print "SBE41 file name : " + self.file_name
+        print(("SBE41 file name : " + self.file_name))
         self.date = utils.get_date_from_file_name(file_name)
         self.header = header
         self.binary = binary
@@ -104,13 +167,11 @@ class Profile:
                 self.data = numpy.frombuffer(self.binary, numpy.int32)
             else:
                 self.data = list()
-                for index in range(0, len(self.binary), 3):
-                    value = (ord(self.binary[index + 2]) << 16) +\
-                            (ord(self.binary[index + 1]) << 8) +\
-                            ord(self.binary[index])
+                for rd_tupple in struct.iter_unpack('<3B', self.binary):
+                    value = (rd_tupple[2] << 16) + (rd_tupple[1] << 8) + rd_tupple[0]
                     self.data.append(value)
         except:
-            print "error"
+            traceback.print_exc()
             self.data = None
         else:
             self.data_pressure = list()
@@ -140,7 +201,6 @@ class Profile:
                     else:
                         self.data_salinity.append(45.0)
 
-
     def plotly_temperature(self, export_path, csv_file):
         if list(self.data):
             # Check if file exist
@@ -149,15 +209,15 @@ class Profile:
             export_path = export_path + export_name
             if csv_file:
                 csv_path = export_path.replace(".TEMP.html",".csv")
-                rows = zip(self.data_pressure,self.data_temperature,self.data_salinity)
+                rows = list(zip(self.data_pressure,self.data_temperature,self.data_salinity))
                 with open(csv_path, mode='w') as csv_file:
                     csv_file = csv.writer(csv_file, delimiter=';', quotechar='"', quoting=csv.QUOTE_MINIMAL)
                     for row in rows:
                         csv_file.writerow(row)
             if os.path.exists(export_path):
-                print export_path + "already exist"
+                print((export_path + "already exist"))
                 return
-            print export_name
+            print(export_name)
             # Add acoustic values to the graph
             data_line = graph.Scatter(x=self.data_temperature,
                                       y=self.data_pressure,
@@ -182,7 +242,7 @@ class Profile:
                         filename=export_path,
                         auto_open=False)
         else:
-            print export_path + " can't be exploited for temperature profile"
+            print((export_path + " can't be exploited for temperature profile"))
 
     def plotly_salinity(self, export_path):
         if list(self.data):
@@ -191,7 +251,7 @@ class Profile:
                 UTCDateTime.strftime(UTCDateTime(self.date), "%Y%m%dT%H%M%S") + \
                 "." + self.file_name + ".SAL" + ".html"
             if os.path.exists(export_path):
-                print export_path + "already exist"
+                print((export_path + "already exist"))
                 return
             # Add acoustic values to the graph
             data_line = graph.Scatter(x=self.data_salinity,
@@ -218,4 +278,4 @@ class Profile:
                         filename=export_path,
                         auto_open=False)
         else:
-            print export_path + " can't be exploited for salinity profile"
+            print((export_path + " can't be exploited for salinity profile"))

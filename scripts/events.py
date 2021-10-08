@@ -9,7 +9,7 @@ from obspy.core.trace import Trace
 from obspy.core.trace import Stats
 import matplotlib as mpl
 if os.environ.get('DISPLAY','') == '':
-    print "no display found. Using non-interactive Agg backend"
+    print("no display found. Using non-interactive Agg backend")
     mpl.use('agg',warn=False, force=True)
 import matplotlib.pyplot as plt
 import plotly.graph_objs as graph
@@ -28,13 +28,13 @@ class Events:
         mer_files = glob.glob(base_path + "*.MER")
         for mer_file in mer_files:
             file_name = mer_file.split("/")[-1]
-            with open(mer_file, "r") as f:
+            with open(mer_file, "rb") as f:
                 content = f.read()
-            events = content.split("</PARAMETERS>")[-1].split("<EVENT>")[1:]
+            events = content.split(b'</PARAMETERS>')[-1].split(b'<EVENT>')[1:]
             for event in events:
                 # Divide header and binary
-                header = event.split("<DATA>\x0A\x0D")[0]
-                binary = event.split("<DATA>\x0A\x0D")[1].split("\x0A\x0D\x09</DATA>")[0]
+                header = event.split(b'<DATA>\x0A\x0D')[0].decode("utf-8")
+                binary = event.split(b'<DATA>\x0A\x0D")[1].split("\x0A\x0D\x09</DATA>')[0]
                 self.events.append(Event(file_name, header, binary))
 
     def get_events_between(self, begin, end):
@@ -51,8 +51,6 @@ class Event:
     header = None
     binary = None
     data = None
-    dataMax = None
-    dataMin = None
     date = None
     measured_fs = None   # Measured sampling frequency
     decimated_fs = None  # Sampling frequency of the received data
@@ -152,7 +150,6 @@ class Event:
             self.measured_fs = float(fs_catch[0])
         else:
             self.measured_fs = 40
-        print "MEASURE_FS="+str(self.measured_fs)
 
         # Divide frequency by number of scales
         if not self.is_stanford_event() :
@@ -170,13 +167,9 @@ class Event:
         if not self.is_stanford_event() :
             if self.requested:
                 # For a requested event
-                sample_offset = re.findall("SMP_OFFSET=(\d+)", self.header)
                 rec_file_date = re.findall("FNAME=(\d{4}-\d{2}-\d{2}T\d{2}_\d{2}_\d{2}\.\d{6})", self.header)
-                if len(rec_file_date) <= 0 :
-                    rec_file_date = re.findall("FNAME=(\d{4}-\d{2}-\d{2}T\d{2}_\d{2}_\d{2})", self.header)
-                    rec_file_date = UTCDateTime.strptime(rec_file_date[0], "%Y-%m-%dT%H_%M_%S")
-                else:
-                    rec_file_date = UTCDateTime.strptime(rec_file_date[0], "%Y-%m-%dT%H_%M_%S.%f")
+                sample_offset = re.findall("SMP_OFFSET=(\d+)", self.header)
+                rec_file_date = UTCDateTime.strptime(rec_file_date[0], "%Y-%m-%dT%H_%M_%S.%f")
                 sample_offset = float(sample_offset[0])
                 self.date = rec_file_date + sample_offset/self.measured_fs
             else:
@@ -201,8 +194,6 @@ class Event:
         # If scales == -1 this is a raw signal, just convert binary data to numpy array of int32
         if self.scales == "-1":
             self.data = numpy.frombuffer(self.binary, numpy.int32)
-            self.dataMax = numpy.amax(self.data)
-            self.dataMin = numpy.amin(self.data)
             return
         # Get additional information to invert wavelet
         normalized = re.findall(" NORMALIZED=(\d+)", self.environment)[0]
@@ -213,25 +204,23 @@ class Event:
         icdf24_v103ec_test = os.path.join(automaid_dir, 'bin/icdf24_v103ec_test')
         icdf24_v103_test = os.path.join(automaid_dir, 'bin/icdf24_v103_test')
         icdf24_data = os.path.join(automaid_dir, "bin/wtcoeffs.icdf24_" + self.scales)
-        with open(wtcoeffsname, 'w') as f:
+        with open(wtcoeffsname, 'wb') as f:
             f.write(self.binary)
         # Do icd24
         if edge_correction == "1":
-            print "icdf24_v103ec_test"
+            #print("icdf24_v103ec_test")
             subprocess.check_output([icdf24_v103ec_test,
                                      self.scales,
                                      normalized,
                                      wtcoeffsname])
         else:
-            print "icdf24_v103_test"
+            #print("icdf24_v103_test")
             subprocess.check_output([icdf24_v103_test,
                                     self.scales,
                                     normalized,
                                     wtcoeffsname])
         # Read icd24 data
         self.data = numpy.fromfile(icdf24_data, numpy.int32)
-        self.dataMax = numpy.amax(self.data)
-        self.dataMin = numpy.amin(self.data)
 
     def get_export_file_name(self):
         export_file_name = UTCDateTime.strftime(UTCDateTime(self.date), "%Y%m%dT%H%M%S") + "." + self.file_name
@@ -247,9 +236,6 @@ class Event:
             else:
                 export_file_name = export_file_name + ".WLT" + self.scales
         return export_file_name
-
-    def statistics(self):
-        return [UTCDateTime.strftime(UTCDateTime(self.date), "%Y%m%dT%H%M%S"),self.dataMax, self.dataMin]
 
     def __get_figure_title(self):
         title = "" + self.date.isoformat() \
@@ -307,9 +293,9 @@ class Event:
     def plotly_stanford(self, export_path):
         # Check if file exist
         export_path = export_path + self.get_export_file_name() + ".html"
-        print export_path
         if os.path.exists(export_path):
             return
+        print(export_path)
         win_sz = re.findall("WINDOW_LEN=(\d+)", self.environment, re.DOTALL)
         dt = numpy.dtype([('perc50', numpy.int8)])
         x_split = numpy.array_split(self.data,2)
@@ -348,6 +334,7 @@ class Event:
         export_path = export_path + self.get_export_file_name() + ".png"
         if os.path.exists(export_path):
             return
+        print(export_path)
         # Plot frequency image
         plt.figure(figsize=(9, 4))
         plt.title(self.__get_figure_title(), fontsize=12)
@@ -365,9 +352,10 @@ class Event:
     def plot_stanford(self, export_path):
         # Check if file exist
         export_path = export_path + self.get_export_file_name() + ".png"
-        print export_path
+        print(export_path)
         if os.path.exists(export_path):
             return
+        print(export_path)
         win_sz = re.findall("WINDOW_LEN=(\d+)", self.environment, re.DOTALL)
         dt = numpy.dtype([('perc50', numpy.int8)])
         x_split = numpy.array_split(self.data,2)
@@ -396,10 +384,9 @@ class Event:
         export_path_wav = export_path + self.get_export_file_name() + ".wav"
         if os.path.exists(export_path_sac) and os.path.exists(export_path_msd):
             return
-
         # Check if the station location have been calculated
         if self.station_loc is None and not force_without_loc:
-            print self.get_export_file_name() + ": Skip sac/mseed generation, wait the next ascent to compute location"
+            print((self.get_export_file_name() + ": Skip sac/mseed generation, wait the next ascent to compute location"))
             return
 
         # Fill header info
@@ -425,6 +412,9 @@ class Event:
         stream = Stream(traces=[trace])
 
         # Save stream object
+        print(export_path_sac)
         stream.write(export_path_sac, format='SAC')
-        stream.write(export_path_msd, format='MSEED')
-        #stream.write(export_path_wav, format='WAV', framerate=self.decimated_fs)
+        print(export_path_msd)
+        stream.write(export_path_msd, format='MSEED',encoding='STEIM1')
+        print(export_path_wav)
+        stream.write(export_path_wav, format='WAV', framerate=self.decimated_fs)

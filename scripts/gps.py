@@ -175,7 +175,7 @@ def get_gps_from_mermaid_environment(mmd_name, content):
         if clockfreq <= 0:
             err_msg = "WARNING: Error with clock synchronization in file \"" + mmd_name + "\"" \
                    + " at " + fixdate.isoformat() + ", clockfreq = " + str(clockfreq) + "Hz"
-            print err_msg
+            print(err_msg)
 
         # Add date to the list
         if fixdate is not None and latitude is not None and longitude is not None \

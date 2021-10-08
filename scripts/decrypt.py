@@ -1,6 +1,5 @@
 import os
 import shutil
-from string import maketrans
 import sys
 import glob
 import struct
@@ -8,11 +7,12 @@ import json
 import re
 import time
 import traceback
+import utils
 
 #1:CLIENT
 #2:SUPERUSERS
 #3:ADMINISTRATOR
-user_level = 1
+user_level = 3
 
 # Get database name with link file and version read on file
 def get_database_version(file_version,model) :
@@ -30,9 +30,7 @@ def get_database_version(file_version,model) :
             file_major = int(file_version[0])
         if file_version[1] :
             file_minor = int(file_version[1])
-        print "file version : " + str(file_major) +"."+ str(file_minor)
         for database in databases :
-            #print "Model : " + str(database["Model"])
             if not database["Model"] or (model == database["Model"]):
                 database_minor_max = 2147483647
                 database_major_max = 2147483647
@@ -43,20 +41,15 @@ def get_database_version(file_version,model) :
                     databaseMax_version = database["MaxVersion"].split(".")
                     database_major_max = int(databaseMax_version[0])
                     database_minor_max = int(databaseMax_version[1])
-                #print "MAJOR MAX : " + str(database_major_max)
-                #print "MAJOR MIN : " + str(database_major_min)
-                #print "MINOR MAX : " +str(database_minor_max)
-                #print "MINOR MIN : " +str(database_minor_min)
                 if ((file_major > database_major_min) and (file_major < database_minor_max)) \
                 or ((file_major >= database_major_min) and (file_major <= database_major_max) \
                 and (file_minor >= database_minor_min) and (file_minor <= database_minor_max)) :
-                    print database["Name"]
                     return database["Name"]
                 #print "\r\n"
-        print "No Database available for : " + str(file_version)
+        print(("No Database available for : " + str(file_version)))
         return ""
     else :
-        print "no databases file : " + database_path
+        print(("no databases file : " + database_path))
         return ""
 # Concatenate .000 files .BIN files in the path
 def concatenate_bin_files(path):
@@ -90,7 +83,7 @@ def decrypt_one(path,LOG_card,WARN_card,ERR_card,version):
     string =""
     with open(path, "rb") as f:
         byte = f.read(1)
-        while byte != "":
+        while byte != b'':
             byte = f.read(1)
             if byte != b'#':
                 continue
@@ -102,19 +95,19 @@ def decrypt_one(path,LOG_card,WARN_card,ERR_card,version):
                     #Read head
                     IDbytes = f.read(2)
                     if len(IDbytes) != 2 :
-                        print "err:IDbytes"
+                        print("err:IDbytes")
                         break;
                     TIMESTAMPbytes = f.read(4)
                     if len(TIMESTAMPbytes) != 4 :
-                        print "err:TIMESTAMPbytes"
+                        print("err:TIMESTAMPbytes")
                         break;
                     INFOSbytes = f.read(1)
                     if INFOSbytes == "" :
-                        print "err:INFOSbytes"
+                        print("err:INFOSbytes")
                         break;
                     DATASIZEbytes = f.read(1)
                     if DATASIZEbytes == "" :
-                        print "err:DATASIZEbytes"
+                        print("err:DATASIZEbytes")
                         break;
 
                     #unpack head
@@ -125,35 +118,36 @@ def decrypt_one(path,LOG_card,WARN_card,ERR_card,version):
                         dataSize = struct.unpack('<B', DATASIZEbytes)[0]
                     except :
                         traceback.print_exc()
+                        print("err:header")
 
                     #Process head
                     idString = "0x"+"{0:0{1}X}".format(id,4)+"UL"
                     binaryinfo = "{0:08b}".format(infos)
-                    type = "00"
+                    logtype = "00"
                     argformat = "00"
-                    type = binaryinfo[-2:]
+                    logtype = binaryinfo[-2:]
                     argformat = binaryinfo[-4:-2]
                     if argformat != "00":
                         continue
 
-                    #print "ID : " + str(id)
-                    #print "IDString : " + str(idString)
-                    #print "Timestamp : " + str(timestamp)
-                    #print "Infos : " + str(infos)
-                    #print "BinaryInfos : " + str(binaryinfo)
-                    #print "Type : " + str(type)
-                    #print "ArgFormat : " + str(argformat)
-                    #print "dataSize : " + str(dataSize)
+                    #print ("ID : " + str(id))
+                    #print ("IDString : " + str(idString))
+                    #print ("Timestamp : " + str(timestamp))
+                    #print ("Infos : " + str(infos))
+                    #print ("BinaryInfos : " + str(binaryinfo))
+                    #print ("Type : " + str(type))
+                    #print ("ArgFormat : " + str(argformat))
+                    #print ("dataSize : " + str(dataSize))
 
 
                     decrypt_card={}
                     type_string = ""
-                    if type == "00":
+                    if logtype == "00":
                         decrypt_card = LOG_card
-                    elif type == "01":
+                    elif logtype == "01":
                         type_string = "<WARN>"
                         decrypt_card = WARN_card
-                    elif type == "10":
+                    elif logtype == "10":
                         type_string = "<ERR>"
                         decrypt_card = ERR_card
                     else :
@@ -182,7 +176,7 @@ def decrypt_one(path,LOG_card,WARN_card,ERR_card,version):
                         f.read(dataSize)
                         string+=str(timestamp) + ":" + type_string + "["+"{:04d}".format(id)+"] Format not found\r\n"
                         continue
-                    #print Formats
+                    #print (Formats)
                     string += str(timestamp) + ":" + type_string
                     string +="["+"{:6}".format(File)+","+"{:04d}".format(id)+"]"
                     index=0
@@ -192,11 +186,11 @@ def decrypt_one(path,LOG_card,WARN_card,ERR_card,version):
                             #Read Argument Head
                             ARGINFOSByte = f.read(1)
                             if ARGINFOSByte == "":
-                                print "err:ARGINFOSByte"
+                                print("err:ARGINFOSByte")
                                 break
                             ARGSIZEByte = f.read(1)
                             if ARGSIZEByte == "":
-                                print "err:ARGSIZEByte"
+                                print("err:ARGSIZEByte")
                                 break
                             #Unpack Argument Head
                             try :
@@ -204,15 +198,15 @@ def decrypt_one(path,LOG_card,WARN_card,ERR_card,version):
                                 ArgSize = struct.unpack('<B', ARGSIZEByte)[0]
                             except :
                                 traceback.print_exc()
-                                print "err:INFOSSIZE"
+                                print("err:INFOSSIZE")
 
                             #Process Argument Head
                             ArgInfosBinary="{0:08b}".format(ArgInfos)
                             ArgType = ArgInfosBinary[-2:]
 
-                            #print "ArgInfosBinary : " + str(ArgInfosBinary)
-                            #print "ArgType : " + str(ArgType)
-                            #print "ArgSize : " + str(ArgSize)
+                            #print ("ArgInfosBinary : " + str(ArgInfosBinary))
+                            #print ("ArgType : " + str(ArgType))
+                            #print ("ArgSize : " + str(ArgSize))
                             index = index+2
                             Formats[argIndex] = Formats[argIndex].replace(r"\r\n","\r\n")
                             if ArgSize > 0:
@@ -222,118 +216,113 @@ def decrypt_one(path,LOG_card,WARN_card,ERR_card,version):
                                     if ArgSize == 4:
                                         ArgByte = f.read(4)
                                         if len(ArgByte) != 4 :
-                                            print "err:TYPE00SIZE04"
+                                            print("err:TYPE00SIZE04")
                                             break;
                                         try :
                                             Arg = struct.unpack('<i', ArgByte)[0]
                                         except :
                                             traceback.print_exc()
-                                            print "err:TYPE00SIZE04"
+                                            print("err:TYPE00SIZE04")
                                     elif ArgSize == 2:
                                         ArgByte = f.read(2)
                                         if len(ArgByte) != 2 :
-                                            print "err:TYPE00SIZE02"
+                                            print("err:TYPE00SIZE02")
                                             break;
                                         try :
                                             Arg = struct.unpack('<h', ArgByte)[0]
                                         except :
                                             traceback.print_exc()
-                                            print "err:TYPE00SIZE02"
+                                            print("err:TYPE00SIZE02")
                                     elif ArgSize == 1:
                                         ArgByte = f.read(1)
                                         if ArgByte == "" :
-                                            print "err:TYPE00SIZE01"
+                                            print("err:TYPE00SIZE01")
                                             break;
                                         try :
                                             Arg = struct.unpack('<b', ArgByte)[0]
                                         except :
                                             traceback.print_exc()
-                                            print "err:TYPE00SIZE01"
+                                            print("err:TYPE00SIZE01")
                                 elif ArgType == "01":
                                     # unsigned integer
                                     if ArgSize == 4:
                                         ArgByte = f.read(4)
                                         if len(ArgByte) != 4 :
-                                            print "err:TYPE01SIZE04"
+                                            print("err:TYPE01SIZE04")
                                             break;
                                         try :
                                             Arg = struct.unpack('<I', ArgByte)[0]
                                         except :
                                             traceback.print_exc()
-                                            print "err:TYPE01SIZE04"
+                                            print("err:TYPE01SIZE04")
                                     elif ArgSize == 2:
                                         ArgByte = f.read(2)
                                         if len(ArgByte) != 2 :
-                                            print "err:TYPE01SIZE02"
+                                            print("err:TYPE01SIZE02")
                                             break;
                                         try :
                                             Arg = struct.unpack('<H', ArgByte)[0]
                                         except :
                                             traceback.print_exc()
-                                            print "err:TYPE01SIZE02"
+                                            print("err:TYPE01SIZE02")
                                     elif ArgSize == 1:
                                         ArgByte = f.read(1)
                                         if ArgByte == "":
-                                            print "err:TYPE01SIZE01"
+                                            print("err:TYPE01SIZE01")
                                             break
                                         try :
                                             Arg = struct.unpack('<B', ArgByte)[0]
                                         except :
                                             traceback.print_exc()
-                                            print "err:TYPE01SIZE01"
+                                            print("err:TYPE01SIZE01")
                                 elif ArgType == "11":
                                     # string
                                     ArgByte = f.read(ArgSize)
                                     if len(ArgByte) != ArgSize :
-                                        print "err:TYPE11"
+                                        print("err:TYPE11")
                                         break;
+                                    if ArgByte[ArgSize-1] == 0 :
+                                        ArgByte = ArgByte[:-1]
+                                    Arg = ArgByte
                                     try :
-                                        Arg = struct.unpack("%ds" % ArgSize, ArgByte)[0]
+                                        Arg = Arg.decode('ascii', 'ignore')
                                     except :
                                         traceback.print_exc()
-                                        print "err:TYPE11"
-                                    if ord(Arg[ArgSize-1]) == 0 :
-                                        Arg = Arg[:-1]
+                                        print("err:TYPE11")
                                     #replace none ascii characters
-                                    Arg = ''.join([i if ord(i) < 128 else ' ' for i in Arg])
-
-                                #print ArgSize
-                                #print Arg
-                                #print "Format : " + str(Formats[argIndex]) + "\r\n"
+                                #print (ArgSize)
+                                #print ("Format : " + str(Formats[argIndex]) + "\r\n")
                                 try :
                                     if "%.*s" in Formats[argIndex]:
-                                        string += Formats[argIndex] % (ArgSize,Arg)
+                                        string += (Formats[argIndex] % (ArgSize,Arg))
                                     else :
-                                        string += Formats[argIndex] % Arg
+                                        string += (Formats[argIndex] % Arg)
                                 except :
                                     traceback.print_exc()
-                                    print "error format"
+                                    print("error format")
                             else :
-                                #print "Format : " + str(Formats[argIndex]) + "\r\n"
+                                #print ("Format : " + str(Formats[argIndex]) + "\r\n")
                                 string += str(Formats[argIndex])
                                 index = index + 1
                             index = index + ArgSize
                             argIndex = argIndex + 1
                     else :
-                        #print "Format : " + (Formats[0].replace(r"\r\n","\r\n")) + "\r\n"
+                        #print ("Format : " + (Formats[0].replace(r"\r\n","\r\n")) + "\r\n")
                         string += str(Formats[0].replace(r"\r\n","\r\n"))
                     string += "\r\n"
-    #print "finished"
+    #print ("finished")
     return string
 # Decrypt all BIN files in a path
 def decrypt_all(path):
     # Generate List of BINS file
-    #print path
     files_to_decrypt = glob.glob(path + "*.BIN")
-    #print files_to_decrypt
     for file in files_to_decrypt :
         # Get version line
-        print file
-        with open(file, "r") as f:
+        print(file)
+        with open(file, "r", errors='replace') as f:
             version = f.readline()
         # Get version
         catch = re.findall("<BDD ([0-9]{3})\.[0-9]{3}\.[0-9]{3}_?V?([0-9]*\.[0-9]+)-?.*>", version)
-        #print catch
         if len(catch) > 0:
             # Get database file path
             absFilePath = os.path.abspath(__file__)
@@ -346,7 +335,6 @@ def decrypt_all(path):
                 file_major = file_version[0]
             if file_version[1] :
                 file_minor = file_version[1]
-
             file_version = file_major+'.'+file_minor
             model = 0
             if catch[-1][0] == "589" :
@@ -356,8 +344,26 @@ def decrypt_all(path):
                 database_file_path = os.path.join(scriptpath,"databases",database_file)
                 if os.path.exists(database_file_path):
                     # Read and Parse Database file
+                    database =""
                     with open(database_file_path,"r") as f:
-                        decryptlist = json.loads(f.read())
+                        database = f.read()
+                    bin = b''
+                    with open(file,"rb") as bin_file:
+                        bin = bin_file.read()
+                    currentbinMd5 = utils.get_md5_from_bytes(bin)
+                    currentdatabaseMd5 = utils.get_md5_from_string(database)
+                    oldbinMd5 = ""
+                    olddatabaseMd5 = ""
+                    if os.path.exists(file.replace(".BIN",".baseMd5")):
+                        with open(file.replace(".BIN",".baseMd5"),"r") as f:
+                            olddatabaseMd5 = f.read()
+                    if os.path.exists(file.replace(".BIN",".md5")):
+                        with open(file.replace(".BIN",".md5"),"r") as f:
+                            oldbinMd5 = f.read()
+
+                    if (currentbinMd5 == oldbinMd5) and (currentdatabaseMd5 == olddatabaseMd5) :
+                        return
+                    decryptlist = json.loads(database)
                     for decryptcard in decryptlist:
                         if decryptcard["TYPE"] == "LOG":
                             LOGcard = decryptcard["DECRYPTCARD"]
@@ -365,18 +371,20 @@ def decrypt_all(path):
                             WARNcard = decryptcard["DECRYPTCARD"]
                         elif decryptcard["TYPE"] == "ERR":
                             ERRcard = decryptcard["DECRYPTCARD"]
-                    #print file
                     try :
                         Log_file = decrypt_one(file,LOGcard,WARNcard,ERRcard,file_version)
                     except:
-                        traceback.print_exc()
-                        print "FORMAT ERROR :" +str(file)
+                        print(("FORMAT ERROR :" +str(file)))
                     else:
+                        print((file.replace(".BIN",".LOG")))
                         with open(file.replace(".BIN",".LOG"),"w") as f:
                             f.write(Log_file)
-                        print file.replace(".BIN",".LOG")
+                        with open(file.replace(".BIN",".md5"),"w") as f:
+                            f.write(currentbinMd5)
+                        with open(file.replace(".BIN",".baseMd5"),"w") as f:
+                            f.write(currentdatabaseMd5)
                 else:
-                    print "No database : " + str(database_file_path)
+                    print(("No database : " + str(database_file_path)))
 
 if __name__ == "__main__":
     decrypt_all("../server/osean/decrypt/bins/")
