@@ -34,7 +34,7 @@ class Events:
             for event in events:
                 # Divide header and binary
                 header = event.split(b'<DATA>\x0A\x0D')[0].decode("utf-8")
-                binary = event.split(b'<DATA>\x0A\x0D")[1].split("\x0A\x0D\x09</DATA>')[0]
+                binary = event.split(b'<DATA>\x0A\x0D')[1].split(b'\x0A\x0D\x09</DATA>')[0]
                 self.events.append(Event(file_name, header, binary))
 
     def get_events_between(self, begin, end):
