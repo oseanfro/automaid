@@ -348,6 +348,7 @@ class Event:
         export_path = export_path + self.get_export_file_name() + ".png"
         if os.path.exists(export_path):
             return
+        print export_path
         # Plot frequency image
         plt.figure(figsize=(9, 4))
         plt.title(self.__get_figure_title(), fontsize=12)
@@ -393,7 +394,7 @@ class Event:
         # Check if file exist
         export_path_sac = export_path + self.get_export_file_name() + ".sac"
         export_path_msd = export_path + self.get_export_file_name() + ".mseed"
-        export_path_wav = export_path + self.get_export_file_name() + ".wav"
+        #export_path_wav = export_path + self.get_export_file_name() + ".wav"
         if os.path.exists(export_path_sac) and os.path.exists(export_path_msd):
             return
 
@@ -425,6 +426,8 @@ class Event:
         stream = Stream(traces=[trace])
 
         # Save stream object
+        print export_path_sac
         stream.write(export_path_sac, format='SAC')
+        print export_path_msd
         stream.write(export_path_msd, format='MSEED')
         #stream.write(export_path_wav, format='WAV', framerate=self.decimated_fs)

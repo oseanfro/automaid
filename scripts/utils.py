@@ -183,7 +183,7 @@ def plotly_vertical_shape(position, ymin=0, ymax=1, name='name', color='blue'):
         yval.append(ymax)
         yval.append(None)
 
-    lines = graph.Scatter(x=xval,
+    lines = graph.Scattergl(x=xval,
                           y=yval,
                           name=name,
                           line=dict(color=color,

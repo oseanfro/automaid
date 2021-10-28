@@ -232,6 +232,7 @@ class Dive:
         # If the float is not diving don't plot anything
         if not self.is_dive:
             return
+        print export_path
         # Search pressure values
         pressure = utils.find_timestamped_values(
             "]P\s*(\+?\-?\d+)mbar", self.log_content)
