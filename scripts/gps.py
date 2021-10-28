@@ -28,12 +28,17 @@ def linear_interpolation(gps_list, date):
         if date == gps.date:
             return gps
 
+    if len(gpsl) == 1 :
+        return gpsl[0]
+    elif len(gpsl) == 0 :
+        return GPS(0, 0, 0, None, None, "no gps fix")
+
     if date < gpsl[0].date:
         # if date is before any gps fix compute drift from the two first gps fix
         i = 0
         j = 1
         # Try to get a minimum time between two gps fix of 10 minutes
-        while abs(gpsl[j].date - gpsl[i].date) < 10 * 60 and j < len(gpsl)-1:
+        while j < len(gpsl)-1 and abs(gpsl[j].date - gpsl[i].date) < 10 * 60 :
             j += 1
         # Try to get a minimum distance between two gps fix of 20 meters
         while gps2dist_azimuth(gpsl[j].latitude, gpsl[j].longitude,
@@ -45,18 +50,18 @@ def linear_interpolation(gps_list, date):
         i = -1
         j = -2
         # Try to get a minimum time between two gps fix of 10 minutes
-        while abs(gpsl[j].date - gpsl[i].date) < 10 * 60 and abs(j) < len(gpsl):
+        while abs(j) < len(gpsl) and abs(gpsl[j].date - gpsl[i].date) < 10 * 60 :
             j -= 1
         # Try to get a minimum distance between two gps fix of 20 meters
-        while gps2dist_azimuth(gpsl[j].latitude, gpsl[j].longitude,
-                               gpsl[i].latitude, gpsl[i].longitude)[0] < 20 and abs(j) < len(gpsl):
+        while abs(j) < len(gpsl) and gps2dist_azimuth(gpsl[j].latitude, gpsl[j].longitude,
+                               gpsl[i].latitude, gpsl[i].longitude)[0] < 20 :
             j -= 1
 
     else:
         # if date is between two gps fix find the appropriate gps fix
         i = 0
         j = 1
-        while not gpsl[i].date < date < gpsl[j].date and j < len(gpsl)-1:
+        while j < len(gpsl)-1 and not gpsl[i].date < date < gpsl[j].date :
             i += 1
             j += 1
 

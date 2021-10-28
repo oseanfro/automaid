@@ -74,7 +74,7 @@ class Dive:
         # Check if the log correspond to a complete dive
         self.is_complete_dive = False
         if self.is_dive:
-            catch = utils.find_timestamped_values("\[LOGBIN *, *\d+\]\*\*\* switching to.*", self.log_content)
+            catch = utils.find_timestamped_values("\*\*\* switching to.*", self.log_content)
             if len(catch) > 0:
                 self.is_complete_dive = True
 
