@@ -2,9 +2,11 @@ ARGO/
 IMU/
 server/
 processed/
-scripts/tool_invert_mer*
-scripts/tool_invert_raw*
-scripts/statistics*
+bin/*_test
+bin/wtcoeffs*
+tool_invert_mer/*
+tool_invert_raw/*
+statistics*
 *.tags
 *.pyc
 scripts/*.pyc
