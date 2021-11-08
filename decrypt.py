@@ -7,7 +7,11 @@ import json
 import re
 import time
 import traceback
-import utils
+
+try :
+    import utils
+except:
+    import automaid.utils as utils
 
 #1:CLIENT
 #2:SUPERUSERS

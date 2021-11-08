@@ -2,8 +2,12 @@ import os
 import shutil
 import glob
 import datetime
+import re
+import sys
+import traceback
 
 try :
+    import kml
     import dives
     import utils
     import sbe41_profile
@@ -11,24 +15,23 @@ try :
     import decrypt
     import vitals
     import databases
+    from arguments import dataPath
+    from arguments import events_plotly
+    from arguments import filterDate
+    from arguments import generate_csv_file
 except:
+    import automaid.kml as kml
     import automaid.dives as dives
     import automaid.utils
-    import automaid.profile
+    import automaid.sbe41_profile
     import automaid.events
     import automaid.decrypt
     import automaid.vitals
     import automaid.databases
-
-import kml
-import re
-import sys
-import traceback
-
-from arguments import dataPath
-from arguments import events_plotly
-from arguments import filterDate
-from arguments import generate_csv_file
+    from automaid.arguments import dataPath
+    from automaid.arguments import events_plotly
+    from automaid.arguments import filterDate
+    from automaid.arguments import generate_csv_file
 
 redo = "True"
 

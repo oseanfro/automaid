@@ -3,9 +3,13 @@ from obspy import UTCDateTime
 import plotly.graph_objs as graph
 import plotly.offline as plotly
 import os
-import utils
 import datetime
+
 import glob
+try :
+    import utils
+except:
+    import automaid.utils as utils
 
 class Vitals:
     _state = None
@@ -206,24 +210,24 @@ def list_vitals(filepath,client,buoy,mdives,datapath,filterDate):
         for line in lines:
             vital.split(line,listdive,datapath,filterDate)
             emergency.split(line)
-            if vital._state is "Full":
+            if vital._state == "Full":
                 listread.append(utils.convert2dict(vital))
                 vital = Vitals(client,buoy)
-            if vital._state is "Interrupted":
+            if vital._state == "Interrupted":
                 listread.append(utils.convert2dict(vital))
                 vital = Vitals(client,buoy)
                 vital.split(line,mdives,datapath,filterDate)
-            if emergency._state is "Full":
+            if emergency._state == "Full":
                 listread.append(utils.convert2dict(emergency))
                 emergency = Emergency(client,buoy)
-            if emergency._state is "Interrupted":
+            if emergency._state == "Interrupted":
                 listread.append(utils.convert2dict(emergency))
                 emergency = Emergency(client,buoy)
                 emergency.split(line)
-        if vital._state is "In_progress":
+        if vital._state == "In_progress":
             vital._state = "Interrupted"
             listread.append(utils.convert2dict(vital))
-        if emergency._state is "In_progress":
+        if emergency._state == "In_progress":
             emergency._state = "Interrupted"
             listread.append(utils.convert2dict(emergency))
     return listread

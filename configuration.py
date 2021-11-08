@@ -1,8 +1,13 @@
-import dives
-import utils
 import re
 from obspy import UTCDateTime
 import numpy as np
+
+try :
+    import dives
+    import utils
+except:
+    import automaid.dives as dives
+    import automaid.utils as utils
 
 class Stage :
     stage_type=None

@@ -2,16 +2,26 @@ import glob
 import os
 import csv
 import re
-import sbe41_profile
+
 import plotly.graph_objs as graph
 import plotly.offline as plotly
-import utils
 from obspy import UTCDateTime
 import traceback
-import gps
-import arguments
-import configuration
-import argo
+
+try :
+    import utils
+    import sbe41_profile
+    import arguments
+    import configuration
+    import argo
+    import gps
+except:
+    import automaid.utils as utils
+    import automaid.sbe41_profile as sbe41_profile
+    import automaid.arguments as arguments
+    import automaid.configuration as configuration
+    import automaid.argo as argo
+    import automaid.gps as gps
 
 # Log class to manipulate log files
 class Dive:

@@ -14,9 +14,13 @@ if os.environ.get('DISPLAY','') == '':
 import matplotlib.pyplot as plt
 import plotly.graph_objs as graph
 import plotly.offline as plotly
-import utils
-import gps
 
+try :
+    import utils
+    import gps
+except:
+    import automaid.utils as utils
+    import automaid.gps as gps
 
 class Events:
     events = None

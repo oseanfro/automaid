@@ -1,10 +1,17 @@
-import dives
-import utils
 import re
 from obspy import UTCDateTime
 import numpy as np
-import configuration
-import sbe41_profile
+
+try :
+    import dives
+    import utils
+    import configuration
+    import sbe41_profile
+except:
+    import automaid.dives as dives
+    import automaid.utils as utils
+    import automaid.configuration as configuration
+    import automaid.sbe41_profile as sbe41_profile
 
 class ConfigurationParameter:
     name=None
