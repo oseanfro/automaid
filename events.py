@@ -18,9 +18,11 @@ import plotly.offline as plotly
 try :
     import utils
     import gps
+    import arguments
 except:
     import automaid.utils as utils
     import automaid.gps as gps
+    import automaid.arguments as arguments
 
 class Events:
     events = None
@@ -416,9 +418,12 @@ class Event:
         stream = Stream(traces=[trace])
 
         # Save stream object
-        print(export_path_sac)
-        stream.write(export_path_sac, format='SAC')
-        print(export_path_msd)
-        stream.write(export_path_msd, format='MSEED',encoding='STEIM1')
-        print(export_path_wav)
-        stream.write(export_path_wav, format='WAV', framerate=self.decimated_fs)
+        if arguments.export_sac :
+            print(export_path_sac)
+            stream.write(export_path_sac, format='SAC')
+        if arguments.export_msd :
+            print(export_path_msd)
+            stream.write(export_path_msd, format='MSEED',encoding='STEIM1')
+        if arguments.export_wav :
+            print(export_path_wav)
+            stream.write(export_path_wav, format='WAV', framerate=self.decimated_fs)

@@ -44,7 +44,7 @@ class Vitals:
         self.vdop = None
         self.divepath = []
         self.deployed = False
-    def split(self,line,mdives,path,filterDate):
+    def split(self,line,mdives,path):
         line_buoy = re.match(".* >>> BUOY (\d+) (.*) <<<",line)
         line_coord = re.match(".*: ([NS])(\d+)deg(\d+\.\d+)mn, ([EW])(\d+)deg(\d+\.\d+)mn",line)
         line_dop = re.match(".* hdop (.*), vdop (.*)",line)
@@ -52,16 +52,10 @@ class Vitals:
         line_Pint = re.match(".* Pint (\d+)Pa",line)
         line_Pext = re.match(".* Pext (-?\d+)mbar \(range (-?\d+)mbar\)",line)
         line_emerg = re.match(".* EMERGENCY .*",line)
-        begin = 0
-        end = 0
         buffdate = 0
 
-        if self.buoy in list(filterDate.keys()):
-            begin = filterDate[self.buoy][0]
-            end = filterDate[self.buoy][1]
-        else:
-            begin = datetime.datetime(1000, 1, 1)
-            end = datetime.datetime(3000, 1, 1)
+        begin = datetime.datetime(1000, 1, 1)
+        end = datetime.datetime(3000, 1, 1)
 
         if line_buoy:
             buffdate = datetime.datetime.strptime(line_buoy.group(2), "%Y-%m-%dT%H:%M:%S")
@@ -72,7 +66,7 @@ class Vitals:
         if line_buoy:
             if  self.date is None:
                 self.date = utils.totimestamp(datetime.datetime.strptime(line_buoy.group(2), "%Y-%m-%dT%H:%M:%S"))
-                for dive in mdives:
+                for dive in mdives.get_dives():
                     if (self.date <= dive.end_date.timestamp and self.date >= dive.date.timestamp):
                         divefiles = os.listdir(path + "/" + self.buoy + "/processed/" + dive.directory_name)
                         for divefile in divefiles:
@@ -171,7 +165,7 @@ class Emergency:
                 else:
                     self.date = utils.totimestamp(datetime.datetime.strptime(line_buoy.group(1), "%Y%m%d-%Hh%Mmn%S"))
 
-                self.cause = line_buoy.group(3).decode('ascii', 'ignore')
+                self.cause = line_buoy.group(3)
                 self._state = "In_progress"
             else:
                 self._state = "Interrupted"
@@ -197,10 +191,10 @@ class Emergency:
         and not self.cause is None:
             self._state = "Full"
 
-def list_vitals(filepath,client,buoy,mdives,datapath,filterDate):
+def list_vitals(filepath,client,buoy,mdives,datapath):
     listread = list()
     listdive = list()
-    for dive in mdives:
+    for dive in mdives.get_dives():
         if (dive.get_buoy() == buoy):
             listdive.append(dive)
     vital = Vitals(client,buoy)
@@ -208,7 +202,7 @@ def list_vitals(filepath,client,buoy,mdives,datapath,filterDate):
     with open(filepath, "r") as fs:
         lines = fs.readlines()
         for line in lines:
-            vital.split(line,listdive,datapath,filterDate)
+            vital.split(line,listdive,datapath)
             emergency.split(line)
             if vital._state == "Full":
                 listread.append(utils.convert2dict(vital))
@@ -216,7 +210,7 @@ def list_vitals(filepath,client,buoy,mdives,datapath,filterDate):
             if vital._state == "Interrupted":
                 listread.append(utils.convert2dict(vital))
                 vital = Vitals(client,buoy)
-                vital.split(line,mdives,datapath,filterDate)
+                vital.split(line,mdives,datapath)
             if emergency._state == "Full":
                 listread.append(utils.convert2dict(emergency))
                 emergency = Emergency(client,buoy)
@@ -271,7 +265,7 @@ def sortdictbyname(value):
     elif value['buoy'][-2:].isdigit():
         return value['buoy'][-2:]
 
-def plot_battery_voltage(vital_file_path, vital_file_name, begin, end):
+def plot_battery_voltage(vital_file_path, vital_file_name):
     # Read file
     with open(vital_file_path + vital_file_name, "r",encoding='latin1') as f:
         content = f.read()
@@ -295,17 +289,6 @@ def plot_battery_voltage(vital_file_path, vital_file_name, begin, end):
 
     if len(date) < 1:
         return
-
-    # Get values between the appropriate date
-    i = 0
-    while date[i] < begin and i < len(date)-1:
-        i += 1
-    j = 0
-    while date[j] < end and j < len(date)-1:
-        j += 1
-    date = date[i:j]
-    voltage = voltage[i:j]
-    minimum_voltage = minimum_voltage[i:j]
 
     # Add battery values to the graph
     voltage_line = graph.Scatter(x=date,
@@ -335,7 +318,7 @@ def plot_battery_voltage(vital_file_path, vital_file_name, begin, end):
                 auto_open=False)
 
 
-def plot_internal_pressure(vital_file_path, vital_file_name, begin, end):
+def plot_internal_pressure(vital_file_path, vital_file_name):
     # Read file
     with open(vital_file_path + vital_file_name, "r",encoding='latin1') as f:
         content = f.read()
@@ -360,16 +343,6 @@ def plot_internal_pressure(vital_file_path, vital_file_name, begin, end):
     if len(date) < 1:
         return
 
-    # Get values between the appropriate date
-    i = 0
-    while date[i] < begin and i < len(date)-1:
-        i += 1
-    j = 0
-    while date[j] < end and j < len(date)-1:
-        j += 1
-    date = date[i:j]
-    internal_pressure = internal_pressure[i:j]
-
     # Add battery values to the graph
     internal_pressure_line = graph.Scatter(x=date,
                                            y=internal_pressure,
@@ -391,7 +364,7 @@ def plot_internal_pressure(vital_file_path, vital_file_name, begin, end):
                 auto_open=False)
 
 
-def plot_pressure_offset(vital_file_path, vital_file_name, begin, end):
+def plot_pressure_offset(vital_file_path, vital_file_name):
     # Read file
     with open(vital_file_path + vital_file_name, "r",encoding='latin1') as f:
         content = f.read()
@@ -423,18 +396,7 @@ def plot_pressure_offset(vital_file_path, vital_file_name, begin, end):
     date = [x[2] for x in res]
     if len(date) < 1:
         return
-
-    # Get values between the appropriate date
-    i = 0
-    while date[i] < begin and i < len(date)-1:
-        i += 1
-    j = 0
-    while date[j] < end and j < len(date)-1:
-        j += 1
-    date = date[i:j]
     date_rev = date[::-1]
-    pressure_offset = pressure_offset[i:j]
-    pressure_offset_range = pressure_offset_range[i:j]
     pressure_offset_max = [x + y for x, y in zip(pressure_offset, pressure_offset_range)]
     pressure_offset_min = [x - y for x, y in zip(pressure_offset, pressure_offset_range)]
     pressure_offset_min_rev = pressure_offset_min[::-1]

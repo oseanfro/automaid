@@ -582,6 +582,7 @@ class Dives:
         if not path or not events or not profiles:
             return
         log_names = glob.glob(path + "*.LOG")
+        print(log_names)
         if len(log_names) == 0 :
             log_names = glob.glob(path + "*.LOG.h")
         log_names = [x.split("/")[-1] for x in log_names]

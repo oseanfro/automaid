@@ -17,26 +17,24 @@ try :
     import databases
     from arguments import dataPath
     from arguments import events_plotly
-    from arguments import filterDate
     from arguments import generate_csv_file
 except:
     import automaid.kml as kml
     import automaid.dives as dives
-    import automaid.utils
-    import automaid.sbe41_profile
-    import automaid.events
-    import automaid.decrypt
-    import automaid.vitals
-    import automaid.databases
+    import automaid.utils as utils
+    import automaid.sbe41_profile as sbe41_profile
+    import automaid.events as events
+    import automaid.decrypt as decrypt
+    import automaid.vitals as vitals
+    import automaid.databases as databases
     from automaid.arguments import dataPath
     from automaid.arguments import events_plotly
-    from automaid.arguments import filterDate
     from automaid.arguments import generate_csv_file
 
 redo = "True"
 
 # main process
-def process(mfloat_path, mfloat, begin, end):
+def process(mfloat_path, mfloat):
     # Build list of all mermaid events recorded by the float
     mevents = events.Events(mfloat_path)
     # Build list of all profiles recorded
@@ -80,14 +78,14 @@ def process(mfloat_path, mfloat, begin, end):
 
     # Plot vital data
     kml.generate(mfloat_path, mfloat, mdives.get_dives())
-    vitals.plot_battery_voltage(mfloat_path, mfloat + ".vit", begin, end)
-    vitals.plot_internal_pressure(mfloat_path, mfloat + ".vit", begin, end)
-    vitals.plot_pressure_offset(mfloat_path, mfloat + ".vit", begin, end)
+    vitals.plot_battery_voltage(mfloat_path, mfloat + ".vit")
+    vitals.plot_internal_pressure(mfloat_path, mfloat + ".vit")
+    vitals.plot_pressure_offset(mfloat_path, mfloat + ".vit")
 
     return (mdives)
 
 # generate as a function
-def generate(mfloat, datapath, filterdate):
+def generate(mfloat, datapath):
     # For each Mermaid float
     print("")
     print(("> " + mfloat))
@@ -120,15 +118,6 @@ def generate(mfloat, datapath, filterdate):
     files_to_copy += glob.glob(mfloat_path_source + mfloat_nb + "_*[.]MER")
     files_to_copy += glob.glob(mfloat_path_source + mfloat_nb + "_*[.]S41")
 
-    if mfloat in list(filterDate.keys()):
-        begin = filterDate[mfloat][0]
-        end = filterDate[mfloat][1]
-        files_to_copy = [f for f in files_to_copy if begin <= utils.get_date_from_file_name(f) <= end]
-    else:
-        # keep all files
-        begin = datetime.datetime(1000, 1, 1)
-        end = datetime.datetime(3000, 1, 1)
-
     # Add .vit and .out files
     files_to_copy += glob.glob(mfloat_path_source + mfloat + "*")
 
@@ -139,7 +128,7 @@ def generate(mfloat, datapath, filterdate):
     mdives =[]
     files_to_delete = list()
     try:
-        mdives = process(mfloat_path_processed, mfloat, begin, end)
+        mdives = process(mfloat_path_processed, mfloat)
     except:
         # Just print(e) is cleaner and more likely what you want,
         # but if you insist on printing message specifically whenever possible...
@@ -211,14 +200,6 @@ def main():
                     files_to_copy += glob.glob( buoy_dir + "/" + mfloat_nb + "*." + extension)
             files_to_copy += glob.glob(buoy_dir + "/" + mfloat_nb + "*.MER")
             files_to_copy += glob.glob(buoy_dir + "/" + mfloat_nb + "*.S41")
-            if mfloat in list(filterDate.keys()):
-                begin = filterDate[mfloat][0]
-                end = filterDate[mfloat][1]
-                files_to_copy = [f for f in files_to_copy if begin <= utils.get_date_from_file_name(f) <= end]
-            else:
-                # keep all files
-                begin = datetime.datetime(1000, 1, 1)
-                end = datetime.datetime(3000, 1, 1)
 
             # Add .vit and .out files
             files_to_copy += glob.glob(buoy_dir + "/" + mfloat + "*")
@@ -226,7 +207,7 @@ def main():
             for f in files_to_copy:
                 shutil.copy(f, mfloat_src_path)
             try:
-                generate(mfloat,outputPath,filterDate);
+                generate(mfloat,outputPath);
             except:
                 # Just print(e) is cleaner and more likely what you want,
                 # but if you insist on printing message specifically whenever possible...

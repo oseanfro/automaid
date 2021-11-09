@@ -16,6 +16,12 @@ valve_ploted = True
 pump_ploted = True
 mermaid_ploted = True
 
+# Export formats
+export_msd = True
+export_sac = True
+export_wav = False
+
+
 # Set a time range of analysis for a specific float
 filterDate = {
 

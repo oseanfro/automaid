@@ -12,7 +12,7 @@ def update(path):
     print ("************************")
     link_path = os.path.join(path,DATABASE_LINK_NAME)
     try:
-        request = requests.get('http://mermaid.osean.fr/databases/'+DATABASE_LINK_NAME)
+        request = requests.get('http://mermaid.osean.fr/databases/'+DATABASE_LINK_NAME, auth=('osean','osean3324'))
     except Exception as e:
         print ("Exception: \""+ str(e) + "\" detected when get " + DATABASE_LINK_NAME)
         network = 0
@@ -22,7 +22,7 @@ def update(path):
             for database in database_list :
                 if database["Name"]:
                     try:
-                        new_req = requests.get('http://mermaid.osean.fr/databases/'+database["Name"])
+                        new_req = requests.get('http://mermaid.osean.fr/databases/'+database["Name"], auth=('osean','osean3324'))
                         database["data"] = new_req.json()
                         if new_req.status_code != 200 :
                             print ("Error " + str(new_req.status_code) + " when get " + database["Name"])
@@ -38,13 +38,14 @@ def update(path):
             if os.path.exists(path) :
                 shutil.rmtree(path)
             os.makedirs(path)
-            with open(link_path, 'w') as linkfile:
-                json.dump(database_list, linkfile, indent=4)
             for database in database_list :
                 if database["Name"]:
                     database_path = os.path.join(path,database["Name"])
                     with open(database_path, 'w') as databasefile:
                         json.dump(database["data"], databasefile)
+                    database.pop('data', None)
+            with open(link_path, 'w') as linkfile:
+                json.dump(database_list, linkfile, indent=4)
 
 if __name__ == "__main__":
     update("./databases/")
