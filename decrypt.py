@@ -320,15 +320,14 @@ def decrypt_one(path,LOG_card,WARN_card,ERR_card,version):
 def decrypt_all(path):
     # Generate List of BINS file
     files_to_decrypt = glob.glob(path + "*.BIN")
-    for file in files_to_decrypt :
+    for binary_file in files_to_decrypt :
         # Get version line
-        print(file)
-        with open(file, "r", errors='replace') as f:
+        with open(binary_file, "r", errors='replace') as f:
             version = f.readline()
         # Get version
         catch = re.findall("<BDD ([0-9]{3})\.[0-9]{3}\.[0-9]{3}_?V?([0-9]*\.[0-9]+)-?.*>", version)
         if len(catch) > 0:
-            # Get database file path
+            # Get database binary_file path
             absFilePath = os.path.abspath(__file__)
             scriptpath, scriptfilename = os.path.split(absFilePath)
             file_version=catch[-1][1].split(".")
@@ -347,46 +346,34 @@ def decrypt_all(path):
             if database_file != "" :
                 database_file_path = os.path.join(scriptpath,"databases",database_file)
                 if os.path.exists(database_file_path):
-                    # Read and Parse Database file
+                    # Read and Parse Database binary_file
                     database =""
                     with open(database_file_path,"r") as f:
                         database = f.read()
                     bin = b''
-                    with open(file,"rb") as bin_file:
+                    with open(binary_file,"rb") as bin_file:
                         bin = bin_file.read()
-                    currentbinMd5 = utils.get_md5_from_bytes(bin)
-                    currentdatabaseMd5 = utils.get_md5_from_string(database)
-                    oldbinMd5 = ""
-                    olddatabaseMd5 = ""
-                    if os.path.exists(file.replace(".BIN",".baseMd5")):
-                        with open(file.replace(".BIN",".baseMd5"),"r") as f:
-                            olddatabaseMd5 = f.read()
-                    if os.path.exists(file.replace(".BIN",".md5")):
-                        with open(file.replace(".BIN",".md5"),"r") as f:
-                            oldbinMd5 = f.read()
 
-                    if (currentbinMd5 == oldbinMd5) and (currentdatabaseMd5 == olddatabaseMd5) :
-                        return
-                    decryptlist = json.loads(database)
-                    for decryptcard in decryptlist:
-                        if decryptcard["TYPE"] == "LOG":
-                            LOGcard = decryptcard["DECRYPTCARD"]
-                        elif decryptcard["TYPE"] == "WARN":
-                            WARNcard = decryptcard["DECRYPTCARD"]
-                        elif decryptcard["TYPE"] == "ERR":
-                            ERRcard = decryptcard["DECRYPTCARD"]
+                    log_file = binary_file.replace(".BIN",".LOG")
+                    binary_file_name = os.path.basename(binary_file)
+                    log_file_name = binary_file_name.replace(".BIN",".LOG")
+
+                    print("convert " + binary_file_name + " to " + log_file_name)
+                    decrypt_list = json.loads(database)
+                    for decrypt_card in decrypt_list:
+                        if decrypt_card["TYPE"] == "LOG":
+                            log_card = decrypt_card["DECRYPTCARD"]
+                        elif decrypt_card["TYPE"] == "WARN":
+                            warn_card = decrypt_card["DECRYPTCARD"]
+                        elif decrypt_card["TYPE"] == "ERR":
+                            err_card = decrypt_card["DECRYPTCARD"]
                     try :
-                        Log_file = decrypt_one(file,LOGcard,WARNcard,ERRcard,file_version)
+                        result = decrypt_one(binary_file,log_card,warn_card,err_card,file_version)
                     except:
-                        print(("FORMAT ERROR :" +str(file)))
+                        print(("FORMAT ERROR :" +str(binary_file)))
                     else:
-                        print((file.replace(".BIN",".LOG")))
-                        with open(file.replace(".BIN",".LOG"),"w") as f:
-                            f.write(Log_file)
-                        with open(file.replace(".BIN",".md5"),"w") as f:
-                            f.write(currentbinMd5)
-                        with open(file.replace(".BIN",".baseMd5"),"w") as f:
-                            f.write(currentdatabaseMd5)
+                        with open(log_file,"w") as f:
+                            f.write(result)
                 else:
                     print(("No database : " + str(database_file_path)))
 

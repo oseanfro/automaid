@@ -80,21 +80,18 @@ class Event:
         self.file_name = file_name
         self.header = header
         self.binary = binary
+        self.requested = False
 
         if len(re.findall(" ROUNDS=(-?\d+)", self.header)) > 0 :
             self.stanford_rounds = re.findall(" ROUNDS=(-?\d+)", self.header)[0]
             date = re.findall(" DATE=(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6})", header, re.DOTALL)
             self.date = UTCDateTime.strptime(date[0], "%Y-%m-%dT%H:%M:%S.%f")
-            self.requested = False
-            #if len(re.findall("FNAME=(\d{4}-\d{2}-\d{2}T\d{2}_\d{2}_\d{2}\.\d{6})", self.header)) > 0 :
-                #self.requested = True
         else :
-            if len(re.findall(" STAGES=(-?\d+)", self.header)) > 0 :
-                self.scales = re.findall(" STAGES=(-?\d+)", self.header)[0]
-            catch_trig = re.findall(" TRIG=(\d+)", self.header)
+            if len(re.findall("STAGES=(-?\d+)", self.header)) > 0 :
+                self.scales = re.findall("STAGES=(-?\d+)", self.header)[0]
+            catch_trig = re.findall("TRIG=(\d+)", self.header)
             if len(catch_trig) > 0:
                 # Event detected with STA/LTA algorithm
-                self.requested = False
                 self.trig = int(catch_trig[0])
                 date = re.findall(" DATE=(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6})", header, re.DOTALL)
                 try:
@@ -171,11 +168,15 @@ class Event:
     def correct_date(self):
         # Calculate the date of the first sample
         if not self.is_stanford_event() :
-            if self.requested:
+            if self.requested == True:
                 # For a requested event
                 rec_file_date = re.findall("FNAME=(\d{4}-\d{2}-\d{2}T\d{2}_\d{2}_\d{2}\.\d{6})", self.header)
+                try:
+                    rec_file_date = UTCDateTime.strptime(rec_file_date[0], "%Y-%m-%dT%H_%M_%S.%f")
+                except IndexError as e:
+                    rec_file_date = re.findall("FNAME=(\d{4}-\d{2}-\d{2}T\d{2}_\d{2}_\d{2})", self.header, re.DOTALL)
+                    rec_file_date = UTCDateTime.strptime(rec_file_date[0], "%Y-%m-%dT%H_%M_%S")
                 sample_offset = re.findall("SMP_OFFSET=(\d+)", self.header)
-                rec_file_date = UTCDateTime.strptime(rec_file_date[0], "%Y-%m-%dT%H_%M_%S.%f")
                 sample_offset = float(sample_offset[0])
                 self.date = rec_file_date + sample_offset/self.measured_fs
             else:
@@ -272,11 +273,22 @@ class Event:
                 + "     dB_OFFSET = " + str(self.stanford_db_offset) + "db"
         return title
 
-    def plotly(self, export_path):
+    def plotly(self, path):
         # Check if file exist
-        export_path = export_path + self.get_export_file_name() + ".html"
-        if os.path.exists(export_path):
-            return
+        export_path = path + self.get_export_file_name() + ".html"
+        export_path_md5 = path + self.get_export_file_name() + ".md5"
+        md5Current = utils.get_md5_from_bytes(self.data)
+        md5Old = ""
+        if os.path.exists(export_path_md5) and os.path.exists(export_path):
+            with open(export_path_md5, "r") as f:
+                md5Old = f.read()
+            if md5Current == md5Old:
+                return
+        if os.path.exists(export_path_md5) :
+            os.remove(export_path_md5)
+        if os.path.exists(export_path) :
+            os.remove(export_path)
+        print(export_path)
         # Add acoustic values to the graph
         data_line = graph.Scatter(x=utils.get_date_array(self.date, len(self.data), 1./self.decimated_fs),
                                   y=self.data,
@@ -296,11 +308,21 @@ class Event:
         plotly.plot({'data': data, 'layout': layout},
                     filename=export_path,
                     auto_open=False)
-    def plotly_stanford(self, export_path):
+    def plotly_stanford(self, path):
         # Check if file exist
-        export_path = export_path + self.get_export_file_name() + ".html"
-        if os.path.exists(export_path):
-            return
+        export_path = path + self.get_export_file_name() + ".html"
+        export_path_md5 = path + self.get_export_file_name() + ".md5"
+        md5Current = utils.get_md5_from_bytes(self.data)
+        md5Old = ""
+        if os.path.exists(export_path_md5) and os.path.exists(export_path):
+            with open(export_path_md5, "r") as f:
+                md5Old = f.read()
+            if md5Current == md5Old:
+                return
+        if os.path.exists(export_path_md5) :
+            os.remove(export_path_md5)
+        if os.path.exists(export_path) :
+            os.remove(export_path)
         print(export_path)
         win_sz = re.findall("WINDOW_LEN=(\d+)", self.environment, re.DOTALL)
         dt = numpy.dtype([('perc50', numpy.int8)])
@@ -335,11 +357,21 @@ class Event:
                     filename=export_path,
                     auto_open=False)
 
-    def plot(self, export_path):
+    def plot(self, path):
         # Check if file exist
-        export_path = export_path + self.get_export_file_name() + ".png"
-        if os.path.exists(export_path):
-            return
+        export_path = path + self.get_export_file_name() + ".png"
+        export_path_md5 = path + self.get_export_file_name() + ".md5"
+        md5Current = utils.get_md5_from_bytes(self.data)
+        md5Old = ""
+        if os.path.exists(export_path_md5) and os.path.exists(export_path):
+            with open(export_path_md5, "r") as f:
+                md5Old = f.read()
+            if md5Current == md5Old:
+                return
+        if os.path.exists(export_path_md5) :
+            os.remove(export_path_md5)
+        if os.path.exists(export_path) :
+            os.remove(export_path)
         print(export_path)
         # Plot frequency image
         plt.figure(figsize=(9, 4))
@@ -354,13 +386,24 @@ class Event:
         plt.savefig(export_path)
         plt.clf()
         plt.close()
+        with open(export_path_md5, mode='w') as md5_file:
+            md5_file.write(md5Current)
 
-    def plot_stanford(self, export_path):
+    def plot_stanford(self, path):
         # Check if file exist
-        export_path = export_path + self.get_export_file_name() + ".png"
-        print(export_path)
-        if os.path.exists(export_path):
-            return
+        export_path = path + self.get_export_file_name() + ".png"
+        export_path_md5 = path + "." + self.get_export_file_name() + ".md5"
+        md5Current = utils.get_md5_from_bytes(self.data)
+        md5Old = ""
+        if os.path.exists(export_path_md5) and os.path.exists(export_path):
+            with open(export_path_md5, "r") as f:
+                md5Old = f.read()
+            if md5Current == md5Old:
+                return
+        if os.path.exists(export_path_md5) :
+            os.remove(export_path_md5)
+        if os.path.exists(export_path) :
+            os.remove(export_path)
         print(export_path)
         win_sz = re.findall("WINDOW_LEN=(\d+)", self.environment, re.DOTALL)
         dt = numpy.dtype([('perc50', numpy.int8)])
@@ -382,48 +425,81 @@ class Event:
         plt.savefig(export_path)
         plt.clf()
         plt.close()
+        with open(export_path_md5, mode='w') as md5_file:
+            md5_file.write(md5Current)
 
-    def to_sac_and_mseed(self, export_path, station_number, force_without_loc):
-        # Check if file exist
-        export_path_sac = export_path + self.get_export_file_name() + ".sac"
-        export_path_msd = export_path + self.get_export_file_name() + ".mseed"
-        export_path_wav = export_path + self.get_export_file_name() + ".wav"
-        if os.path.exists(export_path_sac) and os.path.exists(export_path_msd):
-            return
+
+    def to_sac_and_mseed(self, path, station_number, force_without_loc):
         # Check if the station location have been calculated
         if self.station_loc is None and not force_without_loc:
             print((self.get_export_file_name() + ": Skip sac/mseed generation, wait the next ascent to compute location"))
             return
 
-        # Fill header info
-        stats = Stats()
-        stats.sampling_rate = self.decimated_fs
-        stats.network = "MH"
-        stats.station = station_number
-        stats.starttime = self.date
+        if not arguments.export_sac and not arguments.export_msd and not arguments.export_wav:
+            print((self.get_export_file_name() + ": Skip sac/mseed generation, not configured"))
+            return
+        export_path_sac = path + self.get_export_file_name() + ".sac"
+        export_path_msd = path + self.get_export_file_name() + ".mseed"
+        export_path_wav = path + self.get_export_file_name() + ".wav"
 
-        stats.sac = dict()
-        if not force_without_loc:
-            stats.sac["stla"] = self.station_loc.latitude
-            stats.sac["stlo"] = self.station_loc.longitude
-        stats.sac["stdp"] = self.depth
-        stats.sac["user0"] = self.snr
-        stats.sac["user1"] = self.criterion
-        stats.sac["iztype"] = 9  # 9 == IB in sac format
+        export_path_md5 = path + "." + self.get_export_file_name() + ".md5"
+        md5Current = utils.get_md5_from_bytes(self.data)
+        md5Old = ""
 
-        # Save data into a Stream object
-        trace = Trace()
-        trace.stats = stats
-        trace.data = self.data
-        stream = Stream(traces=[trace])
-
-        # Save stream object
+        redo = False
         if arguments.export_sac :
-            print(export_path_sac)
-            stream.write(export_path_sac, format='SAC')
+            if not os.path.exists(export_path_sac):
+                redo = True
+
         if arguments.export_msd :
-            print(export_path_msd)
-            stream.write(export_path_msd, format='MSEED',encoding='STEIM1')
+            if not os.path.exists(export_path_msd):
+                redo = True
+
         if arguments.export_wav :
-            print(export_path_wav)
-            stream.write(export_path_wav, format='WAV', framerate=self.decimated_fs)
+            if not os.path.exists(export_path_wav):
+                redo = True
+
+        if not redo :
+            if os.path.exists(export_path_md5) :
+                with open(export_path_md5, "r") as f:
+                    md5Old = f.read()
+                if md5Current == md5Old:
+                    return
+            else :
+                redo = True
+
+        if redo :
+            # Fill header info
+            stats = Stats()
+            stats.sampling_rate = self.decimated_fs
+            stats.network = "MH"
+            stats.station = station_number
+            stats.starttime = self.date
+
+            stats.sac = dict()
+            if not force_without_loc:
+                stats.sac["stla"] = self.station_loc.latitude
+                stats.sac["stlo"] = self.station_loc.longitude
+            stats.sac["stdp"] = self.depth
+            stats.sac["user0"] = self.snr
+            stats.sac["user1"] = self.criterion
+            stats.sac["iztype"] = 9  # 9 == IB in sac format
+
+            # Save data into a Stream object
+            trace = Trace()
+            trace.stats = stats
+            trace.data = self.data
+            stream = Stream(traces=[trace])
+
+            # Save stream object
+            if arguments.export_sac :
+                print(export_path_sac)
+                stream.write(export_path_sac, format='SAC')
+            if arguments.export_msd :
+                print(export_path_msd)
+                stream.write(export_path_msd, format='MSEED',encoding='STEIM1')
+            if arguments.export_wav :
+                print(export_path_wav)
+                stream.write(export_path_wav, format='WAV', framerate=self.decimated_fs)
+            with open(export_path_md5, mode='w') as md5_file:
+                md5_file.write(md5Current)

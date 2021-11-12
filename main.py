@@ -107,25 +107,22 @@ def generate(mfloat, datapath):
     if not os.path.exists(mfloat_path_processed):
         os.mkdir(mfloat_path_processed)
 
-    # Concatenate LOG and BIN files that need it
-    utils.concatenate_files(mfloat_path_source)
-    # Decrypt all BIN files
-    decrypt.decrypt_all(mfloat_path_source)
     # Copy appropriate files in the directory and remove files outside of the time range
     files_to_copy = list()
-    # All separated files, BIN files for V2, LOG files for V1, MERMAID files, SBE41 files
-    files_to_copy += glob.glob(mfloat_path_source + mfloat_nb + "_*[.]LOG")
-    files_to_copy += glob.glob(mfloat_path_source + mfloat_nb + "_*[.]MER")
-    files_to_copy += glob.glob(mfloat_path_source + mfloat_nb + "_*[.]S41")
-
+    # All files begin with buoy nb
+    files_to_copy += glob.glob(mfloat_path_source + mfloat_nb + "_*")
     # Add .vit and .out files
     files_to_copy += glob.glob(mfloat_path_source + mfloat + "*")
-
     # Copy files
     for f in files_to_copy:
         shutil.copy(f, mfloat_path_processed)
 
-    mdives =[]
+    # Concatenate LOG and BIN files that need it
+    utils.concatenate_files(mfloat_path_processed)
+    # Decrypt all BIN files
+    decrypt.decrypt_all(mfloat_path_processed)
+
+    mdives = dives.Dives()
     files_to_delete = list()
     try:
         mdives = process(mfloat_path_processed, mfloat)
@@ -133,12 +130,10 @@ def generate(mfloat, datapath):
         # Just print(e) is cleaner and more likely what you want,
         # but if you insist on printing message specifically whenever possible...
         traceback.print_exc()
-        mdives = []
+        mdives = dives.Dives()
     else:
-    # Clean directories
-        files_to_delete += glob.glob(mfloat_path_processed + mfloat_nb + "_*[.]LOG")
-        files_to_delete += glob.glob(mfloat_path_processed + mfloat_nb + "_*[.]MER")
-        files_to_delete += glob.glob(mfloat_path_processed + mfloat_nb + "_*[.]S41")
+        # Clean directories
+        files_to_delete += glob.glob(mfloat_path_processed + mfloat_nb + "_*")
         files_to_delete += glob.glob(mfloat_path_processed + mfloat + "*")
 
     for f in files_to_delete:
@@ -172,7 +167,6 @@ def main():
                 vitals.merge_vitals(os.path.join(root,dir),str(buoy_dir.group(1))+".vit");
                 buoys_dir_paths.append(os.path.join(root,dir))
 
-    print(buoys_dir_paths)
     # Search Profiler floats at root directory
     for buoy_dir in buoys_dir_paths :
         mfloats = [p.split("/")[-1][:-4] for p in glob.glob(buoy_dir + "/[0-9][0-9][0-9].[0-9][0-9][0-9]-*.vit")]

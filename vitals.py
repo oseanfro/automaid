@@ -45,48 +45,49 @@ class Vitals:
         self.divepath = []
         self.deployed = False
     def split(self,line,mdives,path):
-        line_buoy = re.match(".* >>> BUOY (\d+) (.*) <<<",line)
-        line_coord = re.match(".*: ([NS])(\d+)deg(\d+\.\d+)mn, ([EW])(\d+)deg(\d+\.\d+)mn",line)
-        line_dop = re.match(".* hdop (.*), vdop (.*)",line)
-        line_bat = re.match(".* Vbat (\d+)mV \(min (\d+)mV\)",line)
-        line_Pint = re.match(".* Pint (\d+)Pa",line)
-        line_Pext = re.match(".* Pext (-?\d+)mbar \(range (-?\d+)mbar\)",line)
-        line_emerg = re.match(".* EMERGENCY .*",line)
+        line_buoy = re.match(b".* >>> BUOY (\d+) (.*) <<<",line)
+        line_coord = re.match(b".*: ([NS])(\d+)deg(\d+\.\d+)mn, ([EW])(\d+)deg(\d+\.\d+)mn",line)
+        line_dop = re.match(b".* hdop (.*), vdop (.*)",line)
+        line_bat = re.match(b".* Vbat (\d+)mV \(min (\d+)mV\)",line)
+        line_Pint = re.match(b".* Pint (\d+)Pa",line)
+        line_Pext = re.match(b".* Pext (-?\d+)mbar \(range (-?\d+)mbar\)",line)
+        line_emerg = re.match(b".* EMERGENCY .*",line)
         buffdate = 0
 
         begin = datetime.datetime(1000, 1, 1)
         end = datetime.datetime(3000, 1, 1)
 
         if line_buoy:
-            buffdate = datetime.datetime.strptime(line_buoy.group(2), "%Y-%m-%dT%H:%M:%S")
+            buffdate = datetime.datetime.strptime(line_buoy.group(2).decode(), "%Y-%m-%dT%H:%M:%S")
         if buffdate == 0:
             buffdate = datetime.datetime(1000, 1, 1)
         if begin < buffdate:
             self.deployed = True
         if line_buoy:
-            if  self.date is None:
-                self.date = utils.totimestamp(datetime.datetime.strptime(line_buoy.group(2), "%Y-%m-%dT%H:%M:%S"))
+            if  self.date == None:
+                self.date = utils.totimestamp(datetime.datetime.strptime(line_buoy.group(2).decode(), "%Y-%m-%dT%H:%M:%S"))
                 for dive in mdives.get_dives():
                     if (self.date <= dive.end_date.timestamp and self.date >= dive.date.timestamp):
                         divefiles = os.listdir(path + "/" + self.buoy + "/processed/" + dive.directory_name)
                         for divefile in divefiles:
-                            divefilepath = "/" + dive.directory_name + "/" + divefile
-                            if divefilepath not in self.divepath:
-                                self.divepath.append("/" + dive.directory_name + "/" + divefile)
+                            if '.md5' not in divefile :
+                                divefilepath = "/" + dive.directory_name + "/" + divefile
+                                if divefilepath not in self.divepath:
+                                    self.divepath.append("/" + dive.directory_name + "/" + divefile)
 
                 self._state = "In_progress"
             else:
                 self._state = "Interrupted"
         if line_coord:
             if self.latitude is None and self.longitude is None:
-                if line_coord.group(1) == "N":
+                if line_coord.group(1) == b"N":
                     sign = 1
-                elif line_coord.group(1) == "S":
+                elif line_coord.group(1) == b"S":
                     sign = -1
                 self.latitude = sign*(float(line_coord.group(2)) + float(line_coord.group(3))/60.)
-                if line_coord.group(4) == "E":
+                if line_coord.group(4) == b"E":
                     sign = 1
-                elif line_coord.group(4) == "W":
+                elif line_coord.group(4) == b"W":
                     sign = -1
                 self.longitude = sign*(float(line_coord.group(5)) + float(line_coord.group(6))/60.)
                 self._state = "In_progress"
@@ -94,8 +95,8 @@ class Vitals:
                 self._state = "Interrupted"
         if line_dop:
             if self.hdop is None  and self.vdop is None :
-                self.hdop = line_dop.group(1)
-                self.vdop = line_dop.group(2)
+                self.hdop = line_dop.group(1).decode()
+                self.vdop = line_dop.group(2).decode()
                 self._state = "In_progress"
             else:
                 self._state = "Interrupted"
@@ -154,31 +155,31 @@ class Emergency:
         self.cause = None
 
     def split(self,line):
-        line_buoy = re.match("(.*): EMERGENCY buoy (\d+) (.*)",line)
-        line_coord = re.match(".*: EMERGENCY ([NS])(\d+)deg(\d+\.\d+)mn ([EW])(\d+)deg(\d+\.\d+)mn",line)
+        line_buoy = re.match(b"(.*): EMERGENCY buoy (\d+) ([ -~]*)",line)
+        line_coord = re.match(b".*: EMERGENCY ([NS])(\d+)deg(\d+\.\d+)mn ([EW])(\d+)deg(\d+\.\d+)mn",line)
 
         if line_buoy:
-            iso8601_date = re.match("(\d+)-(\d+)-(\d+)T(\d+):(\d+):(\d+)",line_buoy.group(1))
+            iso8601_date = re.match(b"(\d+)-(\d+)-(\d+)T(\d+):(\d+):(\d+)",line_buoy.group(1))
             if  self.date is None and self.cause is None:
                 if iso8601_date :
-                    self.date = utils.totimestamp(datetime.datetime.strptime(line_buoy.group(1), "%Y-%m-%dT%H:%M:%S"))
+                    self.date = utils.totimestamp(datetime.datetime.strptime(line_buoy.group(1).decode(), "%Y-%m-%dT%H:%M:%S"))
                 else:
-                    self.date = utils.totimestamp(datetime.datetime.strptime(line_buoy.group(1), "%Y%m%d-%Hh%Mmn%S"))
+                    self.date = utils.totimestamp(datetime.datetime.strptime(line_buoy.group(1).decode(), "%Y%m%d-%Hh%Mmn%S"))
 
-                self.cause = line_buoy.group(3)
+                self.cause = line_buoy.group(3).decode()
                 self._state = "In_progress"
             else:
                 self._state = "Interrupted"
         if line_coord:
             if self.latitude is None and self.longitude is None:
-                if line_coord.group(1) == "N":
+                if line_coord.group(1) == b"N":
                     sign = 1
-                elif line_coord.group(1) == "S":
+                elif line_coord.group(1) == b"S":
                     sign = -1
                 self.latitude = sign*(float(line_coord.group(2)) + float(line_coord.group(3))/60.)
-                if line_coord.group(4) == "E":
+                if line_coord.group(4) == b"E":
                     sign = 1
-                elif line_coord.group(4) == "W":
+                elif line_coord.group(4) == b"W":
                     sign = -1
                 self.longitude = sign*(float(line_coord.group(5)) + float(line_coord.group(6))/60.)
                 self._state = "In_progress"
@@ -193,16 +194,12 @@ class Emergency:
 
 def list_vitals(filepath,client,buoy,mdives,datapath):
     listread = list()
-    listdive = list()
-    for dive in mdives.get_dives():
-        if (dive.get_buoy() == buoy):
-            listdive.append(dive)
     vital = Vitals(client,buoy)
     emergency = Emergency(client,buoy)
-    with open(filepath, "r") as fs:
+    with open(filepath, "rb") as fs:
         lines = fs.readlines()
         for line in lines:
-            vital.split(line,listdive,datapath)
+            vital.split(line,mdives,datapath)
             emergency.split(line)
             if vital._state == "Full":
                 listread.append(utils.convert2dict(vital))
@@ -227,9 +224,8 @@ def list_vitals(filepath,client,buoy,mdives,datapath):
     return listread
 
 def sort_vitals(elem):
-    match = re.match("([A-Z0-9]{8}).vit",elem)
+    match = re.match(b"([A-Z0-9]{8}).vit",elem)
     return int(match.group(1),16)
-
 
 def merge_vitals(path,final):
     files_to_merges = [m.split('/')[-1] for m in glob.glob(path+"/[A-Z0-9][A-Z0-9][A-Z0-9][A-Z0-9][A-Z0-9][A-Z0-9][A-Z0-9][A-Z0-9].vit")]
@@ -241,8 +237,6 @@ def merge_vitals(path,final):
             for file in files_sorted :
                 with open(os.path.join(path,file), "r") as splitted:
                     final_file.write(splitted.read())
-
-
 
 #on rentre une list de dictionnaire
 #et renvoie une liste plus complete avec des donnee process
@@ -258,6 +252,8 @@ def process (list):
     return list
 
 def sortdictbydate(value):
+    if value['date'] is None :
+        return 0.0
     return value['date']
 def sortdictbyname(value):
     if value['buoy'][-4:].isdigit():
@@ -267,19 +263,19 @@ def sortdictbyname(value):
 
 def plot_battery_voltage(vital_file_path, vital_file_name):
     # Read file
-    with open(vital_file_path + vital_file_name, "r",encoding='latin1') as f:
+    with open(vital_file_path + vital_file_name, "rb") as f:
         content = f.read()
 
     # Find battery values
-    content = content.replace(' ', '')
-    content = content.replace('>','')
-    battery_catch = re.findall("(.+):Vbat(\d+)mV\(min(\d+)mV\)", content)
+    content = content.replace(b' ', b'')
+    content = content.replace(b'>',b'')
+    battery_catch = re.findall(b"(.+):Vbat(\d+)mV\(min(\d+)mV\)", content)
 
-    iso8601_date = re.match("(\d+)-(\d+)-(\d+)T(\d+):(\d+):(\d+)",battery_catch[0][0])
+    iso8601_date = re.match(b"(\d+)-(\d+)-(\d+)T(\d+):(\d+):(\d+)",battery_catch[0][0])
     if iso8601_date :
-        date = [UTCDateTime(0).strptime(i[0], "%Y-%m-%dT%H:%M:%S") for i in battery_catch]
+        date = [UTCDateTime(0).strptime(i[0].decode(), "%Y-%m-%dT%H:%M:%S") for i in battery_catch]
     else :
-        date = [UTCDateTime(0).strptime(i[0], "%Y%m%d-%Hh%Mmn%S") for i in battery_catch]
+        date = [UTCDateTime(0).strptime(i[0].decode(), "%Y%m%d-%Hh%Mmn%S") for i in battery_catch]
     voltage = [float(i[1])/1000. for i in battery_catch]
     minimum_voltage = [float(i[2])/1000. for i in battery_catch]
 
@@ -320,19 +316,19 @@ def plot_battery_voltage(vital_file_path, vital_file_name):
 
 def plot_internal_pressure(vital_file_path, vital_file_name):
     # Read file
-    with open(vital_file_path + vital_file_name, "r",encoding='latin1') as f:
+    with open(vital_file_path + vital_file_name, "rb") as f:
         content = f.read()
 
     # Find battery values
-    content = content.replace(' ', '')
-    content = content.replace('>','')
-    internal_pressure_catch = re.findall("(.+):Pint(-?\d+)Pa", content)
+    content = content.replace(b' ', b'')
+    content = content.replace(b'>',b'')
+    internal_pressure_catch = re.findall(b"(.+):Pint(-?\d+)Pa", content)
 
-    iso8601_date = re.match("(\d+)-(\d+)-(\d+)T(\d+):(\d+):(\d+)",internal_pressure_catch[0][0])
+    iso8601_date = re.match(b"(\d+)-(\d+)-(\d+)T(\d+):(\d+):(\d+)",internal_pressure_catch[0][0])
     if iso8601_date :
-        date = [UTCDateTime(0).strptime(i[0], "%Y-%m-%dT%H:%M:%S") for i in internal_pressure_catch]
+        date = [UTCDateTime(0).strptime(i[0].decode(), "%Y-%m-%dT%H:%M:%S") for i in internal_pressure_catch]
     else :
-        date = [UTCDateTime(0).strptime(i[0], "%Y%m%d-%Hh%Mmn%S") for i in internal_pressure_catch]
+        date = [UTCDateTime(0).strptime(i[0].decode(), "%Y%m%d-%Hh%Mmn%S") for i in internal_pressure_catch]
 
     internal_pressure = [float(i[1])/100. for i in internal_pressure_catch]
 
@@ -366,18 +362,18 @@ def plot_internal_pressure(vital_file_path, vital_file_name):
 
 def plot_pressure_offset(vital_file_path, vital_file_name):
     # Read file
-    with open(vital_file_path + vital_file_name, "r",encoding='latin1') as f:
+    with open(vital_file_path + vital_file_name, "rb") as f:
         content = f.read()
 
     # Find battery values
-    content = content.replace(' ', '')
-    content = content.replace('>','')
-    pressure_offset_catch = re.findall("(.+):Pext(-?\d+)mbar\(range(-?\d+)mbar\)", content)
-    iso8601_date = re.match("(\d+)-(\d+)-(\d+)T(\d+):(\d+):(\d+)",pressure_offset_catch[0][0])
+    content = content.replace(b' ', b'')
+    content = content.replace(b'>',b'')
+    pressure_offset_catch = re.findall(b"(.+):Pext(-?\d+)mbar\(range(-?\d+)mbar\)", content)
+    iso8601_date = re.match(b"(\d+)-(\d+)-(\d+)T(\d+):(\d+):(\d+)",pressure_offset_catch[0][0])
     if iso8601_date :
-        date = [UTCDateTime(0).strptime(i[0], "%Y-%m-%dT%H:%M:%S") for i in pressure_offset_catch]
+        date = [UTCDateTime(0).strptime(i[0].decode(), "%Y-%m-%dT%H:%M:%S") for i in pressure_offset_catch]
     else :
-        date = [UTCDateTime(0).strptime(i[0], "%Y%m%d-%Hh%Mmn%S") for i in pressure_offset_catch]
+        date = [UTCDateTime(0).strptime(i[0].decode(), "%Y%m%d-%Hh%Mmn%S") for i in pressure_offset_catch]
 
     pressure_offset = [int(i[1]) for i in pressure_offset_catch]
     pressure_offset_range = [int(i[2]) for i in pressure_offset_catch]

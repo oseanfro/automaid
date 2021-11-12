@@ -226,7 +226,7 @@ class Dive:
     def generate_datetime_log(self):
         # Check if file exist
         export_path = self.export_path + self.log_name + ".h"
-        export_path_md5 = self.export_path + self.log_name + ".md5"
+        export_path_md5 = self.export_path + "." + self.log_name + ".md5"
 
         md5Current = utils.get_md5_from_string(self.log_content)
         md5Old = ""
@@ -253,7 +253,7 @@ class Dive:
             return
         # Check if file exist
         export_path = self.export_path + self.log_name + "." + self.mmd_name + ".env"
-        export_path_md5 = self.export_path + self.log_name + "." + self.mmd_name + ".md5"
+        export_path_md5 = self.export_path + "." + self.log_name + "." + self.mmd_name + ".md5"
 
         md5Current = utils.get_md5_from_string(self.mmd_environment)
         md5Old = ""
@@ -278,7 +278,7 @@ class Dive:
             return
         # Check if file exist
         export_path = self.export_path + self.log_name + "." + self.s41_name + ".params"
-        export_path_md5 = self.export_path + self.log_name + "." + self.s41_name + ".md5"
+        export_path_md5 = self.export_path + "." + self.log_name + "." + self.s41_name + ".md5"
 
         md5Current = utils.get_md5_from_string(self.s41_environment)
         md5Old = ""
@@ -303,7 +303,7 @@ class Dive:
             return
         # Check if data are same
         export_path = self.export_path + self.log_name[:-4] + '.html'
-        export_path_md5 = self.export_path + self.log_name[:-4] + ".md5"
+        export_path_md5 = self.export_path + "." + self.log_name[:-4] + ".md5"
 
         md5Current = utils.get_md5_from_string(self.log_content)
         md5Old = ""
@@ -579,16 +579,15 @@ class Dive:
 class Dives:
     dives = None
     def __init__(self, path=None, events=None, profiles=None):
+        self.dives = list()
         if not path or not events or not profiles:
             return
         log_names = glob.glob(path + "*.LOG")
-        print(log_names)
         if len(log_names) == 0 :
             log_names = glob.glob(path + "*.LOG.h")
         log_names = [x.split("/")[-1] for x in log_names]
         log_names.sort()
         # Create Dive objects
-        self.dives = list()
         for log_name in log_names:
             print(log_name)
             try:
