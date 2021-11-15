@@ -281,7 +281,7 @@ class Event:
     def plotly(self, path):
         # Check if file exist
         export_path = path + self.get_export_file_name() + ".html"
-        export_path_md5 = path + self.get_export_file_name() + ".md5"
+        export_path_md5 = path + "." + self.get_export_file_name() + ".md5"
         md5Current = utils.get_md5_from_bytes(self.data)
         md5Old = ""
         if os.path.exists(export_path_md5) and os.path.exists(export_path):
@@ -314,10 +314,13 @@ class Event:
             figure.write_html(file=export_path, include_plotlyjs=True)
         else :
             figure.write_html(file=export_path, include_plotlyjs='cdn')
+        with open(export_path_md5, mode='w') as md5_file:
+            md5_file.write(md5Current)
+
     def plotly_stanford(self, path):
         # Check if file exist
         export_path = path + self.get_export_file_name() + ".html"
-        export_path_md5 = path + self.get_export_file_name() + ".md5"
+        export_path_md5 = path + "." + self.get_export_file_name() + ".md5"
         md5Current = utils.get_md5_from_bytes(self.data)
         md5Old = ""
         if os.path.exists(export_path_md5) and os.path.exists(export_path):
@@ -363,11 +366,13 @@ class Event:
             figure.write_html(file=export_path, include_plotlyjs=True)
         else :
             figure.write_html(file=export_path, include_plotlyjs='cdn')
+        with open(export_path_md5, mode='w') as md5_file:
+            md5_file.write(md5Current)
 
     def plot(self, path):
         # Check if file exist
         export_path = path + self.get_export_file_name() + ".png"
-        export_path_md5 = path + self.get_export_file_name() + ".md5"
+        export_path_md5 = path + "." + self.get_export_file_name() + ".md5"
         md5Current = utils.get_md5_from_bytes(self.data)
         md5Old = ""
         if os.path.exists(export_path_md5) and os.path.exists(export_path):
@@ -442,9 +447,10 @@ class Event:
             print((self.get_export_file_name() + ": Skip sac/mseed generation, wait the next ascent to compute location"))
             return
 
+        # no sac or msd file
         if not arguments.export_sac and not arguments.export_msd and not arguments.export_wav:
-            print((self.get_export_file_name() + ": Skip sac/mseed generation, not configured"))
             return
+
         export_path_sac = path + self.get_export_file_name() + ".sac"
         export_path_msd = path + self.get_export_file_name() + ".mseed"
         export_path_wav = path + self.get_export_file_name() + ".wav"

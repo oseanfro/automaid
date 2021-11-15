@@ -70,9 +70,10 @@ def generate_processed_files(mfloat, mfloat_path):
 
     # Generate plot and sac files
     for dive in mdives.get_dives():
-        dive.generate_events_plot()
         if events_plotly:
             dive.generate_events_plotly()
+        else :
+            dive.generate_events_plot()
         dive.generate_events_sac()
         dive.generate_profile_plotly(generate_csv_file)
 
@@ -135,6 +136,7 @@ def process_one_float(mfloat, datapath):
         shutil.copy(f, files_generated_path)
 
     mdives = dives.Dives()
+    files_to_delete = list()
     try:
         mdives = generate_processed_files(mfloat, mfloat_path_processed)
     except:
@@ -143,7 +145,6 @@ def process_one_float(mfloat, datapath):
         traceback.print_exc()
         mdives = dives.Dives()
     else:
-        files_to_delete = list()
         # Clean directories
         files_to_delete += glob.glob(mfloat_path_processed + mfloat_nb + "_*")
         files_to_delete += glob.glob(mfloat_path_processed + "*.vit")

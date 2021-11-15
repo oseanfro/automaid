@@ -1,8 +1,6 @@
 import datetime
 
-# Plot interactive figures in HTML format for acoustic events
-# WARNING: Plotly files takes a lot of memory so commented by default
-events_plotly = False
+
 
 # Path for input datas
 data_directory = "server"
@@ -16,9 +14,11 @@ valve_ploted = True
 pump_ploted = True
 mermaid_ploted = True
 
+# Plot interactive figures in HTML format for acoustic events
+events_plotly = True
 # Export formats
-export_msd = True
-export_sac = True
+export_msd = False
+export_sac = False
 export_wav = False
 
 # Html generation (if local_html is false user need internet to open html)
