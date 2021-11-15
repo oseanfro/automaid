@@ -27,7 +27,7 @@ import traceback
 import matplotlib as mpl
 if os.environ.get('DISPLAY','') == '':
     print("no display found. Using non-interactive Agg backend")
-    mpl.use('agg',warn=False, force=True)
+    mpl.use('agg', force=True)
 import matplotlib.pyplot as plt
 
 PSAL_PARAMS = {"PARAM_NAME":"PSAL",

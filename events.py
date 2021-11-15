@@ -10,7 +10,7 @@ from obspy.core.trace import Stats
 import matplotlib as mpl
 if os.environ.get('DISPLAY','') == '':
     print("no display found. Using non-interactive Agg backend")
-    mpl.use('agg',warn=False, force=True)
+    mpl.use('agg', force=True)
 import matplotlib.pyplot as plt
 import plotly.graph_objs as graph
 import plotly.offline as plotly
