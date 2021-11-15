@@ -24,6 +24,11 @@ except:
     import automaid.gps as gps
     import automaid.arguments as arguments
 
+if arguments.optimize :
+    Scatter = graph.Scattergl
+else :
+    Scatter = graph.Scatter
+
 class Events:
     events = None
 
@@ -290,7 +295,7 @@ class Event:
             os.remove(export_path)
         print(export_path)
         # Add acoustic values to the graph
-        data_line = graph.Scatter(x=utils.get_date_array(self.date, len(self.data), 1./self.decimated_fs),
+        data_line = graph.Scattergl(x=utils.get_date_array(self.date, len(self.data), 1./self.decimated_fs),
                                   y=self.data,
                                   name="counts",
                                   line=dict(color='blue',
@@ -304,10 +309,11 @@ class Event:
                               yaxis=dict(title='Counts', titlefont=dict(size=18)),
                               hovermode='closest'
                               )
-
-        plotly.plot({'data': data, 'layout': layout},
-                    filename=export_path,
-                    auto_open=False)
+        figure = graph.Figure(data=data, layout=layout)
+        if arguments.local_html :
+            figure.write_html(file=export_path, include_plotlyjs=True)
+        else :
+            figure.write_html(file=export_path, include_plotlyjs='cdn')
     def plotly_stanford(self, path):
         # Check if file exist
         export_path = path + self.get_export_file_name() + ".html"
@@ -332,13 +338,13 @@ class Event:
         freq_max=(float)((x0.size*40)/int(win_sz[0]))
         freq = numpy.arange(0.,freq_max,freq_max/x0.size)
         # Add acoustic values to the graph
-        x0_line = graph.Scatter(x=freq,
+        x0_line = Scatter(x=freq,
                                   y=x0,
                                   name="Percentil 50",
                                   line=dict(color='blue',
                                             width=2),
                                   mode='lines')
-        x1_line = graph.Scatter(x=freq,
+        x1_line = Scatter(x=freq,
                                   y=x1,
                                   name="Percentil 95",
                                   line=dict(color='red',
@@ -352,10 +358,11 @@ class Event:
                               yaxis=dict(title='dBfs^2/Hz', titlefont=dict(size=18)),
                               hovermode='closest'
                               )
-
-        plotly.plot({'data': data, 'layout': layout},
-                    filename=export_path,
-                    auto_open=False)
+        figure = graph.Figure(data=data, layout=layout)
+        if arguments.local_html :
+            figure.write_html(file=export_path, include_plotlyjs=True)
+        else :
+            figure.write_html(file=export_path, include_plotlyjs='cdn')
 
     def plot(self, path):
         # Check if file exist

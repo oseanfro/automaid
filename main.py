@@ -6,7 +6,7 @@ import re
 import sys
 import traceback
 
-try :
+try:
     import kml
     import dives
     import utils
@@ -15,7 +15,7 @@ try :
     import decrypt
     import vitals
     import databases
-    from arguments import dataPath
+    from arguments import data_directory
     from arguments import events_plotly
     from arguments import generate_csv_file
 except:
@@ -27,21 +27,20 @@ except:
     import automaid.decrypt as decrypt
     import automaid.vitals as vitals
     import automaid.databases as databases
-    from automaid.arguments import dataPath
+    from automaid.arguments import data_directory
     from automaid.arguments import events_plotly
     from automaid.arguments import generate_csv_file
 
 redo = "True"
 
-# main process
-def process(mfloat_path, mfloat):
+# Generate processed files
+def generate_processed_files(mfloat, mfloat_path):
     # Build list of all mermaid events recorded by the float
     mevents = events.Events(mfloat_path)
     # Build list of all profiles recorded
     ms41s = sbe41_profile.Profiles(mfloat_path)
     # Process data for each dive
     mdives = dives.Dives(mfloat_path, mevents, ms41s)
-
 
     # Compute files for each dive
     for dive in mdives.get_dives():
@@ -65,7 +64,8 @@ def process(mfloat_path, mfloat):
     # the algorithm use gps information in the next dive to estimate surface drift
     i = 0
     while i < len(mdives.get_dives()) - 1:
-        mdives.get_dives()[i].compute_events_station_location(mdives.get_dives()[i + 1])
+        mdives.get_dives()[i].compute_events_station_location(
+            mdives.get_dives()[i + 1])
         i += 1
 
     # Generate plot and sac files
@@ -84,8 +84,9 @@ def process(mfloat_path, mfloat):
 
     return (mdives)
 
-# generate as a function
-def generate(mfloat, datapath):
+
+# Move src files into process directory, Generate processed files and clean directory
+def process_one_float(mfloat, datapath):
     # For each Mermaid float
     print("")
     print(("> " + mfloat))
@@ -113,33 +114,77 @@ def generate(mfloat, datapath):
     files_to_copy += glob.glob(mfloat_path_source + mfloat_nb + "_*")
     # Add .vit and .out files
     files_to_copy += glob.glob(mfloat_path_source + mfloat + "*")
+    files_to_copy += glob.glob(mfloat_path_source + "*.vit")
     # Copy files
     for f in files_to_copy:
         shutil.copy(f, mfloat_path_processed)
 
+    files_generated = list()
+    # Concatenate VIT files that need it
+    files_generated += vitals.merge_vitals(mfloat_path_processed, mfloat + ".vit")
     # Concatenate LOG and BIN files that need it
-    utils.concatenate_files(mfloat_path_processed)
+    files_generated += utils.concatenate_files(mfloat_path_processed)
     # Decrypt all BIN files
-    decrypt.decrypt_all(mfloat_path_processed)
+    files_generated += decrypt.decrypt_all(mfloat_path_processed)
+    # Create generated files folder
+    files_generated_path = os.path.join(mfloat_path_processed,"temporary")
+    if not os.path.exists(files_generated_path):
+        os.mkdir(files_generated_path)
+    # Copy files
+    for f in files_generated:
+        shutil.copy(f, files_generated_path)
 
     mdives = dives.Dives()
-    files_to_delete = list()
     try:
-        mdives = process(mfloat_path_processed, mfloat)
+        mdives = generate_processed_files(mfloat, mfloat_path_processed)
     except:
         # Just print(e) is cleaner and more likely what you want,
         # but if you insist on printing message specifically whenever possible...
         traceback.print_exc()
         mdives = dives.Dives()
     else:
+        files_to_delete = list()
         # Clean directories
         files_to_delete += glob.glob(mfloat_path_processed + mfloat_nb + "_*")
-        files_to_delete += glob.glob(mfloat_path_processed + mfloat + "*")
+        files_to_delete += glob.glob(mfloat_path_processed + "*.vit")
 
     for f in files_to_delete:
         os.remove(f)
 
     return mdives
+
+# #############################
+#       standalones functions
+# #############################
+
+def update_tree(mfloat_serial, src_path, dest_path) :
+    # Get float number
+    mfloat_nb = re.findall("(\d+)$", mfloat_serial)[0]
+    mfloat_path = os.path.join(dest_path, mfloat_serial)
+    mfloat_src_path = os.path.join(mfloat_path, "source")
+
+    # Create float directory
+    if not os.path.exists(mfloat_path):
+        os.mkdir(mfloat_path)
+    # Create directory for the source float
+    if not os.path.exists(mfloat_src_path):
+        os.mkdir(mfloat_src_path)
+
+    # Copy appropriate files in the directory
+    extensions = ["[0-9][0-9][0-9]", "LOG", "BIN"]
+    files_to_copy = list()
+    for extension in extensions:
+        files_to_copy += glob.glob(src_path + "/" + mfloat_nb + "*." + extension)
+    files_to_copy += glob.glob(src_path + "/" + mfloat_nb + "*.MER")
+    files_to_copy += glob.glob(src_path + "/" + mfloat_nb + "*.S41")
+
+    # Add .vit and .out files
+    files_to_copy += glob.glob(mfloat["dir"] + "/" + mfloat["name"] + "*")
+    files_to_copy += glob.glob(mfloat["dir"] + "/" + "*.vit")
+    # Copy files
+    for f in files_to_copy:
+        shutil.copy(f, mfloat_src_path)
+
 
 # generate as a script (python automaid.py)
 def main():
@@ -148,6 +193,8 @@ def main():
         os.chdir("scripts")
 
     outputPath = "../processed"
+    dataPath = os.path.join("../", data_directory)
+
     # Create ouput directory
     if not os.path.exists(outputPath):
         os.mkdir(outputPath)
@@ -155,58 +202,35 @@ def main():
     # Update databases
     absFilePath = os.path.abspath(__file__)
     scriptpath, scriptfilename = os.path.split(absFilePath)
-    database_path = os.path.join(scriptpath,"databases")
+    database_path = os.path.join(scriptpath, "databases")
     databases.update(database_path)
 
-    # Search Profiler by folder name
-    buoys_dir_paths=[os.path.join("../",dataPath)]
-    for root, dirs, files in os.walk(os.path.join("../",dataPath)):
+    # Floats list
+    mfloats = []
+    # Search sub folders with Profiler name and initialize tree
+    for root, dirs, files in os.walk(dataPath):
         for dir in dirs:
             buoy_dir = re.match('.*([0-9]{3}.[0-9]{3}-[A-z]-([0-9]{4}|[0-9]{2}))', dir)
             if (buoy_dir):
-                vitals.merge_vitals(os.path.join(root,dir),str(buoy_dir.group(1))+".vit");
-                buoys_dir_paths.append(os.path.join(root,dir))
+                buoy_serial = buoy_dir.group(1)
+                update_tree(buoy_serial,root,outputPath)
+                mfloats += [buoy_serial]
+        for file in files:
+            if os.path.samefile(root,dataPath) :
+                buoy_vit = re.match('([0-9]{3}.[0-9]{3}-[A-z]-([0-9]{4}|[0-9]{2}))\.vit', file)
+                if (buoy_vit):
+                    buoy_serial = buoy_vit.group(1)
+                    update_tree(buoy_serial,root,outputPath)
+                    mfloats += [buoy_serial]
 
-    # Search Profiler floats at root directory
-    for buoy_dir in buoys_dir_paths :
-        mfloats = [p.split("/")[-1][:-4] for p in glob.glob(buoy_dir + "/[0-9][0-9][0-9].[0-9][0-9][0-9]-*.vit")]
-        # For each Mermaid float
-        for mfloat in mfloats:
-            print("")
-            print(("> " + mfloat))
-
-            # Get float number
-            mfloat_nb = re.findall("(\d+)$", mfloat)[0]
-            mfloat_path = os.path.join(outputPath,mfloat)
-            mfloat_src_path = os.path.join(mfloat_path,"source")
-
-            # Create float directory
-            if not os.path.exists(mfloat_path):
-                os.mkdir(mfloat_path)
-            # Create directory for the source float
-            if not os.path.exists(mfloat_src_path):
-                os.mkdir(mfloat_src_path)
-
-            # Copy appropriate files in the directory and remove files outside of the time range
-            extensions = ["[0-9][0-9][0-9]", "LOG", "BIN"]
-            files_to_copy = list()
-            for extension in extensions:
-                    files_to_copy += glob.glob( buoy_dir + "/" + mfloat_nb + "*." + extension)
-            files_to_copy += glob.glob(buoy_dir + "/" + mfloat_nb + "*.MER")
-            files_to_copy += glob.glob(buoy_dir + "/" + mfloat_nb + "*.S41")
-
-            # Add .vit and .out files
-            files_to_copy += glob.glob(buoy_dir + "/" + mfloat + "*")
-            # Copy files
-            for f in files_to_copy:
-                shutil.copy(f, mfloat_src_path)
-            try:
-                generate(mfloat,outputPath);
-            except:
-                # Just print(e) is cleaner and more likely what you want,
-                # but if you insist on printing message specifically whenever possible...
-                traceback.print_exc()
-
+    # For each Mermaid float make process
+    for mfloat in mfloats:
+        try:
+            process_one_float(mfloat, outputPath)
+        except:
+            # Just print(e) is cleaner and more likely what you want,
+            # but if you insist on printing message specifically whenever possible...
+            traceback.print_exc()
 
 if __name__ == "__main__":
     main()

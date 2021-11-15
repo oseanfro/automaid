@@ -5,7 +5,7 @@ import datetime
 events_plotly = False
 
 # Path for input datas
-dataPath = "server"
+data_directory = "server"
 
 # Generate CSV with RAW data
 generate_csv_file = False
@@ -20,6 +20,10 @@ mermaid_ploted = True
 export_msd = True
 export_sac = True
 export_wav = False
+
+# Html generation (if local_html is false user need internet to open html)
+local_html = False
+optimize = True
 
 
 # Set a time range of analysis for a specific float

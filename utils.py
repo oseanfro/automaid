@@ -6,6 +6,15 @@ import plotly.graph_objs as graph
 from datetime import datetime, timedelta
 import hashlib
 
+try :
+    import arguments
+except:
+    import automaid.arguments as arguments
+
+if arguments.optimize :
+    Scatter = graph.Scattergl
+else :
+    Scatter = graph.Scatter
 
 #
 # Log files utilities
@@ -17,6 +26,7 @@ def concatenate_files(path):
     log_files_path = glob.glob(path + "*.LOG")
     log_files_path_filtered = list()
     bin_files_path = glob.glob(path + "*.BIN")
+    processed_path = list()
 
     for log_file_path in log_files_path:
         ok_file = True
@@ -27,14 +37,13 @@ def concatenate_files(path):
         if ok_file :
             log_files_path_filtered.append(log_file_path)
 
-
-
     for log_file_path in log_files_path_filtered:
         logstring = ""
-        files_to_merge = glob.glob(log_file_path[:-4] +".[0-9][0-9][0-9]")
-        files_to_merge += log_files_path
+        files_to_merge = list(glob.glob(log_file_path[:-4] +".[0-9][0-9][0-9]"))
+        files_to_merge.append(log_file_path)
         files_to_merge.sort()
         if len(files_to_merge) > 1:
+            processed_path.append(log_file_path)
             for file_to_merge in files_to_merge :
                 if file_to_merge[-3:].isdigit():
                     with open(file_to_merge, "r") as fl:
@@ -49,6 +58,7 @@ def concatenate_files(path):
                         with open(file_to_merge, "w") as fl:
                             fl.write(logstring)
                         logstring = ""
+
     #BIN FILES
     for bin_file_path in bin_files_path:
         bin = b''
@@ -70,6 +80,7 @@ def concatenate_files(path):
                         with open(file_to_merge, "wb") as fl:
                             fl.write(bin)
                         bin = b''
+    return processed_path
 
 
 # Split logs in several lines
@@ -194,8 +205,6 @@ def get_md5_from_bytes(bytes):
 def get_md5_from_string(string):
     result = hashlib.md5(string.encode())
     return result.hexdigest()
-
-
 #
 # Plot utilities
 #
@@ -212,7 +221,7 @@ def plotly_vertical_shape(position, ymin=0, ymax=1, name='name', color='blue'):
         yval.append(ymax)
         yval.append(None)
 
-    lines = graph.Scatter(x=xval,
+    lines = Scatter(x=xval,
                           y=yval,
                           name=name,
                           line=dict(color=color,

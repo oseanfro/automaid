@@ -8,13 +8,19 @@ import re
 
 try :
     import utils
+    import arguments
 except:
     import automaid.utils as utils
+    import automaid.arguments as arguments
 
 import numpy
 from obspy import UTCDateTime
 import plotly.graph_objs as graph
 import plotly.offline as plotly
+if arguments.optimize :
+    Scatter = graph.Scattergl
+else :
+    Scatter = graph.Scatter
 import struct
 import traceback
 
@@ -219,7 +225,7 @@ class Profile:
                 return
             print(export_name)
             # Add acoustic values to the graph
-            data_line = graph.Scatter(x=self.data_temperature,
+            data_line = Scatter(x=self.data_temperature,
                                       y=self.data_pressure,
                                       marker=dict(size=6,
                                                   cmax=30,
@@ -238,9 +244,11 @@ class Profile:
                                   hovermode='closest'
                                   )
 
-            plotly.plot({'data': data, 'layout': layout},
-                        filename=export_path,
-                        auto_open=False)
+            figure = graph.Figure(data=data, layout=layout)
+            if arguments.local_html :
+                figure.write_html(file=export_path, include_plotlyjs=True)
+            else :
+                figure.write_html(file=export_path, include_plotlyjs='cdn')
         else:
             print((export_path + " can't be exploited for temperature profile"))
 
@@ -254,7 +262,7 @@ class Profile:
                 print((export_path + "already exist"))
                 return
             # Add acoustic values to the graph
-            data_line = graph.Scatter(x=self.data_salinity,
+            data_line = Scatter(x=self.data_salinity,
                                       y=self.data_pressure,
                                       marker=dict(size=9,
                                                   cmax=39,
@@ -273,9 +281,10 @@ class Profile:
                                       size=18), autorange="reversed"),
                                   hovermode='closest'
                                   )
-
-            plotly.plot({'data': data, 'layout': layout},
-                        filename=export_path,
-                        auto_open=False)
+            figure = graph.Figure(data=data, layout=layout)
+            if arguments.local_html :
+                figure.write_html(file=export_path, include_plotlyjs=True)
+            else :
+                figure.write_html(file=export_path, include_plotlyjs='cdn')
         else:
             print((export_path + " can't be exploited for salinity profile"))

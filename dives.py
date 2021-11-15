@@ -23,6 +23,11 @@ except:
     import automaid.argo as argo
     import automaid.gps as gps
 
+if arguments.optimize :
+    Scatter = graph.Scattergl
+else :
+    Scatter = graph.Scatter
+
 # Log class to manipulate log files
 class Dive:
     log_name = None
@@ -334,7 +339,7 @@ class Dive:
         # Add pressure values to the graph
         p_val = [-int(p[0]) / 100. for p in pressure]
         p_date = [p[1] for p in pressure]
-        depth_line = graph.Scatter(x=p_date,
+        depth_line = Scatter(x=p_date,
                                    y=p_val,
                                    name="depth",
                                    line=dict(color='#474747',
@@ -401,9 +406,12 @@ class Dive:
                               hovermode='closest'
                               )
 
-        plotly.plot({'data': data, 'layout': layout},
-                    filename=export_path,
-                    auto_open=False)
+        figure = graph.Figure(data=data, layout=layout)
+
+        if arguments.local_html :
+            figure.write_html(file=export_path, include_plotlyjs=True)
+        else :
+            figure.write_html(file=export_path, include_plotlyjs='cdn')
 
         with open(export_path_md5, mode='w') as md5_file:
             md5_file.write(md5Current)

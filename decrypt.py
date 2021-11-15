@@ -320,6 +320,7 @@ def decrypt_one(path,LOG_card,WARN_card,ERR_card,version):
 def decrypt_all(path):
     # Generate List of BINS file
     files_to_decrypt = glob.glob(path + "*.BIN")
+    files_decrypted = list()
     for binary_file in files_to_decrypt :
         # Get version line
         with open(binary_file, "r", errors='replace') as f:
@@ -374,8 +375,9 @@ def decrypt_all(path):
                     else:
                         with open(log_file,"w") as f:
                             f.write(result)
+                        files_decrypted.append(log_file)
                 else:
                     print(("No database : " + str(database_file_path)))
-
+    return files_decrypted
 if __name__ == "__main__":
     decrypt_all("../server/osean/decrypt/bins/")

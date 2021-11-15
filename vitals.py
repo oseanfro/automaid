@@ -8,8 +8,17 @@ import datetime
 import glob
 try :
     import utils
+    import arguments
 except:
     import automaid.utils as utils
+    import automaid.arguments as arguments
+
+if arguments.optimize :
+    Scatter = graph.Scattergl
+else :
+    Scatter = graph.Scatter
+
+
 
 class Vitals:
     _state = None
@@ -224,7 +233,7 @@ def list_vitals(filepath,client,buoy,mdives,datapath):
     return listread
 
 def sort_vitals(elem):
-    match = re.match(b"([A-Z0-9]{8}).vit",elem)
+    match = re.match("([A-Z0-9]{8}).vit",elem)
     return int(match.group(1),16)
 
 def merge_vitals(path,final):
@@ -237,6 +246,8 @@ def merge_vitals(path,final):
             for file in files_sorted :
                 with open(os.path.join(path,file), "r") as splitted:
                     final_file.write(splitted.read())
+        return [os.path.join(path,final)]
+    return []
 
 #on rentre une list de dictionnaire
 #et renvoie une liste plus complete avec des donnee process
@@ -263,6 +274,7 @@ def sortdictbyname(value):
 
 def plot_battery_voltage(vital_file_path, vital_file_name):
     # Read file
+    export_path = os.path.join(os.path.dirname(os.path.dirname(vital_file_path)), "processed/",  "voltage.html")
     with open(vital_file_path + vital_file_name, "rb") as f:
         content = f.read()
 
@@ -287,14 +299,14 @@ def plot_battery_voltage(vital_file_path, vital_file_name):
         return
 
     # Add battery values to the graph
-    voltage_line = graph.Scatter(x=date,
+    voltage_line = Scatter(x=date,
                                  y=voltage,
                                  name="voltage",
                                  line=dict(color='blue',
                                            width=2),
                                  mode='lines+markers')
 
-    minimum_voltage_line = graph.Scatter(x=date,
+    minimum_voltage_line = Scatter(x=date,
                                          y=minimum_voltage,
                                          name="minimum voltage",
                                          line=dict(color='orange',
@@ -309,12 +321,15 @@ def plot_battery_voltage(vital_file_path, vital_file_name):
                           hovermode='closest'
                           )
 
-    plotly.plot({'data': data, 'layout': layout},
-                filename=os.path.join(os.path.dirname(os.path.dirname(vital_file_path)), "processed/",  "voltage.html"),
-                auto_open=False)
+    figure = graph.Figure(data=data, layout=layout)
+    if arguments.local_html :
+        figure.write_html(file=export_path, include_plotlyjs=True)
+    else :
+        figure.write_html(file=export_path, include_plotlyjs='cdn')
 
 
 def plot_internal_pressure(vital_file_path, vital_file_name):
+    export_path = os.path.join(os.path.dirname(os.path.dirname(vital_file_path)), "processed/",  "internal_pressure.html")
     # Read file
     with open(vital_file_path + vital_file_name, "rb") as f:
         content = f.read()
@@ -340,7 +355,7 @@ def plot_internal_pressure(vital_file_path, vital_file_name):
         return
 
     # Add battery values to the graph
-    internal_pressure_line = graph.Scatter(x=date,
+    internal_pressure_line = Scatter(x=date,
                                            y=internal_pressure,
                                            name="internal pressure",
                                            line=dict(color='blue',
@@ -354,13 +369,15 @@ def plot_internal_pressure(vital_file_path, vital_file_name):
                           yaxis=dict(title='Internal pressure (millibars)', titlefont=dict(size=18)),
                           hovermode='closest'
                           )
-
-    plotly.plot({'data': data, 'layout': layout},
-                filename=os.path.join(os.path.dirname(os.path.dirname(vital_file_path)), "processed/",  "internal_pressure.html"),
-                auto_open=False)
+    figure = graph.Figure(data=data, layout=layout)
+    if arguments.local_html :
+        figure.write_html(file=export_path, include_plotlyjs=True)
+    else :
+        figure.write_html(file=export_path, include_plotlyjs='cdn')
 
 
 def plot_pressure_offset(vital_file_path, vital_file_name):
+    export_path = os.path.join(os.path.dirname(os.path.dirname(vital_file_path)), "processed/",  "external_pressure_offset.html")
     # Read file
     with open(vital_file_path + vital_file_name, "rb") as f:
         content = f.read()
@@ -398,14 +415,14 @@ def plot_pressure_offset(vital_file_path, vital_file_name):
     pressure_offset_min_rev = pressure_offset_min[::-1]
 
     # Add battery values to the graph
-    pressure_offset_line = graph.Scatter(x=date,
+    pressure_offset_line = Scatter(x=date,
                                          y=pressure_offset,
                                          name="pressure offset",
                                          line=dict(color='blue',
                                                    width=2),
                                          mode='lines+markers')
 
-    pressure_offset_range = graph.Scatter(x=date + date_rev,
+    pressure_offset_range = Scatter(x=date + date_rev,
                                           y=pressure_offset_max + pressure_offset_min_rev,
                                           fill='toself',
                                           fillcolor='rgba(0,0,256,0.2)',
@@ -420,7 +437,8 @@ def plot_pressure_offset(vital_file_path, vital_file_name):
                           yaxis=dict(title='Pressure offset (millibars)', titlefont=dict(size=18)),
                           hovermode='closest'
                           )
-
-    plotly.plot({'data': data, 'layout': layout},
-                filename=os.path.join(os.path.dirname(os.path.dirname(vital_file_path)), "processed/",  "external_pressure_offset.html"),
-                auto_open=False)
+    figure = graph.Figure(data=data, layout=layout)
+    if arguments.local_html :
+        figure.write_html(file=export_path, include_plotlyjs=True)
+    else :
+        figure.write_html(file=export_path, include_plotlyjs='cdn')
