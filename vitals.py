@@ -60,7 +60,6 @@ class Vitals:
         line_bat = re.match(b".* Vbat (\d+)mV \(min (\d+)mV\)",line)
         line_Pint = re.match(b".* Pint (\d+)Pa",line)
         line_Pext = re.match(b".* Pext (-?\d+)mbar \(range (-?\d+)mbar\)",line)
-        line_emerg = re.match(b".* EMERGENCY .*",line)
         buffdate = 0
 
         begin = datetime.datetime(1000, 1, 1)
@@ -325,7 +324,7 @@ def plot_battery_voltage(vital_file_path, vital_file_name):
     if arguments.local_html :
         figure.write_html(file=export_path, include_plotlyjs=True)
     else :
-        figure.write_html(file=export_path, include_plotlyjs='cdn')
+        figure.write_html(file=export_path, include_plotlyjs='cdn', full_html=False)
 
 
 def plot_internal_pressure(vital_file_path, vital_file_name):
@@ -373,7 +372,7 @@ def plot_internal_pressure(vital_file_path, vital_file_name):
     if arguments.local_html :
         figure.write_html(file=export_path, include_plotlyjs=True)
     else :
-        figure.write_html(file=export_path, include_plotlyjs='cdn')
+        figure.write_html(file=export_path, include_plotlyjs=False, full_html=False)
 
 
 def plot_pressure_offset(vital_file_path, vital_file_name):
@@ -441,4 +440,4 @@ def plot_pressure_offset(vital_file_path, vital_file_name):
     if arguments.local_html :
         figure.write_html(file=export_path, include_plotlyjs=True)
     else :
-        figure.write_html(file=export_path, include_plotlyjs='cdn')
+        figure.write_html(file=export_path, include_plotlyjs='cdn', full_html=False)

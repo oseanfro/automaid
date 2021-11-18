@@ -313,7 +313,7 @@ class Event:
         if arguments.local_html :
             figure.write_html(file=export_path, include_plotlyjs=True)
         else :
-            figure.write_html(file=export_path, include_plotlyjs='cdn')
+            figure.write_html(file=export_path, include_plotlyjs='cdn', full_html=False)
         with open(export_path_md5, mode='w') as md5_file:
             md5_file.write(md5Current)
 
@@ -365,7 +365,7 @@ class Event:
         if arguments.local_html :
             figure.write_html(file=export_path, include_plotlyjs=True)
         else :
-            figure.write_html(file=export_path, include_plotlyjs='cdn')
+            figure.write_html(file=export_path, include_plotlyjs='cdn' , full_html=False)
         with open(export_path_md5, mode='w') as md5_file:
             md5_file.write(md5Current)
 

@@ -248,7 +248,7 @@ class Profile:
             if arguments.local_html :
                 figure.write_html(file=export_path, include_plotlyjs=True)
             else :
-                figure.write_html(file=export_path, include_plotlyjs='cdn')
+                figure.write_html(file=export_path, include_plotlyjs='cdn', full_html=False)
         else:
             print((export_path + " can't be exploited for temperature profile"))
 
@@ -285,6 +285,6 @@ class Profile:
             if arguments.local_html :
                 figure.write_html(file=export_path, include_plotlyjs=True)
             else :
-                figure.write_html(file=export_path, include_plotlyjs='cdn')
+                figure.write_html(file=export_path, include_plotlyjs='cdn', full_html=False)
         else:
             print((export_path + " can't be exploited for salinity profile"))
