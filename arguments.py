@@ -21,8 +21,10 @@ export_msd = False
 export_sac = False
 export_wav = False
 
-# Html generation (if local_html is false user need internet to open html)
+# Html generation
+# if local_html is false user need internet to open html
 local_html = False
+# if optimize is true we use Scattergl graph (optimized graph when they are a lot of points)
 optimize = True
 
 
