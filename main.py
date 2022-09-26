@@ -175,13 +175,15 @@ def update_tree(mfloat_serial, src_path, dest_path) :
     extensions = ["[0-9][0-9][0-9]", "LOG", "BIN"]
     files_to_copy = list()
     for extension in extensions:
-        files_to_copy += glob.glob(src_path + "/" + mfloat_nb + "*." + extension)
-    files_to_copy += glob.glob(src_path + "/" + mfloat_nb + "*.MER")
-    files_to_copy += glob.glob(src_path + "/" + mfloat_nb + "*.S41")
+        files_to_copy += glob.glob(src_path + "/" + mfloat_serial + "/" + "*." + extension)
+    files_to_copy += glob.glob(src_path + "/" + mfloat_serial + "/" + "*.MER")
+    files_to_copy += glob.glob(src_path + "/" + mfloat_serial + "/" + "*.S41")
 
     # Add .vit and .out files
-    files_to_copy += glob.glob(mfloat["dir"] + "/" + mfloat["name"] + "*")
-    files_to_copy += glob.glob(mfloat["dir"] + "/" + "*.vit")
+    files_to_copy += glob.glob(src_path + "/" + mfloat_serial + "/" + "*")
+    files_to_copy += glob.glob(src_path + "/" + mfloat_serial + "/" + "*.vit")
+
+    print(files_to_copy)
     # Copy files
     for f in files_to_copy:
         shutil.copy(f, mfloat_src_path)
