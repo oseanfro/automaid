@@ -225,17 +225,18 @@ class Event:
             f.write(self.binary)
         # Do icd24
         if edge_correction == "1":
-            #print("icdf24_v103ec_test")
+            print("icdf24_v103ec_test")
             subprocess.check_output([icdf24_v103ec_test,
                                      self.scales,
                                      normalized,
                                      wtcoeffsname])
         else:
-            #print("icdf24_v103_test")
+            print("icdf24_v103_test")
             subprocess.check_output([icdf24_v103_test,
                                     self.scales,
                                     normalized,
                                     wtcoeffsname])
+        print(icdf24_data);
         # Read icd24 data
         self.data = numpy.fromfile(icdf24_data, numpy.int32)
 

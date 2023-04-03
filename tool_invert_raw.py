@@ -21,12 +21,12 @@ mode = "Binary"
 ######################################
 # Sampling frequency
 ######################################
-sampling_freq = 40.000000
 
 def invert_raw():
     ######################################
     # Binary
     ######################################
+    sampling_freq = 40.000000
     if mode == "Binary":
         catch_files = []
         files = glob.glob(file_path + "*")
