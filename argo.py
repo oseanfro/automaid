@@ -6,12 +6,12 @@ try :
     import dives
     import utils
     import configuration
-    import sbe41_profile
+    import sbe41
 except:
     import automaid.dives as dives
     import automaid.utils as utils
     import automaid.configuration as configuration
-    import automaid.sbe41_profile as sbe41_profile
+    import automaid.sbe41 as sbe41
 
 class ConfigurationParameter:
     name=None
@@ -457,7 +457,7 @@ class Cycle :
         self.measures = list()
         self.logNames = list()
         self.parameters = ConfigurationParameters()
-        self.sbe41Profiles = sbe41_profile.Profiles()
+        self.sbe41Profiles = sbe41.Profiles()
         self.sbe41ProfileFileName = None
         self.sbe41ProfileEnvironnement = None
 

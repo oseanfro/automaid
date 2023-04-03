@@ -5,7 +5,7 @@ import decrypt
 import glob
 import dives
 import events
-import sbe41_profile
+import sbe41
 import re
 import utils
 import netCDF.init_values as init
@@ -77,7 +77,7 @@ def mermaid_to_nc(mfloat,date_begin,date_end) :
     # Build list of all mermaid events recorded by the float
     mevents = events.Events(mfloat_src_path)
     # Build list of all profiles recorded
-    ms41s = sbe41_profile.Profiles(mfloat_src_path)
+    ms41s = sbe41.Profiles(mfloat_src_path)
     # Process data for each dive
     mdives = dives.Dives(mfloat_src_path, mevents, ms41s)
     # Organise data as cycles

@@ -10,7 +10,8 @@ try:
     import kml
     import dives
     import utils
-    import sbe41_profile
+    import sbe41
+    import sbe61
     import events
     import decrypt
     import vitals
@@ -22,7 +23,8 @@ except:
     import automaid.kml as kml
     import automaid.dives as dives
     import automaid.utils as utils
-    import automaid.sbe41_profile as sbe41_profile
+    import automaid.sbe41 as sbe41
+    import automaid.sbe61 as sbe61
     import automaid.events as events
     import automaid.decrypt as decrypt
     import automaid.vitals as vitals
@@ -38,9 +40,11 @@ def generate_processed_files(mfloat, mfloat_path):
     # Build list of all mermaid events recorded by the float
     mevents = events.Events(mfloat_path)
     # Build list of all profiles recorded
-    ms41s = sbe41_profile.Profiles(mfloat_path)
+    ms41s = sbe41.Profiles(mfloat_path)
+    # Build list of all profiles recorded
+    ms61s = sbe61.Profiles(mfloat_path)
     # Process data for each dive
-    mdives = dives.Dives(mfloat_path, mevents, ms41s)
+    mdives = dives.Dives(mfloat_path, mevents, ms41s,ms61s)
 
     # Compute files for each dive
     for dive in mdives.get_dives():
@@ -51,8 +55,9 @@ def generate_processed_files(mfloat, mfloat_path):
         dive.generate_datetime_log()
         # Generate mermaid environment file
         dive.generate_mermaid_environment_file()
-        # Generate S41 params file
-        dive.generate_s41_environment_file()
+        # Generate profiles params file
+        dive.generate_s41_environment_file();
+        dive.generate_s61_environment_file();
         # Generate dive plot
         dive.generate_dive_plotly(generate_csv_file)
 
@@ -178,10 +183,12 @@ def update_tree(mfloat_serial, src_path, dest_path) :
         files_to_copy += glob.glob(src_path + "/" + mfloat_nb + "*." + extension)
     files_to_copy += glob.glob(src_path + "/" + mfloat_nb + "*.MER")
     files_to_copy += glob.glob(src_path + "/" + mfloat_nb + "*.S41")
+    files_to_copy += glob.glob(src_path + "/" + mfloat_nb + "*.S61")
 
     # Add .vit and .out files
-    files_to_copy += glob.glob(mfloat["dir"] + "/" + mfloat["name"] + "*")
-    files_to_copy += glob.glob(mfloat["dir"] + "/" + "*.vit")
+    files_to_copy += glob.glob(src_path + "/" + mfloat_serial + "*")
+    files_to_copy += glob.glob(src_path + "/" + mfloat_serial + "*.vit")
+
     # Copy files
     for f in files_to_copy:
         shutil.copy(f, mfloat_src_path)

@@ -5,7 +5,7 @@ import decrypt
 import glob
 import dives
 import events
-import sbe41_profile
+import sbe41
 import re
 import utils
 import netCDF.init_values as init

@@ -194,7 +194,7 @@ def verify_format_log(log):
 
 # Get date from a .LOG or a .MER file name
 def get_date_from_file_name(filename):
-    hexdate = re.findall("(.+\d+_)?([A-Z0-9]+)\.(BIN|LOG|MER|S41|[0-9]{3})", filename)[0][1]
+    hexdate = re.findall("(.+\d+_)?([A-Z0-9]+)\.(BIN|LOG|MER|S41|S61|[0-9]{3})", filename)[0][1]
     timestamp = int(hexdate, 16)
     return UTCDateTime(timestamp)
 

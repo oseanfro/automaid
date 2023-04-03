@@ -13,6 +13,7 @@ bypass_ploted = True
 valve_ploted = True
 pump_ploted = True
 mermaid_ploted = True
+sbe61_ploted = True
 
 # Plot interactive figures in HTML format for acoustic events
 events_plotly = True
