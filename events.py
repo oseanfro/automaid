@@ -208,6 +208,8 @@ class Event:
         self.data = numpy.frombuffer(self.binary, numpy.int8)
 
     def invert_transform(self):
+        if self.binary == None :
+            return
         # If scales == -1 this is a raw signal, just convert binary data to numpy array of int32
         if self.scales == "-1":
             self.data = numpy.frombuffer(self.binary, numpy.int32)

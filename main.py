@@ -143,7 +143,7 @@ def process_one_float(mfloat, datapath):
         # Just print(e) is cleaner and more likely what you want,
         # but if you insist on printing message specifically whenever possible...
         traceback.print_exc()
-        mdives = dives.Dives()
+        mdives = None
     else:
         # Clean directories
         files_to_delete += glob.glob(mfloat_path_processed + mfloat_nb + "_*")
@@ -175,15 +175,13 @@ def update_tree(mfloat_serial, src_path, dest_path) :
     extensions = ["[0-9][0-9][0-9]", "LOG", "BIN"]
     files_to_copy = list()
     for extension in extensions:
-        files_to_copy += glob.glob(src_path + "/" + mfloat_serial + "/" + "*." + extension)
-    files_to_copy += glob.glob(src_path + "/" + mfloat_serial + "/" + "*.MER")
-    files_to_copy += glob.glob(src_path + "/" + mfloat_serial + "/" + "*.S41")
+        files_to_copy += glob.glob(src_path + "/" + mfloat_nb + "*." + extension)
+    files_to_copy += glob.glob(src_path + "/" + mfloat_nb + "*.MER")
+    files_to_copy += glob.glob(src_path + "/" + mfloat_nb + "*.S41")
 
     # Add .vit and .out files
-    files_to_copy += glob.glob(src_path + "/" + mfloat_serial + "/" + "*")
-    files_to_copy += glob.glob(src_path + "/" + mfloat_serial + "/" + "*.vit")
-
-    print(files_to_copy)
+    files_to_copy += glob.glob(mfloat["dir"] + "/" + mfloat["name"] + "*")
+    files_to_copy += glob.glob(mfloat["dir"] + "/" + "*.vit")
     # Copy files
     for f in files_to_copy:
         shutil.copy(f, mfloat_src_path)

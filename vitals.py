@@ -1,3 +1,4 @@
+
 import re
 from obspy import UTCDateTime
 import plotly.graph_objs as graph
@@ -280,13 +281,17 @@ def plot_battery_voltage(vital_file_path, vital_file_name):
     # Find battery values
     content = content.replace(b' ', b'')
     content = content.replace(b'>',b'')
-    battery_catch = re.findall(b"(.+):Vbat(\d+)mV\(min(\d+)mV\)", content)
 
-    iso8601_date = re.match(b"(\d+)-(\d+)-(\d+)T(\d+):(\d+):(\d+)",battery_catch[0][0])
-    if iso8601_date :
-        date = [UTCDateTime(0).strptime(i[0].decode(), "%Y-%m-%dT%H:%M:%S") for i in battery_catch]
-    else :
-        date = [UTCDateTime(0).strptime(i[0].decode(), "%Y%m%d-%Hh%Mmn%S") for i in battery_catch]
+    date_format = "%Y-%m-%dT%H:%M:%S"
+    battery_catch = re.findall(b"(\d+-\d+-\d+T\d+:\d+:\d+): *Vbat(\d+)mV\(min(\d+)mV\)", content)
+    if len(battery_catch) <= 0 :
+        date_format = "%Y%m%d-%Hh%Mmn%S"
+        battery_catch = re.findall(b"(\d+-\d+h\d+mn\d+): *Vbat(\d+)mV\(min(\d+)mV\)", content)
+
+    date = [UTCDateTime(0).strptime(i[0].decode(), date_format) for i in battery_catch]
+    if len(date) < 1:
+        return
+
     voltage = [float(i[1])/1000. for i in battery_catch]
     minimum_voltage = [float(i[2])/1000. for i in battery_catch]
 
@@ -336,13 +341,16 @@ def plot_internal_pressure(vital_file_path, vital_file_name):
     # Find battery values
     content = content.replace(b' ', b'')
     content = content.replace(b'>',b'')
-    internal_pressure_catch = re.findall(b"(.+):Pint(-?\d+)Pa", content)
 
-    iso8601_date = re.match(b"(\d+)-(\d+)-(\d+)T(\d+):(\d+):(\d+)",internal_pressure_catch[0][0])
-    if iso8601_date :
-        date = [UTCDateTime(0).strptime(i[0].decode(), "%Y-%m-%dT%H:%M:%S") for i in internal_pressure_catch]
-    else :
-        date = [UTCDateTime(0).strptime(i[0].decode(), "%Y%m%d-%Hh%Mmn%S") for i in internal_pressure_catch]
+    date_format = "%Y-%m-%dT%H:%M:%S"
+    internal_pressure_catch = re.findall(b"(\d+-\d+-\d+T\d+:\d+:\d+): *Pint(-?\d+)Pa", content)
+    if len(internal_pressure_catch) <= 0 :
+        date_format = "%Y%m%d-%Hh%Mmn%S"
+        internal_pressure_catch = re.findall(b"(\d+-\d+h\d+mn\d+): *Pint(-?\d+)Pa", content)
+
+    date = [UTCDateTime(0).strptime(i[0].decode(), date_format) for i in internal_pressure_catch]
+    if len(date) < 1:
+        return
 
     internal_pressure = [float(i[1])/100. for i in internal_pressure_catch]
 
@@ -384,12 +392,16 @@ def plot_pressure_offset(vital_file_path, vital_file_name):
     # Find battery values
     content = content.replace(b' ', b'')
     content = content.replace(b'>',b'')
-    pressure_offset_catch = re.findall(b"(.+):Pext(-?\d+)mbar\(range(-?\d+)mbar\)", content)
-    iso8601_date = re.match(b"(\d+)-(\d+)-(\d+)T(\d+):(\d+):(\d+)",pressure_offset_catch[0][0])
-    if iso8601_date :
-        date = [UTCDateTime(0).strptime(i[0].decode(), "%Y-%m-%dT%H:%M:%S") for i in pressure_offset_catch]
-    else :
-        date = [UTCDateTime(0).strptime(i[0].decode(), "%Y%m%d-%Hh%Mmn%S") for i in pressure_offset_catch]
+
+    date_format = "%Y-%m-%dT%H:%M:%S"
+    pressure_offset_catch = re.findall(b"(\d+-\d+-\d+T\d+:\d+:\d+): *Pext(-?\d+)mbar\(range(-?\d+)mbar\)", content)
+    if len(pressure_offset_catch) <= 0 :
+        date_format = "%Y%m%d-%Hh%Mmn%S"
+        pressure_offset_catch = re.findall(b"(\d+-\d+h\d+mn\d+): *Pext(-?\d+)mbar\(range(-?\d+)mbar\)", content)
+
+    date = [UTCDateTime(0).strptime(i[0].decode(), date_format) for i in pressure_offset_catch]
+    if len(date) < 1:
+        return
 
     pressure_offset = [int(i[1]) for i in pressure_offset_catch]
     pressure_offset_range = [int(i[2]) for i in pressure_offset_catch]
