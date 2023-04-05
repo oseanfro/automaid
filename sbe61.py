@@ -199,6 +199,7 @@ class Profile:
             self.data_pressure = list()
             self.data_temperature = list()
             self.data_salinity = list()
+            self.data_nbin = list()
             for index in range(0, len(self.data), 1):
                 press = self.data[index]['press']
                 temp = self.data[index]['temp']
