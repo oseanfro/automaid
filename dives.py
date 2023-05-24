@@ -220,7 +220,7 @@ class Dive:
             else:
                 print(("WARNING: No GPS synchronization after surfacing for \""
                        + str(self.mmd_name) + "\", \"" + str(self.log_name) + "\""))
-        self.configuration = configuration.Configuration(self)
+        #self.configuration = configuration.Configuration(self)
 
     def generateJSON(self):
         json_object = {}

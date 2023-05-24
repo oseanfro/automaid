@@ -39,9 +39,9 @@ redo = "True"
 def generate_processed_files(mfloat, mfloat_path):
     # Build list of all mermaid events recorded by the float
     mevents = events.Events(mfloat_path)
-    # Build list of all profiles recorded
+    # Build list of all S41 profiles recorded
     ms41s = sbe41.Profiles(mfloat_path)
-    # Build list of all profiles recorded
+    # Build list of all S61 profiles recorded
     ms61s = sbe61.Profiles(mfloat_path)
     # Process data for each dive
     mdives = dives.Dives(mfloat_path, mevents, ms41s,ms61s)

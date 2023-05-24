@@ -78,8 +78,10 @@ def mermaid_to_nc(mfloat,date_begin,date_end) :
     mevents = events.Events(mfloat_src_path)
     # Build list of all profiles recorded
     ms41s = sbe41.Profiles(mfloat_src_path)
+    # Build list of all S61 profiles recorded
+    ms61s = sbe61.Profiles(mfloat_path)
     # Process data for each dive
-    mdives = dives.Dives(mfloat_src_path, mevents, ms41s)
+    mdives = dives.Dives(mfloat_src_path, mevents, ms41s,ms61s)
     # Organise data as cycles
     mCycles = argo.Cycles(mdives)
 
