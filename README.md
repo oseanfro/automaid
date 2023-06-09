@@ -5,15 +5,11 @@ classify data, correct clock drifts, interpolate float positions and
 then generates seismic SAC files, plots seismic events and dives and
 generates KML, HTML, and PNG files.
 
-Written by Sebastien Bonnieux. Maintained by Frederik J. Simons and Joel D. Simon.
+Written by Sebastien Bonnieux. Maintained by Frédéric Rocca.
 
 ### 1. INSTALLATION
 
-This installation procedure has been tested with macOS. For Linux the
-procedure is valid but one could prefer to use a the package manager.
-For Windows the installation of Python 2.7 is valid but the
-compilation of the wavelet inversion program with "make" could be
-problematic.
+This installation procedure has been tested with linux.
 
 An easy installation procedure is described here:
 
@@ -22,23 +18,12 @@ An easy installation procedure is described here:
   disk space). (You may already have it, you might have to do `module
   load anaconda/5.2.0` to specify the precise version).
 * Restart your terminal to load the new PATH variables.
-* Add the conda-forge channel:  
+* Add the conda-forge channel:
 `conda config --add channels conda-forge`
-* Create a virtual environment called "pymaid":  
-`conda create -n pymaid python=2.7`
+* Create a virtual environment called "pymaid":
+`conda create -n pymaid python=3.10 obspy plotly`
 
-* Make sure you are in the `bash` shell!
-
-* Activate the environment:  
-`conda activate pymaid`
-* Install obspy:  
-`conda install obspy`
-* Install plotly 2.7.0:  
-`conda install plotly=2.7.0`
-* Quit the virtual environment:  
-`conda deactivate`
-
-In addition to the Python 2.7 installation it is necessary to compile,
+In addition to the Python 3.10 installation it is necessary to compile,
 using `make` the wavelet inversion programs located in
 `scripts/src/V103/` and `scripts/src/V103EC/`. The compiled binaries
 must be in the "bin" directory and must be named `icdf24_v103_test` and
@@ -48,13 +33,13 @@ must be in the "bin" directory and must be named `icdf24_v103_test` and
 
 To use the application:
 
-* Copy files from your Mermaid server into the "server" directory:  
-`scp username@host:\{"*.LOG","*.BIN","*.MER","*.vit"\} server`
-* Activate the virtual environment:  
+* Copy files from your Mermaid server into the "server" directory:
+`scp username@host:\{"*.LOG","*.BIN","*.S61","*.MER","*.vit"\} server`
+* Activate the virtual environment:
 `conda activate pymaid`
-* Run the main.py file in the "scripts" directory:  
+* Run the main.py file in the "scripts" directory:
 `python scripts/main.py`
-* Quit the virtual environment:  
+* Quit the virtual environment:
 `conda deactivate`
 
 You will be getting the processed files into the directory `processed`.
@@ -62,13 +47,12 @@ You may have to remove some error-prone log files and create some
 directories - we will be editing the script for increased versatility
 as we go along.
 
-The "main.py" file can be edited to select some options:
+The "arguments.py" file can be edited to select some options:
 
-* A date range between which to process the data can be chosen with
-the `begin` and `end` variables.
-* A "redo" flag can be set to True in order to restart the processing
-of data for each launch of the script. This flag force the deletion
-of the content of the content of the `processed` directory.
-* A `events_plotly` flag allow the user to plot interactive figures
-of events in a html page. This kind of plot can be disabled to save
-disk space.
+* A "server_directory" parameter to define server directory path relative to automaid or absolute
+* A "processed_directory" parameter to define output directory path relative to automaid or absolute
+* A "generate_dive_csv_file" flag allow the user to generate "csv" file with timestamped pressure sample
+* A "generate_profil_csv_file" flag allow the user to generate "csv" file with SBE61 samples
+* Each "*_ploted" flags allow the user to display or not vertical lines when actionners is used or measure is done (in html file)
+* Each "export_*" flags allow the user to choose output format for MERMAID data
+* A "local_html" flags allow the user to generate html with or not plotly librairie (if this flag is False user must have internet access to display html files) 

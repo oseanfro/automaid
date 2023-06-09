@@ -16,9 +16,11 @@ try:
     import decrypt
     import vitals
     import databases
-    from arguments import data_directory
+    from arguments import processed_directory
+    from arguments import server_directory
     from arguments import events_plotly
-    from arguments import generate_csv_file
+    from arguments import generate_dive_csv_file
+    from arguments import generate_profil_csv_file
 except:
     import automaid.kml as kml
     import automaid.dives as dives
@@ -29,9 +31,11 @@ except:
     import automaid.decrypt as decrypt
     import automaid.vitals as vitals
     import automaid.databases as databases
-    from automaid.arguments import data_directory
+    from automaid.arguments import processed_directory
+    from automaid.arguments import server_directory
     from automaid.arguments import events_plotly
-    from automaid.arguments import generate_csv_file
+    from automaid.arguments import generate_dive_csv_file
+    from automaid.arguments import generate_profil_csv_file
 
 redo = "True"
 
@@ -59,7 +63,7 @@ def generate_processed_files(mfloat, mfloat_path):
         dive.generate_s41_environment_file();
         dive.generate_s61_environment_file();
         # Generate dive plot
-        dive.generate_dive_plotly(generate_csv_file)
+        dive.generate_dive_plotly(generate_dive_csv_file)
 
     # Compute clock drift correction for each event
     for dive in mdives.get_dives():
@@ -80,7 +84,7 @@ def generate_processed_files(mfloat, mfloat_path):
         else :
             dive.generate_events_plot()
         dive.generate_events_sac()
-        dive.generate_profile_plotly(generate_csv_file)
+        dive.generate_profile_plotly(generate_profil_csv_file)
 
     # Plot vital data
     kml.generate(mfloat_path, mfloat, mdives.get_dives())
@@ -200,8 +204,11 @@ def main():
     if "scripts" in os.listdir("."):
         os.chdir("scripts")
 
-    outputPath = "../processed"
-    dataPath = os.path.join("../", data_directory)
+    outputPath = processed_directory
+    dataPath = server_directory
+
+    print(outputPath)
+    print(dataPath)
 
     # Create ouput directory
     if not os.path.exists(outputPath):
@@ -224,13 +231,13 @@ def main():
                 update_tree(buoy_serial,root,outputPath)
                 mfloats += [buoy_serial]
         for file in files:
+            print(file)
             if os.path.samefile(root,dataPath) :
                 buoy_vit = re.match('([0-9]{3}.[0-9]{3}-[A-z]-([0-9]{4}|[0-9]{2}))\.vit', file)
                 if (buoy_vit):
                     buoy_serial = buoy_vit.group(1)
                     update_tree(buoy_serial,root,outputPath)
                     mfloats += [buoy_serial]
-
     # For each Mermaid float make process
     for mfloat in mfloats:
         try:
