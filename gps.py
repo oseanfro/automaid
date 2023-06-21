@@ -1,3 +1,10 @@
+# @Author: Frédéric Rocca <fro>
+# @Date:   2023-06-09T09:36:17+02:00
+# @Email:  frederic.rocca@osean.fr
+# @Filename: gps.py
+# @Last modified by:   fro
+# @Last modified time: 2023-06-21T09:26:32+02:00
+
 import re
 from obspy import UTCDateTime
 from obspy.geodetics.base import gps2dist_azimuth
@@ -203,7 +210,12 @@ def get_gps_from_log(content):
             fixdate = fixdate[0]
             fixdate = UTCDateTime(int(fixdate))
         else:
-            fixdate = None
+            fixdate = re.findall("(\d+):\[SURF *, *\d+\]Latitude", gps_log)
+            if len(fixdate) > 0:
+                fixdate = fixdate[0]
+                fixdate = UTCDateTime(int(fixdate))
+            else :
+                fixdate = None
 
         latitude = re.findall("([S,N])(\d+)deg(\d+.\d+)mn", gps_log)
         if len(latitude) > 0:
