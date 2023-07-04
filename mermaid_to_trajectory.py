@@ -1,3 +1,10 @@
+# @Author: Frédéric Rocca <fro>
+# @Date:   2023-06-09T09:36:17+02:00
+# @Email:  frederic.rocca@osean.fr
+# @Filename: mermaid_to_trajectory.py
+# @Last modified by:   fro
+# @Last modified time: 2023-07-03T14:33:29+02:00
+
 import os
 import shutil
 import sys
@@ -8,7 +15,6 @@ import events
 import sbe41
 import re
 import utils
-import netCDF.init_values as init
 from obspy import UTCDateTime
 from netCDF4 import Dataset
 from netCDF4 import stringtochar

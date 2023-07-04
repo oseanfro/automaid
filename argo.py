@@ -1,3 +1,10 @@
+# @Author: Frédéric Rocca <fro>
+# @Date:   2023-06-09T09:36:17+02:00
+# @Email:  frederic.rocca@osean.fr
+# @Filename: argo.py
+# @Last modified by:   fro
+# @Last modified time: 2023-07-04T17:51:04+02:00
+
 import re
 from obspy import UTCDateTime
 import numpy as np
@@ -7,11 +14,13 @@ try :
     import utils
     import configuration
     import sbe41
+    import sbe61
 except:
     import automaid.dives as dives
     import automaid.utils as utils
     import automaid.configuration as configuration
     import automaid.sbe41 as sbe41
+    import automaid.sbe61 as sbe61
 
 class ConfigurationParameter:
     name=None
@@ -67,12 +76,25 @@ class ConfigurationParameters:
         self.park_pressure_dbar = None
         if not diveConfig :
             return
+
+        # get ascent profil parameters
+        stage_ascent_profil = None
+        stage_park_profil = None
+        if diveConfig.stages :
+            print("diveConfig.stages not null")
+            for stage in diveConfig.stages:
+                print(stage.type)
+                if stage.type == "classic" and stage.profil :
+                    stage_park_profil = stage
+                if stage.type == "surfacing" and stage.profil :
+                    stage_ascent_profil = stage
+
         # get ascent speed
         self.ascent_speed_mbar_per_s = np.float32(8.0)
         if diveConfig.ascent_mbar_per_s :
             self.ascent_speed_mbar_per_s = np.float32(diveConfig.ascent_mbar_per_s)
-        if diveConfig.sbe41_pilots :
-            self.ascent_speed_mbar_per_s = np.float32(diveConfig.sbe41_pilots.speedcontrol)
+        if stage_ascent_profil :
+            self.ascent_speed_mbar_per_s = np.float32(stage_ascent_profil.profil.speed_control)
         # get park pressure
         self.park_pressure_mbar = None
         self.park_pressure_dbar = None
@@ -100,20 +122,16 @@ class ConfigurationParameters:
         self.ascent_end_threshold_dbar = np.float32(self.surface_mbar/100.0)
         # get sampling period in second
         self.sampling_period_s = None
-        if diveConfig.sbe41_parameters :
-            if int(diveConfig.sbe41_parameters.samplerate) == 1 :
-                self.sampling_period_s = np.float32(1)
-            elif int(diveConfig.sbe41_parameters.samplerate) == 0 :
-                self.sampling_period_s = np.float32(2)
+        if stage_ascent_profil :
+            self.sampling_period_s = 1
         # get speed min to start profile
         self.ascent_speed_min_mbar_per_s = None
-        if diveConfig.sbe41_pilots :
-            self.ascent_speed_min_mbar_per_s = np.float32(diveConfig.sbe41_pilots.speedstart)
+        if stage_ascent_profil :
+            self.ascent_speed_min_mbar_per_s = np.float32(stage_ascent_profil.profil.speed_start)
         # get ascent to surface timeout in sec
         self.ascent_to_surface_timeout_h = None
-        if diveConfig.stages :
-            if diveConfig.stages[-1].stage_type == "surfacing" and diveConfig.stages[-1].scientific_type == "SBE41":
-                self.ascent_to_surface_timeout_h = np.float32(diveConfig.stages[-1].duration_estimated_s/3600.0)
+        if stage_ascent_profil :
+            self.ascent_to_surface_timeout_h = np.float32(stage_ascent_profil.duration_estimated_s/3600.0)
         # get buoyancy reduction firdt threshold
         self.buoyancy_reduction_first_threshold_dbar = None
         if diveConfig.far_mbar :
@@ -134,7 +152,7 @@ class ConfigurationParameters:
         self.down_time_s = None
         self.down_time_h = None
         if diveConfig.stages :
-            if diveConfig.stages[-1].stage_type == "surfacing" :
+            if diveConfig.stages[-1].type == "surfacing" :
                 self.down_time_s = diveConfig.stages[-2].expiration_date_s
             else :
                 self.down_time_s = diveConfig.stages[-1].expiration_date_s
@@ -155,48 +173,48 @@ class ConfigurationParameters:
                 self.park_time_h = np.float32(diveConfig.stages[1].duration_estimated_s/3600.0)
         # get profile sampling methode
         self.profile_sampling_method = None
-        if diveConfig.sbe41_pilots :
-            self.profile_sampling_method = np.int32(diveConfig.sbe41_pilots.binaverageoutput)
+        if stage_ascent_profil :
+            self.profile_sampling_method = np.int32(stage_ascent_profil.profil.bin_average_output)
         # Target depth interval between final CTD samples when in the spot sampling mode.
         self.depth_interval_dbar = None
         if self.ascent_speed_mbar_per_s and self.sampling_period_s and self.profile_sampling_method == 0 :
             self.depth_interval_dbar = np.float32((self.ascent_speed_mbar_per_s * self.sampling_period_s)/100.0)
         # Depth intervals for bottom depth (algorithm of data reduction).
         self.profile_bottom_bin_interval_cbar = None
-        if diveConfig.sbe41_parameters :
-            self.profile_bottom_bin_interval_cbar = np.float32(diveConfig.sbe41_parameters.bottom_bin_interval*10.0)
+        if stage_ascent_profil :
+            self.profile_bottom_bin_interval_cbar = np.float32(np.float32(stage_ascent_profil.profil.bottom_bin_interval)*10.0)
         # Thickness of the slices for deep depths (algorithm of data reduction) (in dbars).
         self.profile_bottom_slices_tickness_dbar = None
-        if diveConfig.sbe41_parameters :
-            self.profile_bottom_slices_tickness_dbar = np.float32(diveConfig.sbe41_parameters.bottom_bin_size)
+        if stage_ascent_profil :
+            self.profile_bottom_slices_tickness_dbar = np.float32(stage_ascent_profil.profil.bottom_bin_size)
         # Include transition bins between depth zones (shallow/intermediate/bottom) (Yes=1/No=0).
         self.profile_include_transition_bin = None
-        if diveConfig.sbe41_parameters :
-            self.profile_include_transition_bin = np.int32(diveConfig.sbe41_parameters.includetransitionbin)
+        if stage_ascent_profil :
+            self.profile_include_transition_bin = np.int32(stage_ascent_profil.profil.include_transition_bin)
 
         self.profile_intermediate_bin_interval_cbar = None
-        if diveConfig.sbe41_parameters :
-            self.profile_intermediate_bin_interval_cbar = np.float32(diveConfig.sbe41_parameters.middle_bin_interval*10.0)
+        if stage_ascent_profil :
+            self.profile_intermediate_bin_interval_cbar = np.float32(np.float32(stage_ascent_profil.profil.middle_bin_interval)*10.0)
 
         self.profile_intermediate_slices_tickness_dbar = None
-        if diveConfig.sbe41_parameters :
-            self.profile_intermediate_slices_tickness_dbar = np.float32(diveConfig.sbe41_parameters.middle_bin_size)
+        if stage_ascent_profil :
+            self.profile_intermediate_slices_tickness_dbar = np.float32(stage_ascent_profil.profil.middle_bin_size)
 
         self.profile_surface_bin_interval_cbar = None
-        if diveConfig.sbe41_parameters :
-            self.profile_surface_bin_interval_cbar = np.float32(diveConfig.sbe41_parameters.top_bin_interval*10.0)
+        if stage_ascent_profil :
+            self.profile_surface_bin_interval_cbar = np.float32(np.float32(stage_ascent_profil.profil.top_bin_interval)*10.0)
 
         self.profile_surface_slices_tickness_dbar = None
-        if diveConfig.sbe41_parameters :
-            self.profile_surface_slices_tickness_dbar = np.float32(diveConfig.sbe41_parameters.top_bin_size)
+        if stage_ascent_profil :
+            self.profile_surface_slices_tickness_dbar = np.float32(stage_ascent_profil.profil.top_bin_size)
 
         self.pressure_threshold_data_reduction_shallow_to_intermediate_dbar = None
-        if diveConfig.sbe41_parameters :
-            self.pressure_threshold_data_reduction_shallow_to_intermediate_dbar = np.float32(diveConfig.sbe41_parameters.top_bin_max)
+        if stage_ascent_profil :
+            self.pressure_threshold_data_reduction_shallow_to_intermediate_dbar = np.float32(stage_ascent_profil.profil.top_bin_max)
 
         self.pressure_threshold_data_reduction_intermediate_to_deep_dbar = None
-        if diveConfig.sbe41_parameters :
-            self.pressure_threshold_data_reduction_intermediate_to_deep_dbar = np.float32(diveConfig.sbe41_parameters.middle_bin_max)
+        if stage_ascent_profil :
+            self.pressure_threshold_data_reduction_intermediate_to_deep_dbar = np.float32(stage_ascent_profil.profil.middle_bin_max)
 
         self.surface_timeout_h = None
         if self.connection_timeout_sec :
@@ -321,6 +339,9 @@ class Measurements:
         # End of transmissions
         self.list.append(Measurement(cycle_nb-1,800,disconnections[-1][1],"Time when last disconnection is done"))
         ########################################## Mission (cycle_nb) ######################################
+
+
+        stages = dive.configuration.stages
         mc = 100
         lines = utils.split_log_lines(dive.log_content)
         for line in lines :
@@ -343,48 +364,72 @@ class Measurements:
                 self.list.append(Measurement(cycle_nb,mc-11,pump[1],"Active pump"))
 
             if mc == 100 :
-                #detect Descent to park start Time (DST)
+                # detect Descent to park start Time (DST)
                 match = utils.find_timestamped_value(":\[DIVING.+\][0-9]+mbar reached .*", line)
                 if len(match) > 0 :
                     self.list.append(Measurement(cycle_nb,100,match[1],"Descent to park start Time (5 meters reached)"))
                     mc = 200
             elif mc == 200 :
-                # detect Descent end time (DET)
-                tree_per_cent_threshold = dive.configuration.stages[0].pressure_ref_mbar - (dive.configuration.stages[0].pressure_ref_mbar/100*3)
+                # Detect Descent end time (DET)
+                tree_per_cent_threshold = stages[0].pressure_ref_mbar - (stages[0].pressure_ref_mbar/100*3)
                 if (len(pressure) > 0)  and (currentPressure_mbar >= tree_per_cent_threshold) :
+                    # Stage[0] is not finishedD and 3% of reference is detected
                     self.list.append(Measurement(cycle_nb,200,currentPressure_time,"Descent end time (park zone detected)"))
                     mc = 300
+                match = utils.find_timestamped_value(":\[MAIN.+\]stage\[0\] complete.*", line)
+                if (len(match) > 0) :
+                    # Stage[0] is finished before reach 3% of reference
+                    self.list.append(Measurement(cycle_nb,200,currentPressure_time,"Descent end time (park zone detected)"))
+                    mc = 300
+                    if len(stages) < 2 or stages[1].type == "surfacing":
+                        # Stage[1] return to the surface => code 500
+                        self.list.append(Measurement(cycle_nb,300,match[1],"Park end time (second step finished)"))
+                        mc = 500
             elif mc == 300 :
-                # detect park end time (PET)
-                match = utils.find_timestamped_value(":\[MAIN.+\]stage\[1\] complete.*", line)
-                if len(match) > 0 :
-                    self.list.append(Measurement(cycle_nb,300,match[1],"Park end time (second step finished)"))
-                    mc = 400
+                # Detect Park end time (PET)
+                if len(stages) > 1 and stages[1].type == "classic":
+                    # Stage[1] maintain buoy in park => wait end of this stage
+                     match = utils.find_timestamped_value(":\[MAIN.+\]stage\[1\] complete.*", line)
+                     if len(match) > 0 :
+                         self.list.append(Measurement(cycle_nb,300,match[1],"Park end time (second step finished)"))
+                         mc = 400
+                         if len(stages) < 3 or stages[2].type == "surfacing":
+                            # Stage[2] return to the surface => code 500
+                            mc = 500
+                else :
+                    # Stage[0] is not finished and stage[1] return to surface
+                    match = utils.find_timestamped_value(":\[MAIN.+\]stage\[0\] complete.*", line)
+                    if len(match) > 0 :
+                        self.list.append(Measurement(cycle_nb,300,match[1],"Park end time (second step finished)"))
+                        mc = 500
             elif mc == 400 :
-                # detect deep descent end time (DDET)
-                tree_per_cent_threshold = dive.configuration.stages[-2].pressure_ref_mbar - (dive.configuration.stages[-2].pressure_ref_mbar/100*3)
+                # Detect deep descent end time (DDET)
+                tree_per_cent_threshold = stages[2].pressure_ref_mbar-(stages[2].pressure_ref_mbar/100*3)
                 if (len(pressure) > 0)  and (currentPressure_mbar >= tree_per_cent_threshold) :
                     self.list.append(Measurement(cycle_nb,400,currentPressure_time,"Deep descent end time (3% of profile detected))"))
                     mc = 500
-                match_surfacing = utils.find_timestamped_value(":\[STAGE.+\]Stage \[2\] surfacing.*", line)
-                match_deepest = utils.find_timestamped_value(":\[MAIN.+\]stage\[2\] complete.*", line)
-                if len(match_surfacing) > 0 :
-                    self.list.append(Measurement(cycle_nb,400,match_surfacing[1],"Deep descent end time (3rd step begin when surfacing)"))
-                    mc = 500
-                if len(match_deepest) > 0 :
-                    self.list.append(Measurement(cycle_nb,400,match_deepest[1],"Deep descent end time (3rd step is finished)"))
-                    mc = 500
             elif mc == 500 :
                 # detect ascent start time (AST)
-                match = utils.find_timestamped_value(":\[SBE41.+\]Speed start detected.*", line)
-                if len(match) > 0 :
-                    self.list.append(Measurement(cycle_nb,500,match[1],"Ascent start time (profile started)"))
-                    mc = 600
+                if stages[-1].type == "surfacing":
+                    match = utils.find_timestamped_value(":\[.+\]Start profil acquisitions.*", line)
+                    if len(match) > 0 :
+                        self.list.append(Measurement(cycle_nb,500,match[1],"Ascent start time (profile started)"))
+                        mc = 600
+                else :
+                    match = utils.find_timestamped_value(":\[.+\]surfacing.*", line)
+                    if len(match) > 0 :
+                        self.list.append(Measurement(cycle_nb,500,match[1],"Ascent start time (profile started)"))
+                        mc = 600
             elif mc == 600 :
                 # detect end of ascent (AET)
                 match = utils.find_timestamped_value(":\[STAGE.+\]The float reached the surface.*", line)
                 if len(match) > 0 :
                     self.list.append(Measurement(cycle_nb,600,match[1],"Ascent end time (profiler reach the surface)"))
+                    mc = 700
+                    break;
+                match_2 = utils.find_timestamped_value(":\[STAGE.+\]Mode changed from PROFILING to SLEEP.*", line)
+                if len(match_2) > 0 :
+                    self.list.append(Measurement(cycle_nb,600,match_2[1],"Ascent end time (profiler reach the surface)"))
                     mc = 700
                     break;
 
@@ -429,6 +474,7 @@ class Cycle :
     sbe41Profiles = None
     sbe41ProfileFileName = None
     sbe41ProfileEnvironnement = None
+    sbe61Profiles = None
 
     def __init__(self, cycleNb, dst=None, fst=None, det=None, pst=None, pet=None, ddet=None, dpst=None, dast=None, ast=None, aet=None, tst=None, fmt=None, flt=None, llt=None, lmt=None, tet=None):
         self.cycleNb = cycleNb
@@ -458,8 +504,7 @@ class Cycle :
         self.logNames = list()
         self.parameters = ConfigurationParameters()
         self.sbe41Profiles = sbe41.Profiles()
-        self.sbe41ProfileFileName = None
-        self.sbe41ProfileEnvironnement = None
+        self.sbe61Profiles = sbe61.Profiles()
 
 class Mission:
     missionNumber = None
@@ -522,13 +567,13 @@ class Cycles :
                 elif measure.code == 800 :
                     cycle.transmissionEndTime = measure.date
 
-            cycle.sbe41Profiles = dive.profiles
-            cycle.sbe41ProfileFileName = dive.s41_name
-            cycle.sbe41ProfileEnvironnement = dive.s41_environment
+            cycle.sbe41Profiles = dive.profilesS41
+            cycle.sbe61Profiles = dive.profilesS61
             cycle.station_name =  dive.station_name
             cycle.station_number = dive.station_number
             cycle.soft_version = dive.soft_version
             if dive.configuration:
+                print(dive.log_name)
                 cycle.parameters = ConfigurationParameters(dive.configuration)
                 self.parametersNb = len(cycle.parameters.list)
             if measures.clockOffset:

@@ -1,3 +1,10 @@
+# @Author: Frédéric Rocca <fro>
+# @Date:   2023-06-09T09:36:17+02:00
+# @Email:  frederic.rocca@osean.fr
+# @Filename: dives.py
+# @Last modified by:   fro
+# @Last modified time: 2023-06-28T16:08:24+02:00
+
 import glob
 import os
 import csv
@@ -220,7 +227,8 @@ class Dive:
             else:
                 print(("WARNING: No GPS synchronization after surfacing for \""
                        + str(self.mmd_name) + "\", \"" + str(self.log_name) + "\""))
-        #self.configuration = configuration.Configuration(self)
+        self.configuration = configuration.Configuration(self)
+        print(self.configuration)
 
     def generateJSON(self):
         json_object = {}

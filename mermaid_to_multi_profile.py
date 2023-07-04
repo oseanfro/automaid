@@ -1,3 +1,10 @@
+# @Author: Frédéric Rocca <fro>
+# @Date:   2023-06-09T09:36:17+02:00
+# @Email:  frederic.rocca@osean.fr
+# @Filename: mermaid_to_multi_profile.py
+# @Last modified by:   fro
+# @Last modified time: 2023-07-04T17:19:59+02:00
+
 import os
 import shutil
 import sys
@@ -8,7 +15,6 @@ import events
 import sbe41
 import re
 import utils
-import netCDF.init_values as init
 from obspy import UTCDateTime
 from netCDF4 import Dataset
 from netCDF4 import stringtochar
@@ -107,7 +113,7 @@ def create_nc_multi_prof_c_file_3_1(FloatWmoID,mfloat_nc_path,mCycles,ms41s):
         file_cdf.setncattr('user_manual_version', '3.1')
         file_cdf.setncattr('Conventions', 'Argo-3.1 CF-1.6')
         file_cdf.setncattr('featureType', 'trajectoryProfile')
-        file_cdf.setncattr('decoder_version', "autoNetCdf_v{0}".format(init.SOFTWARE_VERSION))
+        file_cdf.setncattr('decoder_version', "autoNetCdf_v{0}".format(1.0))
 
         dataTypeVar = file_cdf.createVariable('DATA_TYPE','S1',('STRING16',),fill_value=' ')
         dataTypeVar.setncattr('long_name', 'Data type')
@@ -384,40 +390,39 @@ def create_nc_multi_prof_c_file_3_1(FloatWmoID,mfloat_nc_path,mCycles,ms41s):
         configMissionNumber = []
 
         for cycle in mCycles.list :
-            if cycle.sbe41ProfileFileName :
-                for profile in cycle.sbe41Profiles :
-                    if cycle.parameters.profile_sampling_method > 0:
-                        verticalSamplingScheme.append("Primary sampling: averaged")
-                    else :
-                        verticalSamplingScheme.append("Primary sampling: discrete")
-                    floatSerial.append(cycle.station_name)
-                    station_number.append(cycle.station_number)
-                    firmwareVersion.append(cycle.soft_version)
-                    cyclesNb.append(cycle.cycleNb)
-                    julianDay.append(utils.toJuld(cycle.ascentStartTime))
-                    configMissionNumber.append(cycle.configMissionNumber)
-                    dataPressureResized = []
-                    dataSalinityResized = []
-                    dataTemperatureResized = []
-                    if profile.data_pressure:
-                        dataPressureResized = profile.data_pressure[:]
-                        for x in range(len(dataPressureResized),nLevelsDimSize):
-                            dataPressureResized.append(np.float32(99999.0))
-                        press_data.append(dataPressureResized)
-                    if profile.data_salinity:
-                        dataSalinityResized = profile.data_salinity[:]
-                        for x in range(len(dataSalinityResized),nLevelsDimSize):
-                            dataSalinityResized.append(np.float32(99999.0))
-                        salinity_data.append(dataSalinityResized)
-                    if profile.data_temperature:
-                        dataTemperatureResized = profile.data_temperature[:]
-                        for x in range(len(dataTemperatureResized),nLevelsDimSize):
-                            dataTemperatureResized.append(np.float32(99999.0))
-                        temp_data.append(dataTemperatureResized)
-                    gps = cycle.locations[0]
-                    julianDayPosition.append(utils.toJuld(UTCDateTime(gps.date)))
-                    latitude.append(gps.latitude)
-                    longitude.append(gps.longitude)
+            for profile in cycle.sbe61Profiles :
+                if cycle.parameters.profile_sampling_method > 0:
+                    verticalSamplingScheme.append("Primary sampling: averaged")
+                else :
+                    verticalSamplingScheme.append("Primary sampling: discrete")
+                floatSerial.append(cycle.station_name)
+                station_number.append(cycle.station_number)
+                firmwareVersion.append(cycle.soft_version)
+                cyclesNb.append(cycle.cycleNb)
+                julianDay.append(utils.toJuld(cycle.ascentStartTime))
+                configMissionNumber.append(cycle.configMissionNumber)
+                dataPressureResized = []
+                dataSalinityResized = []
+                dataTemperatureResized = []
+                if profile.data_pressure:
+                    dataPressureResized = profile.data_pressure[:]
+                    for x in range(len(dataPressureResized),nLevelsDimSize):
+                        dataPressureResized.append(np.float32(99999.0))
+                    press_data.append(dataPressureResized)
+                if profile.data_salinity:
+                    dataSalinityResized = profile.data_salinity[:]
+                    for x in range(len(dataSalinityResized),nLevelsDimSize):
+                        dataSalinityResized.append(np.float32(99999.0))
+                    salinity_data.append(dataSalinityResized)
+                if profile.data_temperature:
+                    dataTemperatureResized = profile.data_temperature[:]
+                    for x in range(len(dataTemperatureResized),nLevelsDimSize):
+                        dataTemperatureResized.append(np.float32(99999.0))
+                    temp_data.append(dataTemperatureResized)
+                gps = cycle.locations[0]
+                julianDayPosition.append(utils.toJuld(UTCDateTime(gps.date)))
+                latitude.append(gps.latitude)
+                longitude.append(gps.longitude)
 
         ##################################################################################################
         ###                                                                                             ##
@@ -440,6 +445,8 @@ def create_nc_multi_prof_c_file_3_1(FloatWmoID,mfloat_nc_path,mCycles,ms41s):
         putNString(projectNameVar,'ARGOMermaid',nProfDimSize,string64DimSize)
         putNString(piNameVar,'Frederic Rocca',nProfDimSize,string64DimSize)
         putNString(stationParametersVar,param_names,nProfDimSize,string64DimSize)
+
+        print(cyclesNb)
         cycleNumberVar[:] = cyclesNb
         putString(directionVar,nProfDimSize*'A',nProfDimSize)
         putNString(dataCentreVar,cfg.history_institution,nProfDimSize,string2DimSize)

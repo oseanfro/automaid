@@ -1,3 +1,10 @@
+# @Author: Frédéric Rocca <fro>
+# @Date:   2023-06-09T09:36:17+02:00
+# @Email:  frederic.rocca@osean.fr
+# @Filename: mermaid_to_mono_profile.py
+# @Last modified by:   fro
+# @Last modified time: 2023-07-03T14:33:08+02:00
+
 import os
 import shutil
 import sys
@@ -8,7 +15,6 @@ import events
 import sbe41
 import re
 import utils
-import netCDF.init_values as init
 from obspy import UTCDateTime
 from netCDF4 import Dataset
 from netCDF4 import stringtochar
@@ -44,8 +50,8 @@ def putNString(var,string,nb,varlen):
 
 def create_nc_mono_prof_c_file_3_1(FloatWmoID,mfloat_nc_path,mCycles,ms41s):
         for cycle in mCycles.list :
-            if cycle.sbe41ProfileFileName :
-                for profile in cycle.sbe41Profiles :
+            if cycle.sbe61Profiles :
+                for profile in cycle.sbe61Profiles :
 
                     if cycle.cycleNb < 1000 :
                         profCFilePath = mfloat_nc_path + "R" +FloatWmoID + "_"+f"{cycle.cycleNb:03}"+".nc"
@@ -110,7 +116,7 @@ def create_nc_mono_prof_c_file_3_1(FloatWmoID,mfloat_nc_path,mCycles,ms41s):
                     file_cdf.setncattr('user_manual_version', '3.1')
                     file_cdf.setncattr('Conventions', 'Argo-3.1 CF-1.6')
                     file_cdf.setncattr('featureType', 'trajectoryProfile')
-                    file_cdf.setncattr('decoder_version', "autoNetCdf_v{0}".format(init.SOFTWARE_VERSION))
+                    file_cdf.setncattr('decoder_version', "autoNetCdf_v{0}".format(1.0))
 
                     dataTypeVar = file_cdf.createVariable('DATA_TYPE','S1',('STRING16',),fill_value=' ')
                     dataTypeVar.setncattr('long_name', 'Data type')

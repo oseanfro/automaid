@@ -1,3 +1,10 @@
+# @Author: Frédéric Rocca <fro>
+# @Date:   2023-06-09T09:36:17+02:00
+# @Email:  frederic.rocca@osean.fr
+# @Filename: main.py
+# @Last modified by:   fro
+# @Last modified time: 2023-07-03T14:44:24+02:00
+
 import os
 import shutil
 import glob
@@ -16,6 +23,11 @@ try:
     import decrypt
     import vitals
     import databases
+    import argo
+    import mermaid_to_mono_profile
+    import mermaid_to_multi_profile
+    import mermaid_to_trajectory
+    import mermaid_to_metadata
     from arguments import processed_directory
     from arguments import server_directory
     from arguments import events_plotly
@@ -31,6 +43,11 @@ except:
     import automaid.decrypt as decrypt
     import automaid.vitals as vitals
     import automaid.databases as databases
+    import automaid.argo as argo
+    import automaid.mermaid_to_mono_profile as mermaid_to_mono_profile
+    import automaid.mermaid_to_multi_profile as mermaid_to_multi_profile
+    import automaid.mermaid_to_trajectory as mermaid_to_trajectory
+    import automaid.mermaid_to_metadata as mermaid_to_metadata
     from automaid.arguments import processed_directory
     from automaid.arguments import server_directory
     from automaid.arguments import events_plotly
@@ -49,6 +66,9 @@ def generate_processed_files(mfloat, mfloat_path):
     ms61s = sbe61.Profiles(mfloat_path)
     # Process data for each dive
     mdives = dives.Dives(mfloat_path, mevents, ms41s,ms61s)
+    # Organise data as cycles
+    mCycles = argo.Cycles(mdives)
+    print(mCycles)
 
     # Compute files for each dive
     for dive in mdives.get_dives():
@@ -91,6 +111,18 @@ def generate_processed_files(mfloat, mfloat_path):
     vitals.plot_battery_voltage(mfloat_path, mfloat + ".vit")
     vitals.plot_internal_pressure(mfloat_path, mfloat + ".vit")
     vitals.plot_pressure_offset(mfloat_path, mfloat + ".vit")
+
+    mfloat_nc_profiles_path = os.path.join(mfloat_path, "profiles/")
+    print(mfloat_path)
+    print(mfloat_nc_profiles_path)
+    if not os.path.exists(mfloat_nc_profiles_path):
+        os.mkdir(mfloat_nc_profiles_path)
+
+    mermaid_to_mono_profile.create_nc_mono_prof_c_file_3_1(mfloat,mfloat_nc_profiles_path,mCycles,ms61s)
+    mermaid_to_trajectory.create_nc_trajectory_file_3_2(mfloat,mfloat_path,mCycles,ms61s)
+    mermaid_to_metadata.create_nc_metadata_3_1(mfloat,mfloat_path,mCycles,ms61s)
+    mermaid_to_multi_profile.create_nc_multi_prof_c_file_3_1(mfloat,mfloat_path,mCycles,ms61s)
+
 
     return (mdives)
 
