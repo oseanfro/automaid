@@ -1,3 +1,10 @@
+# @Author: Frédéric Rocca <fro>
+# @Date:   2023-06-09T09:36:17+02:00
+# @Email:  frederic.rocca@osean.fr
+# @Filename: utils.py
+# @Last modified by:   fro
+# @Last modified time: 2023-07-06T16:20:51+02:00
+
 # -*-coding:Utf-8 -*
 import re
 import glob
@@ -176,11 +183,9 @@ def verify_format_log(log):
     for line in lines:
         catch = re.findall("(\d+):[(\w+ *),(\d+)].*", line)
         if len(catch) > 0:
-            print((catch[0][0]))
             if len(catch[0][0]) > 10 :
                 error_log = True
                 continue
-            print((catch[0]))
             if len(catch[0] < 3) :
                 error_log = True
                 continue

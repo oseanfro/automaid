@@ -1,3 +1,10 @@
+# @Author: Frédéric Rocca <fro>
+# @Date:   2023-06-09T09:36:17+02:00
+# @Email:  frederic.rocca@osean.fr
+# @Filename: arguments.py
+# @Last modified by:   fro
+# @Last modified time: 2023-07-06T15:17:18+02:00
+
 import datetime
 
 # Path for input datas
@@ -14,6 +21,9 @@ valve_ploted = True
 pump_ploted = True
 mermaid_ploted = True
 sbe61_ploted = True
+
+# Argo
+generate_ncdf_files = True
 
 # Plot interactive figures in HTML format for acoustic events
 events_plotly = False

@@ -3,9 +3,10 @@
 # @Email:  frederic.rocca@osean.fr
 # @Filename: main.py
 # @Last modified by:   fro
-# @Last modified time: 2023-07-03T14:44:24+02:00
+# @Last modified time: 2023-07-06T15:18:15+02:00
 
 import os
+import json
 import shutil
 import glob
 import datetime
@@ -28,11 +29,9 @@ try:
     import mermaid_to_multi_profile
     import mermaid_to_trajectory
     import mermaid_to_metadata
-    from arguments import processed_directory
-    from arguments import server_directory
-    from arguments import events_plotly
-    from arguments import generate_dive_csv_file
-    from arguments import generate_profil_csv_file
+    import mermaid_to_technical
+    import argo_metadata
+    import arguments
 except:
     import automaid.kml as kml
     import automaid.dives as dives
@@ -48,11 +47,8 @@ except:
     import automaid.mermaid_to_multi_profile as mermaid_to_multi_profile
     import automaid.mermaid_to_trajectory as mermaid_to_trajectory
     import automaid.mermaid_to_metadata as mermaid_to_metadata
-    from automaid.arguments import processed_directory
-    from automaid.arguments import server_directory
-    from automaid.arguments import events_plotly
-    from automaid.arguments import generate_dive_csv_file
-    from automaid.arguments import generate_profil_csv_file
+    import automaid.mermaid_to_technical as mermaid_to_metadata
+    import automaid.arguments as arguments
 
 redo = "True"
 
@@ -66,10 +62,6 @@ def generate_processed_files(mfloat, mfloat_path):
     ms61s = sbe61.Profiles(mfloat_path)
     # Process data for each dive
     mdives = dives.Dives(mfloat_path, mevents, ms41s,ms61s)
-    # Organise data as cycles
-    mCycles = argo.Cycles(mdives)
-    print(mCycles)
-
     # Compute files for each dive
     for dive in mdives.get_dives():
         # Create the directory
@@ -83,7 +75,7 @@ def generate_processed_files(mfloat, mfloat_path):
         dive.generate_s41_environment_file();
         dive.generate_s61_environment_file();
         # Generate dive plot
-        dive.generate_dive_plotly(generate_dive_csv_file)
+        dive.generate_dive_plotly(arguments.generate_dive_csv_file)
 
     # Compute clock drift correction for each event
     for dive in mdives.get_dives():
@@ -99,12 +91,12 @@ def generate_processed_files(mfloat, mfloat_path):
 
     # Generate plot and sac files
     for dive in mdives.get_dives():
-        if events_plotly:
+        if arguments.events_plotly:
             dive.generate_events_plotly()
         else :
             dive.generate_events_plot()
         dive.generate_events_sac()
-        dive.generate_profile_plotly(generate_profil_csv_file)
+        dive.generate_profile_plotly(arguments.generate_profil_csv_file)
 
     # Plot vital data
     kml.generate(mfloat_path, mfloat, mdives.get_dives())
@@ -113,16 +105,40 @@ def generate_processed_files(mfloat, mfloat_path):
     vitals.plot_pressure_offset(mfloat_path, mfloat + ".vit")
 
     mfloat_nc_profiles_path = os.path.join(mfloat_path, "profiles/")
-    print(mfloat_path)
-    print(mfloat_nc_profiles_path)
     if not os.path.exists(mfloat_nc_profiles_path):
         os.mkdir(mfloat_nc_profiles_path)
 
-    mermaid_to_mono_profile.create_nc_mono_prof_c_file_3_1(mfloat,mfloat_nc_profiles_path,mCycles,ms61s)
-    mermaid_to_trajectory.create_nc_trajectory_file_3_2(mfloat,mfloat_path,mCycles,ms61s)
-    mermaid_to_metadata.create_nc_metadata_3_1(mfloat,mfloat_path,mCycles,ms61s)
-    mermaid_to_multi_profile.create_nc_multi_prof_c_file_3_1(mfloat,mfloat_path,mCycles,ms61s)
 
+    if arguments.generate_ncdf_files:
+        ##################################################################################################
+        ###                                                                                             ##
+        ###                                     ARGO file management                                    ##
+        ###                                                                                             ##
+        ##################################################################################################
+        # Organise data as cycles
+        mCycles = argo.Cycles(mdives)
+        print(mCycles)
+        ##################################################################################################
+        ###                                                                                             ##
+        ###                                     Read Metada.json file                                   ##
+        ###                                                                                             ##
+        ##################################################################################################
+        metadata = None
+        metadata_file_path = os.path.join(mfloat_path, "metadata.json")
+        if not os.path.exists(metadata_file_path):
+            argo_metadata.generate(metadata_file_path);
+        with open(metadata_file_path,"r") as f:
+            metadata = json.loads(f.read())
+        ##################################################################################################
+        ###                                                                                             ##
+        ###                                     Generate ARGO files                                     ##
+        ###                                                                                             ##
+        ##################################################################################################
+        mermaid_to_metadata.create_nc_metadata_3_1(mfloat,mfloat_path,mCycles,metadata)
+        mermaid_to_trajectory.create_nc_trajectory_file_3_2(mfloat,mfloat_path,mCycles,metadata)
+        mermaid_to_technical.create_nc_technical_file_3_2(mfloat,mfloat_path,mCycles,metadata)
+        mermaid_to_multi_profile.create_nc_multi_prof_c_file_3_1(mfloat,mfloat_path,mCycles,metadata)
+        mermaid_to_mono_profile.create_nc_mono_prof_c_file_3_1(mfloat,mfloat_nc_profiles_path,mCycles,metadata)
 
     return (mdives)
 
@@ -236,8 +252,8 @@ def main():
     if "scripts" in os.listdir("."):
         os.chdir("scripts")
 
-    outputPath = processed_directory
-    dataPath = server_directory
+    outputPath = arguments.processed_directory
+    dataPath = arguments.server_directory
 
     print(outputPath)
     print(dataPath)

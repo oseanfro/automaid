@@ -1,3 +1,10 @@
+# @Author: Frédéric Rocca <fro>
+# @Date:   2023-06-09T09:36:17+02:00
+# @Email:  frederic.rocca@osean.fr
+# @Filename: sbe41.py
+# @Last modified by:   fro
+# @Last modified time: 2023-07-06T12:50:56+02:00
+
 # -*- coding: utf-8 -*-
 
 import os
@@ -95,18 +102,6 @@ class Profiles:
             if begin < profile.date < end:
                 catched_profiles.append(profile)
         return catched_profiles
-    def get_N_LEVELS(self):
-        nlevel = 0
-        for profile in self.profiles:
-            if len(profile.data_pressure) > nlevel:
-                nlevel = len(profile.data_pressure)
-        return nlevel
-    def get_N_PROF(self):
-        return len(self.profiles)
-    def get_N_PARAMS(self):
-        return len(self.params)
-    def get_PARAMS(self):
-        return self.params
 
 class Profile:
     date = None

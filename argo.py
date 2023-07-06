@@ -3,7 +3,7 @@
 # @Email:  frederic.rocca@osean.fr
 # @Filename: argo.py
 # @Last modified by:   fro
-# @Last modified time: 2023-07-04T17:51:04+02:00
+# @Last modified time: 2023-07-06T14:58:57+02:00
 
 import re
 from obspy import UTCDateTime
@@ -81,9 +81,7 @@ class ConfigurationParameters:
         stage_ascent_profil = None
         stage_park_profil = None
         if diveConfig.stages :
-            print("diveConfig.stages not null")
             for stage in diveConfig.stages:
-                print(stage.type)
                 if stage.type == "classic" and stage.profil :
                     stage_park_profil = stage
                 if stage.type == "surfacing" and stage.profil :
@@ -273,6 +271,8 @@ class Measurement:
     longitude=None
     latitude=None
     description=None
+    is_technical=False
+    technical_value=None
     def __init__(self,cycle,code,date,description,longitude=None,latitude=None,pressure=None,temperature=None,salinity=None):
         self.cycle = cycle
         self.code = code
@@ -280,17 +280,17 @@ class Measurement:
         self.date = date
         self.description = description
         if pressure :
-            self.pressure = pressure
+            self.pressure = np.float64(pressure) / np.float64(10.0)
         else :
-            self.pressure = np.float32(99999.0)
+            self.pressure = np.float64(99999.0)
         if temperature :
-            self.temperature = temperature
+            self.temperature = np.float64(temperature) / np.float64(10000.0)
         else :
-            self.temperature = np.float32(99999.0)
+            self.temperature = np.float64(99999.0)
         if salinity :
-            self.salinity = salinity
+            self.salinity = np.float64(salinity) / np.float64(1000.0)
         else :
-            self.salinity = np.float32(99999.0)
+            self.salinity = np.float64(99999.0)
         if longitude :
             self.longitude = longitude
         else :
@@ -349,19 +349,88 @@ class Measurements:
             if len(pressure) > 0 :
                 currentPressure_mbar = int(pressure[0])
                 currentPressure_time = pressure[1]
+                measure = Measurement(cycle_nb,mc-10,currentPressure_time,"PRESSURE_BladderNow_dbar")
+                measure.is_technical = True
+                measure.technical_value = np.float64(pressure[0])/100.0
+                self.list.append(measure)
+
+            internal_pressure = utils.find_timestamped_value("\[MAIN.+\]internal pressure.*([0-9]+)Pa", line)
+            if len(internal_pressure) > 0 :
+                measure = Measurement(cycle_nb,mc-10,internal_pressure[1],"PRESSURE_InternalVacuum_mbar")
+                measure.is_technical = True
+                measure.technical_value = np.float64(internal_pressure[0])/100.0
+                self.list.append(measure)
+
+            pump_battery = utils.find_timestamped_value(":\[PUMP.+\]battery.*([0-9]+)mV,.*([0-9]+)uA.*P+([0-9]+)mbar", line)
+            if len(pump_battery) > 0 :
+                measure = Measurement(cycle_nb,mc-10,pump_battery[1],"VOLTAGE_BatteryPumpOn_volts")
+                measure.is_technical = True
+                measure.technical_value = np.float64(pump_battery[0][0])/1000.0
+                self.list.append(measure)
+                measure = Measurement(cycle_nb,mc-10,pump_battery[1],"CURRENT_BatteryPumpOn_mA")
+                measure.is_technical = True
+                measure.technical_value = np.float64(pump_battery[0][1])/1000.0
+                self.list.append(measure)
+
+            valve_battery = utils.find_timestamped_value(":\[VALVE.+\]battery.*([0-9]+)mV,.*([0-9]+)uA.*P+([0-9]+)mbar", line)
+            if len(valve_battery) > 0 :
+                measure = Measurement(cycle_nb,mc-10,valve_battery[1],"VOLTAGE_BatteryValveOn_volts")
+                measure.is_technical = True
+                measure.technical_value = np.float64(valve_battery[0][0])/1000.0
+                self.list.append(measure)
+                measure = Measurement(cycle_nb,mc,valve_battery[1],"CURRENT_BatteryValveOn_mA")
+                measure.is_technical = True
+                measure.technical_value = np.float64(valve_battery[0][1])/1000.0
+                self.list.append(measure)
+
+            bypass_close_battery = utils.find_timestamped_value(":\[BYPASS.+\]battery.*([0-9]+)mV,.*([0-9]+)uA.*(bypass closing),P+([0-9]+)mbar", line)
+            if len(bypass_close_battery) > 0 :
+                measure = Measurement(cycle_nb,mc-10,bypass_close_battery[1],"VOLTAGE_BatteryValveAirOn_volts")
+                measure.is_technical = True
+                measure.technical_value = np.float64(bypass_close_battery[0][0])/1000.0
+                self.list.append(measure)
+                measure = Measurement(cycle_nb,mc-10,bypass_close_battery[1],"CURRENT_BatteryValveAirOn_mA")
+                measure.is_technical = True
+                measure.technical_value = np.float64(bypass_close_battery[0][1])/1000.0
+                self.list.append(measure)
+
+            bypass_open_battery = utils.find_timestamped_value(":\[BYPASS.+\]battery.*([0-9]+)mV,.*([0-9]+)uA.*(bypass opening),P+([0-9]+)mbar", line)
+            if len(bypass_open_battery) > 0 :
+                measure = Measurement(cycle_nb,mc-10,bypass_open_battery[1],"VOLTAGE_BatteryPumpAirOn_volts")
+                measure.is_technical = True
+                measure.technical_value = np.float64(bypass_open_battery[0][0])/1000.0
+                self.list.append(measure)
+                measure = Measurement(cycle_nb,mc-10,bypass_open_battery[1],"CURRENT_BatteryPumpAirOn_mA")
+                measure.is_technical = True
+                measure.technical_value = np.float64(bypass_open_battery[0][1])/1000.0
+                self.list.append(measure)
 
             #detect bypass line
-            bypass = utils.find_timestamped_value(":\[BYPASS.+\].*opening.*[0-9]+ms", line)
+            bypass = utils.find_timestamped_value(":\[BYPASS.+\].*opening ([0-9]+)ms", line)
             if len(bypass) > 0 :
-                self.list.append(Measurement(cycle_nb,mc-11,bypass[1],"Active bypass"))
+                measure = Measurement(cycle_nb,mc-10,bypass[1],"TIME_BuoyancyReductionActionAtSurface_seconds")
+                measure.is_technical = True
+                measure.technical_value = np.float64(bypass[0])/1000.0
+                self.list.append(measure)
             #detect valve line
-            valve = utils.find_timestamped_value(":\[VALVE.+\].*opening.*[0-9]+ms", line)
+            valve = utils.find_timestamped_value(":\[VALVE.+\].*opening ([0-9]+)ms", line)
             if len(valve) > 0 :
-                self.list.append(Measurement(cycle_nb,mc-11,valve[1],"Active valve"))
+                measure = Measurement(cycle_nb,mc-10,valve[1],"TIME_Valve_seconds")
+                measure.is_technical = True
+                measure.technical_value = np.float64(valve[0])/1000.0
+                self.list.append(measure)
             #detect pump line
-            pump = utils.find_timestamped_value(":\[PUMP.+\].*during.*[0-9]+ms", line)
+            pump = utils.find_timestamped_value(":\[PUMP.+\].*during ([0-9]+)ms", line)
             if len(pump) > 0 :
-                self.list.append(Measurement(cycle_nb,mc-11,pump[1],"Active pump"))
+                measure = Measurement(cycle_nb,mc-10,pump[1],"TIME_PumpMotor_seconds")
+                measure.is_technical = True
+                measure.technical_value = np.float64(pump[0])/1000.0
+                self.list.append(measure)
+
+            #detect pressure, temperature and salinity measure
+            pts = utils.find_timestamped_value(":\[SBE61.+\]P.*\+(\d+),T.*\+(\d+),S(\d+)", line)
+            if len(pts) > 0 :
+                self.list.append(Measurement(cycle_nb,mc-10,pts[1],"SBE61 drift measure",None,None,int(pts[0][0]),int(pts[0][1]),int(pts[0][2])))
 
             if mc == 100 :
                 # detect Descent to park start Time (DST)
@@ -468,6 +537,7 @@ class Cycle :
     configMissionNumber = None
     locations = None
     measures = None
+    technicalParameters = None
     parameters = None
     launchParameters = None
     logNames = None
@@ -501,6 +571,7 @@ class Cycle :
         self.stages = list()
         self.locations = list()
         self.measures = list()
+        self.technicalParameters = list()
         self.logNames = list()
         self.parameters = ConfigurationParameters()
         self.sbe41Profiles = sbe41.Profiles()
@@ -532,14 +603,10 @@ class Cycles :
             if dive.log_name not in cycle.logNames :
                 cycle.logNames.append(dive.log_name)
             for measure in measures.list :
-                if measure.cycle > cycleNb :
-                    self.list.append(cycle)
-                    cycleNb = cycleNb + 1
-                    cycle = Cycle(cycleNb)
-                    if dive.log_name not in cycle.logNames :
-                        cycle.logNames.append(dive.log_name)
-
-                cycle.measures.append(measure)
+                if measure.is_technical:
+                    cycle.technicalParameters.append(measure)
+                else :
+                    cycle.measures.append(measure)
                 if measure.code == 100 :
                     cycle.descentStartTime = measure.date
                 elif measure.code == 200 :
@@ -566,6 +633,11 @@ class Cycles :
                     cycle.lastMessageTime = measure.date
                 elif measure.code == 800 :
                     cycle.transmissionEndTime = measure.date
+                    self.list.append(cycle)
+                    cycleNb = cycleNb + 1
+                    cycle = Cycle(cycleNb)
+                    if dive.log_name not in cycle.logNames :
+                        cycle.logNames.append(dive.log_name)
 
             cycle.sbe41Profiles = dive.profilesS41
             cycle.sbe61Profiles = dive.profilesS61
@@ -573,7 +645,6 @@ class Cycles :
             cycle.station_number = dive.station_number
             cycle.soft_version = dive.soft_version
             if dive.configuration:
-                print(dive.log_name)
                 cycle.parameters = ConfigurationParameters(dive.configuration)
                 self.parametersNb = len(cycle.parameters.list)
             if measures.clockOffset:
@@ -671,6 +742,26 @@ class Cycles :
         for cycle in self.list :
             n_measurements += len(cycle.measures)
         return n_measurements
+    def get_N_TECHNICAL(self) :
+        n_technical = 0
+        for cycle in self.list :
+            n_technical += len(cycle.technicalParameters)
+        return n_technical
+    def get_N_LEVELS(self):
+        nlevel = 0
+        for cycle in self.list:
+            if cycle.sbe61Profiles:
+                for profil in cycle.sbe61Profiles :
+                    if len(profil.data_pressure) > nlevel:
+                        nlevel = len(profil.data_pressure)
+        return nlevel
+    def get_N_PROF(self):
+        nprof = 0
+        for cycle in self.list:
+            if cycle.sbe61Profiles:
+                nprof += len(cycle.sbe61Profiles)
+        return nprof
+        return len(self.params)
     def get_station_nb(self) :
         for cycle in self.list :
             if cycle.station_number :

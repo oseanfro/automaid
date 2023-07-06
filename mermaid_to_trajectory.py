@@ -3,9 +3,10 @@
 # @Email:  frederic.rocca@osean.fr
 # @Filename: mermaid_to_trajectory.py
 # @Last modified by:   fro
-# @Last modified time: 2023-07-03T14:33:29+02:00
+# @Last modified time: 2023-07-06T16:02:06+02:00
 
 import os
+import json
 import shutil
 import sys
 import decrypt
@@ -20,8 +21,8 @@ from netCDF4 import Dataset
 from netCDF4 import stringtochar
 from datetime import datetime,timezone
 import numpy as np
-import mermaid_to_nc_cfg as cfg
 import configuration
+import argo_metadata
 
 def get_data_from_nc_file(mfloat_nc_path,dataDict) :
     rd_cdf = Dataset(mfloat_nc_path, "r", format="NETCDF3_CLASSIC")
@@ -48,31 +49,36 @@ def putString(var,string,varlen):
 def putNString(var,string,nb,varlen):
     putStringArray(var,[string]*nb,varlen)
 
-def create_nc_trajectory_file_3_2(FloatWmoID,mfloat_nc_path,mCycles,ms41s):
+def create_nc_trajectory_file_3_2(FloatWmoID,mfloat_nc_path,mCycles,metadata):
     trajectoryFilePath = mfloat_nc_path + FloatWmoID + "_Rtraj.nc"
     if os.path.exists(trajectoryFilePath):
         os.remove(trajectoryFilePath)
 
     file_cdf = Dataset(trajectoryFilePath, "w", format="NETCDF3_CLASSIC")
     print(trajectoryFilePath)
+
+    param_names = []
+    for meta_params in metadata["PARAMETERS"]:
+        param_names.append(meta_params["PARAM_NAME"])
     ##################################################################################################
     ###                                                                                             ##
     ###                                     Create Dimensions                                       ##
     ###                                                                                             ##
     ##################################################################################################
-    dateTimeDim = file_cdf.createDimension('DATE_TIME', 14);
-    string256Dim = file_cdf.createDimension('STRING256', 256);
-    string64Dim = file_cdf.createDimension('STRING64', 64);
-    string32Dim = file_cdf.createDimension('STRING32', 32);
-    string16Dim = file_cdf.createDimension('STRING16', 16);
-    string8Dim = file_cdf.createDimension('STRING8', 8);
-    string4Dim = file_cdf.createDimension('STRING4', 4);
-    string2Dim = file_cdf.createDimension('STRING2', 2);
-    nParamDim = file_cdf.createDimension('N_PARAM', ms41s.get_N_PARAMS());
-    nCycleDim = file_cdf.createDimension('N_CYCLE', mCycles.get_N_CYCLE());
-    nMeasurementDim = file_cdf.createDimension('N_MEASUREMENT', mCycles.get_N_MEASUREMENTS());
-    nCalibDim = file_cdf.createDimension('N_CALIB',1);
-    nHistoryDim = file_cdf.createDimension('N_HISTORY',1);
+    dateTimeDim = file_cdf.createDimension('DATE_TIME', 14)
+    string256Dim = file_cdf.createDimension('STRING256', 256)
+    string64Dim = file_cdf.createDimension('STRING64', 64)
+    string32Dim = file_cdf.createDimension('STRING32', 32)
+    string16Dim = file_cdf.createDimension('STRING16', 16)
+    string8Dim = file_cdf.createDimension('STRING8', 8)
+    string4Dim = file_cdf.createDimension('STRING4', 4)
+    string2Dim = file_cdf.createDimension('STRING2', 2)
+    nParamDim = file_cdf.createDimension('N_PARAM', len(metadata["PARAMETERS"]))
+    nCycleDim = file_cdf.createDimension('N_CYCLE', mCycles.get_N_CYCLE())
+    nMeasurementDim = file_cdf.createDimension('N_MEASUREMENT', mCycles.get_N_MEASUREMENTS())
+    nCalibDim = file_cdf.createDimension('N_CALIB_PARAM',1)
+    nCalibDim = file_cdf.createDimension('N_CALIB_JULD',1)
+    nHistoryDim = file_cdf.createDimension('N_HISTORY',1)
 
     nParamDimSize = len(nParamDim)
     nMeasurementDimSize = len(nMeasurementDim)
@@ -97,16 +103,16 @@ def create_nc_trajectory_file_3_2(FloatWmoID,mfloat_nc_path,mCycles,ms41s):
     file_cdf.setncattr('source','Argo float')
 
     currentDate = datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S");
-    globalHistoryText = currentDate + ' creation; ';
+    globalHistoryText = metadata["DATE_CREATION"] + ' creation; ';
     globalHistoryText += currentDate + ' last update (osean float converting raw data)'
 
     file_cdf.setncattr('history', globalHistoryText)
     file_cdf.setncattr('references', 'http://www.argodatamgt.org/Documentation')
-    file_cdf.setncattr('user_manual_version', '3.4')
+    file_cdf.setncattr('user_manual_version', '3.41.1')
     file_cdf.setncattr('Conventions', 'Argo-3.2 CF-1.6')
     file_cdf.setncattr('featureType', 'trajectory')
 
-    dataTypeVar = file_cdf.createVariable('DATA_TYPE','S1',('STRING16',),fill_value=' ')
+    dataTypeVar = file_cdf.createVariable('DATA_TYPE','S1',('STRING32',),fill_value=' ')
     dataTypeVar.setncattr('long_name', 'Data type')
     dataTypeVar.setncattr('conventions', 'Argo reference table 1')
 
@@ -241,18 +247,16 @@ def create_nc_trajectory_file_3_2(FloatWmoID,mfloat_nc_path,mCycles,ms41s):
     paramAdjVar = {}
     paramAdjQcVar = {}
     paramAdjErrVar = {}
-    paramMed = {}
-    paramStd = {}
-    for param in ms41s.get_PARAMS() :
+    for param in metadata["PARAMETERS"] :
         paramVar[param["PARAM_NAME"]] = file_cdf.createVariable(param["PARAM_NAME"],param["NC_TYPE"],('N_MEASUREMENT',),fill_value=param["FILL_VALUE"])
         paramVar[param["PARAM_NAME"]].setncattr('long_name', param["LONG_NAME"]);
         paramVar[param["PARAM_NAME"]].setncattr('standard_name', param["STANDARD_NAME"]);
-        paramVar[param["PARAM_NAME"]].setncattr('units', param["UNITS"]);
+        paramVar[param["PARAM_NAME"]].setncattr('units', param["PARAMETER_UNITS"]);
         paramVar[param["PARAM_NAME"]].setncattr('valid_min', param["VALID_MIN"]);
         paramVar[param["PARAM_NAME"]].setncattr('valid_max', param["VALID_MAX"]);
         paramVar[param["PARAM_NAME"]].setncattr('C_format', param["C_FORMAT"]);
         paramVar[param["PARAM_NAME"]].setncattr('FORTRAN_format', param["FORTRAN_FORMAT"]);
-        paramVar[param["PARAM_NAME"]].setncattr('resolution', param["RESOLUTION"]);
+        paramVar[param["PARAM_NAME"]].setncattr('resolution', param["PARAMETER_RESOLUTION"]);
         paramVar[param["PARAM_NAME"]].setncattr('axis', param["AXIS"]);
 
         ncParamName = "{0}_QC".format(param["PARAM_NAME"])
@@ -264,12 +268,12 @@ def create_nc_trajectory_file_3_2(FloatWmoID,mfloat_nc_path,mCycles,ms41s):
         paramAdjVar[param["PARAM_NAME"]] = file_cdf.createVariable(ncParamName,param["NC_TYPE"],('N_MEASUREMENT',),fill_value=param["FILL_VALUE"])
         paramAdjVar[param["PARAM_NAME"]].setncattr('long_name', param["LONG_NAME"]);
         paramAdjVar[param["PARAM_NAME"]].setncattr('standard_name', param["STANDARD_NAME"]);
-        paramAdjVar[param["PARAM_NAME"]].setncattr('units', param["UNITS"]);
+        paramAdjVar[param["PARAM_NAME"]].setncattr('units', param["PARAMETER_UNITS"]);
         paramAdjVar[param["PARAM_NAME"]].setncattr('valid_min', param["VALID_MIN"]);
         paramAdjVar[param["PARAM_NAME"]].setncattr('valid_max', param["VALID_MAX"]);
         paramAdjVar[param["PARAM_NAME"]].setncattr('C_format', param["C_FORMAT"]);
         paramAdjVar[param["PARAM_NAME"]].setncattr('FORTRAN_format', param["FORTRAN_FORMAT"]);
-        paramAdjVar[param["PARAM_NAME"]].setncattr('resolution', param["RESOLUTION"]);
+        paramAdjVar[param["PARAM_NAME"]].setncattr('resolution', param["PARAMETER_RESOLUTION"]);
         paramAdjVar[param["PARAM_NAME"]].setncattr('axis', param["AXIS"]);
 
         ncParamName = "{0}_ADJUSTED_QC".format(param["PARAM_NAME"])
@@ -280,38 +284,18 @@ def create_nc_trajectory_file_3_2(FloatWmoID,mfloat_nc_path,mCycles,ms41s):
         ncParamName = "{0}_ADJUSTED_ERROR".format(param["PARAM_NAME"])
         paramAdjErrVar[param["PARAM_NAME"]] = file_cdf.createVariable(ncParamName,param["NC_TYPE"],('N_MEASUREMENT',),fill_value=param["FILL_VALUE"])
         paramAdjErrVar[param["PARAM_NAME"]].setncattr('long_name', "Contains the error on the adjusted values as determined by the delayed mode QC process");
-        paramAdjErrVar[param["PARAM_NAME"]].setncattr('units', param["UNITS"]);
+        paramAdjErrVar[param["PARAM_NAME"]].setncattr('units', param["PARAMETER_UNITS"]);
         paramAdjErrVar[param["PARAM_NAME"]].setncattr('C_format', param["C_FORMAT"]);
         paramAdjErrVar[param["PARAM_NAME"]].setncattr('FORTRAN_format', param["FORTRAN_FORMAT"]);
-        paramAdjErrVar[param["PARAM_NAME"]].setncattr('resolution', param["RESOLUTION"]);
-
-        ncParamName = "{0}_MED".format(param["PARAM_NAME"])
-        paramMed[param["PARAM_NAME"]] = file_cdf.createVariable(ncParamName,param["NC_TYPE"],('N_MEASUREMENT',),fill_value=param["FILL_VALUE"])
-        paramMed[param["PARAM_NAME"]].setncattr('long_name', "Median value of the set of measurements used to compute " + param["PARAM_NAME"]+"(N_MEASUREMENT) averaged value");
-        paramMed[param["PARAM_NAME"]].setncattr('units', param["UNITS"]);
-        paramMed[param["PARAM_NAME"]].setncattr('valid_min', param["VALID_MIN"]);
-        paramMed[param["PARAM_NAME"]].setncattr('valid_max', param["VALID_MAX"]);
-        paramMed[param["PARAM_NAME"]].setncattr('C_format', param["C_FORMAT"]);
-        paramMed[param["PARAM_NAME"]].setncattr('FORTRAN_format', param["FORTRAN_FORMAT"]);
-        paramMed[param["PARAM_NAME"]].setncattr('resolution', param["RESOLUTION"]);
-
-        ncParamName = "{0}_STD".format(param["PARAM_NAME"])
-        paramStd[param["PARAM_NAME"]] = file_cdf.createVariable(ncParamName,param["NC_TYPE"],('N_MEASUREMENT',),fill_value=param["FILL_VALUE"])
-        paramStd[param["PARAM_NAME"]].setncattr('long_name', "Standard deviation of the set of measurements used to compute " + param["PARAM_NAME"]+"(N_MEASUREMENT) averaged value");
-        paramStd[param["PARAM_NAME"]].setncattr('units', param["UNITS"]);
-        paramStd[param["PARAM_NAME"]].setncattr('valid_min', param["VALID_MIN"]);
-        paramStd[param["PARAM_NAME"]].setncattr('valid_max', param["VALID_MAX"]);
-        paramStd[param["PARAM_NAME"]].setncattr('C_format', param["C_FORMAT"]);
-        paramStd[param["PARAM_NAME"]].setncattr('FORTRAN_format', param["FORTRAN_FORMAT"]);
-        paramStd[param["PARAM_NAME"]].setncattr('resolution', param["RESOLUTION"]);
+        paramAdjErrVar[param["PARAM_NAME"]].setncattr('resolution', param["PARAMETER_RESOLUTION"]);
 
 
     axesErrorEllipsedMajorVar = file_cdf.createVariable('AXES_ERROR_ELLIPSE_MAJOR','f4',('N_MEASUREMENT',),fill_value=np.float32(99999.0))
-    axesErrorEllipsedMajorVar.setncattr('long_name', 'Major axis of error ellipse from positioning system');
+    axesErrorEllipsedMajorVar.setncattr('long_name', 'Semi-major axis of error ellipse from positioning system');
     axesErrorEllipsedMajorVar.setncattr('units', "meters");
 
     axesErrorEllipsedMinorVar = file_cdf.createVariable('AXES_ERROR_ELLIPSE_MINOR','f4',('N_MEASUREMENT',),fill_value=np.float32(99999.0))
-    axesErrorEllipsedMinorVar.setncattr('long_name', 'Minor axis of error ellipse from positioning system');
+    axesErrorEllipsedMinorVar.setncattr('long_name', '“Semi-minor axis of error ellipse from positioning system');
     axesErrorEllipsedMinorVar.setncattr('units', "meters");
 
     axesErrorEllipsedAngleVar = file_cdf.createVariable('AXES_ERROR_ELLIPSE_ANGLE','f4',('N_MEASUREMENT',),fill_value=np.float32(99999.0))
@@ -527,22 +511,35 @@ def create_nc_trajectory_file_3_2(FloatWmoID,mfloat_nc_path,mCycles,ms41s):
     dataModeVar.setncattr('long_name', 'Delayed mode or real time data');
     dataModeVar.setncattr('conventions', 'R : real time; D : delayed mode; A : real time with adjustment');
 
-    scientificCalibParameterVar = file_cdf.createVariable('SCIENTIFIC_CALIB_PARAMETER','S1',('N_CALIB','N_PARAM','STRING256'),fill_value=' ')
+    scientificCalibParameterVar = file_cdf.createVariable('SCIENTIFIC_CALIB_PARAMETER','S1',('N_CALIB_PARAM','N_PARAM','STRING256'),fill_value=' ')
     scientificCalibParameterVar.setncattr('long_name','List of parameters with calibration information')
     scientificCalibParameterVar.setncattr('conventions','Argo reference table 3')
 
-    scientificCalibEquationVar = file_cdf.createVariable('SCIENTIFIC_CALIB_EQUATION','S1',('N_CALIB','N_PARAM','STRING256'),fill_value=' ')
+    scientificCalibEquationVar = file_cdf.createVariable('SCIENTIFIC_CALIB_EQUATION','S1',('N_CALIB_PARAM','N_PARAM','STRING256'),fill_value=' ')
     scientificCalibEquationVar.setncattr('long_name','Calibration equation for this parameter')
 
-    scientificCalibCoefficientVar = file_cdf.createVariable('SCIENTIFIC_CALIB_COEFFICIENT','S1',('N_CALIB','N_PARAM','STRING256'),fill_value=' ')
+    scientificCalibCoefficientVar = file_cdf.createVariable('SCIENTIFIC_CALIB_COEFFICIENT','S1',('N_CALIB_PARAM','N_PARAM','STRING256'),fill_value=' ')
     scientificCalibCoefficientVar.setncattr('long_name','Calibration coefficients for this parameter')
 
-    scientificCalibCommentVar = file_cdf.createVariable('SCIENTIFIC_CALIB_COMMENT','S1',('N_CALIB','N_PARAM','STRING256'),fill_value=' ')
+    scientificCalibCommentVar = file_cdf.createVariable('SCIENTIFIC_CALIB_COMMENT','S1',('N_CALIB_PARAM','N_PARAM','STRING256'),fill_value=' ')
     scientificCalibCommentVar.setncattr('long_name','Comment applying to this parameter calibration')
 
-    scientificCalibDateVar = file_cdf.createVariable('SCIENTIFIC_CALIB_DATE','S1',('N_CALIB','N_PARAM','DATE_TIME'),fill_value=' ')
+    scientificCalibDateVar = file_cdf.createVariable('SCIENTIFIC_CALIB_DATE','S1',('N_CALIB_PARAM','N_PARAM','DATE_TIME'),fill_value=' ')
     scientificCalibDateVar.setncattr('long_name','Date of calibration')
     scientificCalibDateVar.setncattr('conventions','YYYYMMDDHHMISS')
+
+
+    juldCalibEquationVar = file_cdf.createVariable('JULD_CALIB_EQUATION','S1',('N_CALIB_JULD','STRING256'),fill_value=' ')
+    juldCalibEquationVar.setncattr('long_name','Calibration equation for JULD')
+
+    juldCalibCoefficientVar = file_cdf.createVariable('JULD_CALIB_COEFFICIENT','S1',('N_CALIB_JULD','STRING256'),fill_value=' ')
+    juldCalibCoefficientVar.setncattr('long_name','Calibration coefficients for JULD')
+
+    juldCalibCommentVar = file_cdf.createVariable('JULD_CALIB_COMMENT','S1',('N_CALIB_JULD','STRING256'),fill_value=' ')
+    juldCalibCommentVar.setncattr('long_name','Comment applying to JULD calibration')
+
+    juldCalibDateVar = file_cdf.createVariable('JULD_CALIB_DATE','S1',('N_CALIB_JULD','DATE_TIME'),fill_value=' ')
+    juldCalibDateVar.setncattr('long_name','Date of JULD calibration"')
 
     historyInstitutionVar = file_cdf.createVariable('HISTORY_INSTITUTION','S1',('N_HISTORY','STRING4'),fill_value=' ')
     historyInstitutionVar.setncattr('long_name','Institution which performed action')
@@ -593,20 +590,14 @@ def create_nc_trajectory_file_3_2(FloatWmoID,mfloat_nc_path,mCycles,ms41s):
     historyQcTestVar.setncattr('long_name','Documentation of tests performed, tests failed (in hex form)')
     historyQcTestVar.setncattr('conventions','Write tests performed when Load dataACTION=QCP$; tests failed when ACTION=QCF$')
 
-    print('END OF DEFINITION');
-
     ##################################################################################################
     ###                                                                                             ##
     ###                                     Get data                                                ##
     ###                                                                                             ##
     ##################################################################################################
     # Profile data
-    param_names = []
-    for param in ms41s.get_PARAMS() :
-        param_names.append(param["PARAM_NAME"])
     floatSerial = mCycles.get_station_nb()
     softVersions = mCycles.get_software_versions()
-    print (softVersions)
     if len(softVersions) > 1 :
         print("!!!!!!!!!!!!!!!!!!!!! No unique software version !!!!!!!!!!!!!!!!!")
         file_cdf.close()
@@ -632,7 +623,6 @@ def create_nc_trajectory_file_3_2(FloatWmoID,mfloat_nc_path,mCycles,ms41s):
     pressureAjusted = []
     pressureAjustedQc = ""
     pressureAjustedError = []
-    pressureMed = []
     pressureStd = []
     temperature = []
     temperatureQc = ""
@@ -711,23 +701,17 @@ def create_nc_trajectory_file_3_2(FloatWmoID,mfloat_nc_path,mCycles,ms41s):
             pressureAjusted.append(np.float32(99999.0))
             pressureAjustedQc += '0'
             pressureAjustedError.append(np.float32(99999.0))
-            pressureMed.append(np.float32(99999.0))
-            pressureStd.append(np.float32(99999.0))
             temperature.append(measure.temperature)
             temperatureQc += '0'
             temperatureAjusted.append(np.float32(99999.0))
             temperatureAjustedQc += '0'
             temperatureAjustedError.append(np.float32(99999.0))
-            temperatureMed.append(np.float32(99999.0))
-            temperatureStd.append(np.float32(99999.0))
             salinity.append(measure.salinity)
             salinityQc += '0'
             salinityAjusted.append(np.float32(99999.0))
             salinityAjustedQc += '0'
             salinityAjustedError.append(np.float32(99999.0))
-            salinityMed.append(np.float32(99999.0))
-            salinityStd.append(np.float32(99999.0))
-            trajectoryParameterDataMode.append(ms41s.get_N_PARAMS() * 'R')
+            trajectoryParameterDataMode.append(len(metadata["PARAMETERS"]) * 'R')
             juldDataMode += 'R'
         if cycle.descentStartTime :
             juldDescentStart.append(utils.toJuld(cycle.descentStartTime))
@@ -798,32 +782,31 @@ def create_nc_trajectory_file_3_2(FloatWmoID,mfloat_nc_path,mCycles,ms41s):
         cycleNumberIndex.append(cycle.cycleNb)
         cycleNumberIndexAdjusted.append(np.int32(99999))
         dataMode += 'R'
-
     ##################################################################################################
     ###                                                                                             ##
     ###                                     Load data                                               ##
     ###                                                                                             ##
     ##################################################################################################
     # 2.3.3 General information on the trajectory file
-    putString(dataTypeVar,'Argo trajectory',string16DimSize)
+    putString(dataTypeVar,'Argo trajectory',string32DimSize)
     putString(formatVersionVar,'3.2',string4DimSize)
     putString(handbookVersionVar,'1.2',string4DimSize)
     putString(referenceDateTimeVar,'19500101000000',dateTimeDimSize)
-    putString(dateCreationVar,currentDate,dateTimeDimSize)
+    putString(dateCreationVar,metadata["DATE_CREATION"],dateTimeDimSize)
     putString(dateUpdateVar,currentDate,dateTimeDimSize)
 
     # 2.3.4 General information on the float
-    putString(platformNumberVar,'A9IIIII',string8DimSize)
-    putString(projectNameVar,'ARGOMermaid',string64DimSize)
-    putString(piNameVar,'Frederic Rocca',string64DimSize)
+    putString(platformNumberVar,metadata["PLATFORM_NUMBER"],string8DimSize)
+    putString(projectNameVar,metadata["PROJECT_NAME"],string64DimSize)
+    putString(piNameVar,metadata["PI_NAME"],string64DimSize)
     putString(trajectoryParametersVar,param_names,string64DimSize)
-    putString(dataCentreVar,cfg.history_institution,string2DimSize)
+    putString(dataCentreVar,metadata["DATA_CENTRE"],string2DimSize)
     putString(dataStateIndicatorVar,'0A',string4DimSize)
-    putString(platformTypeVar,'FLOAT',string32DimSize)
+    putString(platformTypeVar,metadata["PLATFORM_TYPE"],string32DimSize)
     putString(floatSerialNoVar,floatSerial,string32DimSize)
     putString(firmwareVersionVar,softVersion,string64DimSize)
-    putString(wmoInstTypeVar,'999',string4DimSize)
-    putString(positionSystemVar,"GNSS",string8DimSize)
+    putString(wmoInstTypeVar,metadata["WMO_INST_TYPE"],string4DimSize)
+    putString(positionSystemVar,metadata["POSITIONING_SYSTEM"],string8DimSize)
 
     # 2.3.5 N_MEASUREMENT dimension variable group
     juldVar[:] = juld
@@ -839,31 +822,25 @@ def create_nc_trajectory_file_3_2(FloatWmoID,mfloat_nc_path,mCycles,ms41s):
     cycleNumberVar[:] = cycleNumber
     cycleNumberAdjusted[:] = cycleNumberAdjusted
     measurementCodeVar[:] = measurementCode
-    for param in ms41s.get_PARAMS() :
+    for param in metadata["PARAMETERS"] :
         if param["PARAM_NAME"] == "PRES":
             paramVar["PRES"][:] = pressure
             putString(paramQcVar["PRES"],pressureQc,nMeasurementDimSize)
             paramAdjVar["PRES"][:] = pressureAjusted
             putString(paramAdjQcVar["PRES"],pressureAjustedQc,nMeasurementDimSize)
             paramAdjErrVar["PRES"][:] = pressureAjustedError
-            paramMed["PRES"][:] = pressureMed
-            paramStd["PRES"][:] = pressureStd
         if param["PARAM_NAME"] == "TEMP":
             paramVar["TEMP"][:] = temperature
             putString(paramQcVar["TEMP"],temperatureQc,nMeasurementDimSize)
             paramAdjVar["TEMP"][:] = temperatureAjusted
             putString(paramAdjQcVar["TEMP"],temperatureAjustedQc,nMeasurementDimSize)
             paramAdjErrVar["TEMP"][:] = temperatureAjustedError
-            paramMed["TEMP"][:] = temperatureMed
-            paramStd["TEMP"][:] = temperatureStd
         if param["PARAM_NAME"] == "PSAL":
             paramVar["PSAL"][:] = salinity
             putString(paramQcVar["PSAL"],salinityQc,nMeasurementDimSize)
             paramAdjVar["PSAL"][:] = salinityAjusted
             putString(paramAdjQcVar["PSAL"],salinityAjustedQc,nMeasurementDimSize)
             paramAdjErrVar["PSAL"][:] = salinityAjustedError
-            paramMed["PSAL"][:] = salinityMed
-            paramStd["PSAL"][:] = salinityStd
     putNString(trajectoryParameterDataModeVar,trajectoryParameterDataMode,1,nParamDimSize)
     putString(juldDataModeVar,juldDataMode,nMeasurementDimSize)
     # 2.3.6 N_CYCLE dimension variable group

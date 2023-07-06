@@ -3,7 +3,7 @@
 # @Email:  frederic.rocca@osean.fr
 # @Filename: configuration.py
 # @Last modified by:   fro
-# @Last modified time: 2023-07-04T17:46:55+02:00
+# @Last modified time: 2023-07-06T16:20:20+02:00
 
 import re
 from obspy import UTCDateTime
@@ -85,6 +85,10 @@ class Profil :
                 self.top_bin_max = top_bin_max[0][0]
             if len(middle_bin_interval) > 0 :
                 self.middle_bin_interval = middle_bin_interval[0][0]
+            if len(middle_bin_max) > 0 :
+                self.middle_bin_max = middle_bin_max[0][0]
+            if len(middle_bin_size) > 0 :
+                self.middle_bin_size = middle_bin_size[0][0]
             if len(bottom_bin_interval) > 0 :
                 self.bottom_bin_interval = bottom_bin_interval[0][0]
             if len(bottom_bin_size) > 0 :

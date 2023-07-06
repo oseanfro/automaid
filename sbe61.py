@@ -1,3 +1,10 @@
+# @Author: Frédéric Rocca <fro>
+# @Date:   2023-06-09T09:36:17+02:00
+# @Email:  frederic.rocca@osean.fr
+# @Filename: sbe61.py
+# @Last modified by:   fro
+# @Last modified time: 2023-07-06T14:59:18+02:00
+
 # -*- coding: utf-8 -*-
 
 import os
@@ -30,46 +37,6 @@ if os.environ.get('DISPLAY', '') == '':
     mpl.use('agg', force=True)
 import matplotlib.pyplot as plt
 
-PSAL_PARAMS = {"PARAM_NAME": "PSAL",
-               "LONG_NAME": "Practical salinity",
-               "STANDARD_NAME": "sea_water_salinity",
-               "NC_TYPE": "f4",
-               "FILL_VALUE": numpy.float32(99999.0),
-               "UNITS": "psu",
-               "VALID_MIN": 2.0,
-               "VALID_MAX": 41.0,
-               "C_FORMAT": "%3.4f",
-               "FORTRAN_FORMAT": "F3.4",
-               "RESOLUTION": 0.0001,
-               "AXIS": "Y"}
-
-PRES_PARAMS = {"PARAM_NAME": "PRES",
-               "LONG_NAME": "Sea water pressure, equals 0 at sea-level",
-               "STANDARD_NAME": "sea_water_pressure",
-               "NC_TYPE": "f4",
-               "FILL_VALUE": numpy.float32(99999.0),
-               "UNITS": "decibar",
-               "VALID_MIN": 0.0,
-               "VALID_MAX": 12000.0,
-               "C_FORMAT": "%5.2f",
-               "FORTRAN_FORMAT": "F5.2",
-               "RESOLUTION": 0.01,
-               "AXIS": "X"}
-
-TEMP_PARAMS = {"PARAM_NAME": "TEMP",
-               "LONG_NAME": "Sea temperature in-situ ITS-90 scale",
-               "STANDARD_NAME": "sea_water_temperature",
-               "NC_TYPE": "f4",
-               "FILL_VALUE": numpy.float32(99999.0),
-               "UNITS": "degree_Celsius",
-               "VALID_MIN": -2.5,
-               "VALID_MAX": 40.0,
-               "C_FORMAT": "%3.4f",
-               "FORTRAN_FORMAT": "F3.4",
-               "RESOLUTION": 0.0001,
-               "AXIS": "Y"}
-
-
 class Profiles:
     profiles = None
     params = None
@@ -77,7 +44,6 @@ class Profiles:
     def __init__(self, base_path=None):
         # Initialize event list (if list is declared above, then elements of the previous instance are kept in memory)
         self.profiles = list()
-        self.params = [PRES_PARAMS, TEMP_PARAMS, PSAL_PARAMS]
         if not base_path:
             return
         # Read all S61 files and find profiles associated to the dive
@@ -98,22 +64,6 @@ class Profiles:
             if begin < profile.date < end:
                 catched_profiles.append(profile)
         return catched_profiles
-
-    def get_N_LEVELS(self):
-        nlevel = 0
-        for profile in self.profiles:
-            if len(profile.data_pressure) > nlevel:
-                nlevel = len(profile.data_pressure)
-        return nlevel
-
-    def get_N_PROF(self):
-        return len(self.profiles)
-
-    def get_N_PARAMS(self):
-        return len(self.params)
-
-    def get_PARAMS(self):
-        return self.params
 
 
 class Profile:
@@ -200,7 +150,15 @@ class Profile:
             self.data_temperature = list()
             self.data_salinity = list()
             self.data_nbin = list()
-            for index in range(0, len(self.data), 1):
+
+            rangeIndex = None
+            if self.bin_average_output > 0:
+                rangeIndex = range(0, len(self.data), 1)
+            else :
+                # reverse array when data are discrete
+                rangeIndex = range(len(self.data)-1, -1, -1)
+
+            for index in rangeIndex :
                 press = self.data[index]['press']
                 temp = self.data[index]['temp']
                 sal = self.data[index]['sal']
@@ -208,11 +166,12 @@ class Profile:
                     temp = numpy.int16(temp)
                 if(sal > numpy.uint16(0xEFFF)):
                     sal = numpy.int16(sal)
-                self.data_pressure.append(float(press) / 10.0)
-                self.data_temperature.append(float(temp) / 1000.0)
-                self.data_salinity.append(float(sal) / 1000.0)
-                if self.include_nbin > 0:
-                    self.data_nbin.append(self.data[index]['nbin'])
+                if not (press == 0 and temp == 0 and sal == 0):
+                    self.data_pressure.append(float(press) / 10.0)
+                    self.data_temperature.append(float(temp) / 1000.0)
+                    self.data_salinity.append(float(sal) / 1000.0)
+                    if self.include_nbin > 0:
+                        self.data_nbin.append(self.data[index]['nbin'])
 
     def parameters_header(self):
         header = " <output_pressure>"+str(self.output_pressure)+"</output_pressure>\r\n"

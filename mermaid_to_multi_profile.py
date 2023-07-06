@@ -3,9 +3,10 @@
 # @Email:  frederic.rocca@osean.fr
 # @Filename: mermaid_to_multi_profile.py
 # @Last modified by:   fro
-# @Last modified time: 2023-07-04T17:19:59+02:00
+# @Last modified time: 2023-07-06T16:19:45+02:00
 
 import os
+import json
 import shutil
 import sys
 import decrypt
@@ -20,15 +21,8 @@ from netCDF4 import Dataset
 from netCDF4 import stringtochar
 from datetime import datetime,timezone
 import numpy as np
-import mermaid_to_nc_cfg as cfg
+import argo_metadata
 
-def get_data_from_nc_file(mfloat_nc_path,dataDict) :
-    rd_cdf = Dataset(mfloat_nc_path, "r", format="NETCDF3_CLASSIC")
-    for key in dataDict.keys() :
-        variables = rd_cdf.get_variables_by_attribute(self, name=dataDict.keys())
-        if len(variables) > 0:
-            dataDict[key] = variables[0]
-    return dataDict
 
 def create_dim_tuple(dimensions,value):
     result = value
@@ -47,7 +41,7 @@ def putString(var,string,varlen):
 def putNString(var,string,nb,varlen):
     putStringArray(var,[string]*nb,varlen)
 
-def create_nc_multi_prof_c_file_3_1(FloatWmoID,mfloat_nc_path,mCycles,ms41s):
+def create_nc_multi_prof_c_file_3_1(FloatWmoID,mfloat_nc_path,mCycles,metadata):
         multiProfCFilePath = mfloat_nc_path + FloatWmoID + "_prof.nc"
         print(multiProfCFilePath)
 
@@ -71,9 +65,9 @@ def create_nc_multi_prof_c_file_3_1(FloatWmoID,mfloat_nc_path,mCycles,ms41s):
         string8Dim = file_cdf.createDimension('STRING8', 8);
         string4Dim = file_cdf.createDimension('STRING4', 4);
         string2Dim = file_cdf.createDimension('STRING2', 2);
-        nProfDim = file_cdf.createDimension('N_PROF', ms41s.get_N_PROF());
-        nParamDim = file_cdf.createDimension('N_PARAM', ms41s.get_N_PARAMS());
-        nLevelsDim = file_cdf.createDimension('N_LEVELS', ms41s.get_N_LEVELS());
+        nProfDim = file_cdf.createDimension('N_PROF', mCycles.get_N_PROF());
+        nParamDim = file_cdf.createDimension('N_PARAM', len(metadata["PARAMETERS"]));
+        nLevelsDim = file_cdf.createDimension('N_LEVELS', mCycles.get_N_LEVELS());
 
         nCalibDim = file_cdf.createDimension('N_CALIB',1);
         nHistoryDim = file_cdf.createDimension('N_HISTORY',0);
@@ -92,8 +86,6 @@ def create_nc_multi_prof_c_file_3_1(FloatWmoID,mfloat_nc_path,mCycles,ms41s):
         dateTimeDimSize = len(dateTimeDim)
         nHistoryDimSize = len(nHistoryDim)
         nCalibDimSize = len(nCalibDim)
-
-        print(nProfDimSize)
         ##################################################################################################
         ###                                                                                             ##
         ###                                     Create Variables                                        ##
@@ -105,17 +97,17 @@ def create_nc_multi_prof_c_file_3_1(FloatWmoID,mfloat_nc_path,mCycles,ms41s):
         file_cdf.setncattr('source','Argo float')
 
         currentDate = datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S");
-        globalHistoryText = currentDate + ' creation; ';
+        globalHistoryText = metadata["DATE_CREATION"] + ' creation; ';
         globalHistoryText += currentDate + ' last update (osean float converting raw data)'
 
         file_cdf.setncattr('history', globalHistoryText)
         file_cdf.setncattr('references', 'http://www.argodatamgt.org/Documentation')
-        file_cdf.setncattr('user_manual_version', '3.1')
+        file_cdf.setncattr('user_manual_version', '3.41.1')
         file_cdf.setncattr('Conventions', 'Argo-3.1 CF-1.6')
         file_cdf.setncattr('featureType', 'trajectoryProfile')
         file_cdf.setncattr('decoder_version', "autoNetCdf_v{0}".format(1.0))
 
-        dataTypeVar = file_cdf.createVariable('DATA_TYPE','S1',('STRING16',),fill_value=' ')
+        dataTypeVar = file_cdf.createVariable('DATA_TYPE','S1',('STRING32',),fill_value=' ')
         dataTypeVar.setncattr('long_name', 'Data type')
         dataTypeVar.setncattr('conventions', 'Argo reference table 1')
 
@@ -234,7 +226,7 @@ def create_nc_multi_prof_c_file_3_1(FloatWmoID,mfloat_nc_path,mCycles,ms41s):
         positionSystemVar.setncattr('long_name', 'Positioning system');
 
         profileGlobalParamQcVars = {}
-        for param in ms41s.get_PARAMS() :
+        for param in metadata["PARAMETERS"] :
             ncParamName = "PROFILE_{0}_QC".format(param["PARAM_NAME"])
             profileGlobalParamQcVars[param["PARAM_NAME"]] = file_cdf.createVariable(ncParamName,'S1',('N_PROF',),fill_value=' ')
             profileGlobalParamQcVars[param["PARAM_NAME"]].setncattr('long_name',"Global quality flag of {0} profile".format(param["PARAM_NAME"]))
@@ -255,16 +247,16 @@ def create_nc_multi_prof_c_file_3_1(FloatWmoID,mfloat_nc_path,mCycles,ms41s):
         profParamAdjVar = {}
         profParamAdjQcVar = {}
         profParamAdjErrVar = {}
-        for param in ms41s.get_PARAMS() :
+        for param in metadata["PARAMETERS"] :
             profParamVar[param["PARAM_NAME"]] = file_cdf.createVariable(param["PARAM_NAME"],param["NC_TYPE"],('N_PROF','N_LEVELS'),fill_value=param["FILL_VALUE"])
             profParamVar[param["PARAM_NAME"]].setncattr('long_name', param["LONG_NAME"]);
             profParamVar[param["PARAM_NAME"]].setncattr('standard_name', param["STANDARD_NAME"]);
-            profParamVar[param["PARAM_NAME"]].setncattr('units', param["UNITS"]);
+            profParamVar[param["PARAM_NAME"]].setncattr('units', param["PARAMETER_UNITS"]);
             profParamVar[param["PARAM_NAME"]].setncattr('valid_min', param["VALID_MIN"]);
             profParamVar[param["PARAM_NAME"]].setncattr('valid_max', param["VALID_MAX"]);
             profParamVar[param["PARAM_NAME"]].setncattr('C_format', param["C_FORMAT"]);
             profParamVar[param["PARAM_NAME"]].setncattr('FORTRAN_format', param["FORTRAN_FORMAT"]);
-            profParamVar[param["PARAM_NAME"]].setncattr('resolution', param["RESOLUTION"]);
+            profParamVar[param["PARAM_NAME"]].setncattr('resolution', param["PARAMETER_RESOLUTION"]);
             profParamVar[param["PARAM_NAME"]].setncattr('axis', param["AXIS"]);
 
             ncParamName = "{0}_QC".format(param["PARAM_NAME"])
@@ -276,12 +268,12 @@ def create_nc_multi_prof_c_file_3_1(FloatWmoID,mfloat_nc_path,mCycles,ms41s):
             profParamAdjVar[param["PARAM_NAME"]] = file_cdf.createVariable(ncParamName,param["NC_TYPE"],('N_PROF','N_LEVELS'),fill_value=param["FILL_VALUE"])
             profParamAdjVar[param["PARAM_NAME"]].setncattr('long_name', param["LONG_NAME"]);
             profParamAdjVar[param["PARAM_NAME"]].setncattr('standard_name', param["STANDARD_NAME"]);
-            profParamAdjVar[param["PARAM_NAME"]].setncattr('units', param["UNITS"]);
+            profParamAdjVar[param["PARAM_NAME"]].setncattr('units', param["PARAMETER_UNITS"]);
             profParamAdjVar[param["PARAM_NAME"]].setncattr('valid_min', param["VALID_MIN"]);
             profParamAdjVar[param["PARAM_NAME"]].setncattr('valid_max', param["VALID_MAX"]);
             profParamAdjVar[param["PARAM_NAME"]].setncattr('C_format', param["C_FORMAT"]);
             profParamAdjVar[param["PARAM_NAME"]].setncattr('FORTRAN_format', param["FORTRAN_FORMAT"]);
-            profParamAdjVar[param["PARAM_NAME"]].setncattr('resolution', param["RESOLUTION"]);
+            profParamAdjVar[param["PARAM_NAME"]].setncattr('resolution', param["PARAMETER_RESOLUTION"]);
             profParamAdjVar[param["PARAM_NAME"]].setncattr('axis', param["AXIS"]);
 
             ncParamName = "{0}_ADJUSTED_QC".format(param["PARAM_NAME"])
@@ -292,10 +284,10 @@ def create_nc_multi_prof_c_file_3_1(FloatWmoID,mfloat_nc_path,mCycles,ms41s):
             ncParamName = "{0}_ADJUSTED_ERROR".format(param["PARAM_NAME"])
             profParamAdjErrVar[param["PARAM_NAME"]] = file_cdf.createVariable(ncParamName,param["NC_TYPE"],('N_PROF','N_LEVELS'),fill_value=param["FILL_VALUE"])
             profParamAdjErrVar[param["PARAM_NAME"]].setncattr('long_name', "Contains the error on the adjusted values as determined by the delayed mode QC process");
-            profParamAdjErrVar[param["PARAM_NAME"]].setncattr('units', param["UNITS"]);
+            profParamAdjErrVar[param["PARAM_NAME"]].setncattr('units', param["PARAMETER_UNITS"]);
             profParamAdjErrVar[param["PARAM_NAME"]].setncattr('C_format', param["C_FORMAT"]);
             profParamAdjErrVar[param["PARAM_NAME"]].setncattr('FORTRAN_format', param["FORTRAN_FORMAT"]);
-            profParamAdjErrVar[param["PARAM_NAME"]].setncattr('resolution', param["RESOLUTION"]);
+            profParamAdjErrVar[param["PARAM_NAME"]].setncattr('resolution', param["PARAMETER_RESOLUTION"]);
 
         parameterVar = file_cdf.createVariable('PARAMETER','S1',('N_PROF','N_CALIB','N_PARAM','STRING16'),fill_value=' ')
         parameterVar.setncattr('long_name','List of parameters with calibration information')
@@ -361,19 +353,11 @@ def create_nc_multi_prof_c_file_3_1(FloatWmoID,mfloat_nc_path,mCycles,ms41s):
         historyQcTestVar.setncattr('long_name','Documentation of tests performed, tests failed (in hex form)')
         historyQcTestVar.setncattr('conventions','Write tests performed when Load dataACTION=QCP$; tests failed when ACTION=QCF$')
 
-        print('END OF DEFINITION');
-
         ##################################################################################################
         ###                                                                                             ##
         ###                                     Get data                                                ##
         ###                                                                                             ##
         ##################################################################################################
-
-        # Profile data
-        param_names = []
-        for param in ms41s.get_PARAMS() :
-            param_names.append(param["PARAM_NAME"])
-
         # Dive data
         press_data =[]
         salinity_data =[]
@@ -392,7 +376,27 @@ def create_nc_multi_prof_c_file_3_1(FloatWmoID,mfloat_nc_path,mCycles,ms41s):
         for cycle in mCycles.list :
             for profile in cycle.sbe61Profiles :
                 if cycle.parameters.profile_sampling_method > 0:
-                    verticalSamplingScheme.append("Primary sampling: averaged")
+                    bottom_interval = cycle.parameters.profile_bottom_bin_interval_cbar
+                    bottom_max = cycle.parameters.pressure_threshold_data_reduction_intermediate_to_deep_dbar
+                    middle_interval = cycle.parameters.profile_intermediate_bin_interval_cbar
+                    middle_max = cycle.parameters.pressure_threshold_data_reduction_intermediate_to_deep_dbar
+                    surface_interval = cycle.parameters.profile_surface_bin_interval_cbar
+
+                    scheme = None
+                    if middle_max == bottom_max :
+                        scheme = "Primary sampling: averaged [1 second sampling, "
+                        scheme+= str(bottom_interval) + " decibars average from bottom to "
+                        scheme+= str(bottom_max) + " decibars,"
+                        scheme+= str(surface_interval) + " decibars average from "
+                        scheme+= str(middle_max) + " to surface]"
+                    else :
+                        scheme = "Primary sampling: averaged [1 second sampling, "
+                        scheme+= str(bottom_interval) + " decibars average from bottom to "
+                        scheme+= str(bottom_max) + " decibars,"
+                        scheme+= str(middle_interval) + " decibars average from " + str(bottom_max) + " decibars to "
+                        scheme+= str(middle_max) + " decibars, " + str(surface_interval) + " decibars average from "
+                        scheme+= str(middle_max) + " to surface]"
+                    verticalSamplingScheme.append(scheme)
                 else :
                     verticalSamplingScheme.append("Primary sampling: discrete")
                 floatSerial.append(cycle.station_name)
@@ -423,7 +427,9 @@ def create_nc_multi_prof_c_file_3_1(FloatWmoID,mfloat_nc_path,mCycles,ms41s):
                 julianDayPosition.append(utils.toJuld(UTCDateTime(gps.date)))
                 latitude.append(gps.latitude)
                 longitude.append(gps.longitude)
-
+        param_names = []
+        for meta_params in metadata["PARAMETERS"]:
+            param_names.append(meta_params["PARAM_NAME"])
         ##################################################################################################
         ###                                                                                             ##
         ###                                     Load data                                               ##
@@ -432,38 +438,37 @@ def create_nc_multi_prof_c_file_3_1(FloatWmoID,mfloat_nc_path,mCycles,ms41s):
 
         # 2.2.3 General information on the profile file
 
-        putString(dataTypeVar,'Argo profile',string16DimSize)
+        putString(dataTypeVar,'Argo profile',string32DimSize)
         putString(formatVersionVar,'3.1',string4DimSize)
         putString(handbookVersionVar,'1.2',string4DimSize)
         putString(referenceDateTimeVar,'19500101000000',dateTimeDimSize)
-        putString(dateCreationVar,currentDate,dateTimeDimSize)
+        putString(dateCreationVar,metadata["DATE_CREATION"],dateTimeDimSize)
         putString(dateUpdateVar,currentDate,dateTimeDimSize)
 
         # 2.2.4 General information for each profile
 
-        putNString(platformNumberVar,'A9IIIII',nProfDimSize,string8DimSize)
-        putNString(projectNameVar,'ARGOMermaid',nProfDimSize,string64DimSize)
-        putNString(piNameVar,'Frederic Rocca',nProfDimSize,string64DimSize)
+        putNString(platformNumberVar,metadata["PLATFORM_NUMBER"],nProfDimSize,string8DimSize)
+        putNString(projectNameVar,metadata["PROJECT_NAME"],nProfDimSize,string64DimSize)
+        putNString(piNameVar,metadata["PI_NAME"],nProfDimSize,string64DimSize)
         putNString(stationParametersVar,param_names,nProfDimSize,string64DimSize)
 
-        print(cyclesNb)
         cycleNumberVar[:] = cyclesNb
         putString(directionVar,nProfDimSize*'A',nProfDimSize)
-        putNString(dataCentreVar,cfg.history_institution,nProfDimSize,string2DimSize)
+        putNString(dataCentreVar,metadata["DATA_CENTRE"],nProfDimSize,string2DimSize)
         putNString(dcReferenceVar,station_number,1,string32DimSize)
         putNString(dataStateIndicatorVar,'0A',nProfDimSize,string4DimSize)
         putString(dataModeVar,nProfDimSize*'R',nProfDimSize)
-        putNString(platformTypeVar,'FLOAT',nProfDimSize,string32DimSize)
+        putNString(platformTypeVar,metadata["PLATFORM_TYPE"],nProfDimSize,string32DimSize)
         putNString(floatSerialNoVar,floatSerial,1,string32DimSize)
         putNString(firmwareVersionVar,firmwareVersion,1,string64DimSize)
-        putNString(wmoInstTypeVar,'999',nProfDimSize,string4DimSize)
+        putNString(wmoInstTypeVar,metadata["WMO_INST_TYPE"],nProfDimSize,string4DimSize)
         juldVar[:] = julianDay
         putString(juldQcVar,nProfDimSize*'0',nProfDimSize)
         juldLocationVar[:] = julianDayPosition
         latitudeVar[:] = latitude
         longitudeVar[:] = longitude
         putString(positionQcVar,nProfDimSize*'0',nProfDimSize)
-        putNString(positionSystemVar,"GNSS",nProfDimSize,string8DimSize)
+        putNString(positionSystemVar,metadata["POSITIONING_SYSTEM"],nProfDimSize,string8DimSize)
         putNString(verticalSamplingSchemeVar,verticalSamplingScheme,1,string256DimSize)
         # POSITION_ERROR_REPORTED (optional)
         # POSITION_ERROR_ESTIMATED (optional)
@@ -472,7 +477,7 @@ def create_nc_multi_prof_c_file_3_1(FloatWmoID,mfloat_nc_path,mCycles,ms41s):
 
         # 2.2.5 Measurements for each profile
 
-        for param in ms41s.get_PARAMS() :
+        for param in metadata["PARAMETERS"] :
             if param["PARAM_NAME"] == "PRES":
                 profParamVar["PRES"][:] = press_data
                 putNString(profParamQcVar["PRES"],nLevelsDimSize*'0',nProfDimSize,nLevelsDimSize)
@@ -487,12 +492,12 @@ def create_nc_multi_prof_c_file_3_1(FloatWmoID,mfloat_nc_path,mCycles,ms41s):
         # filled with default values
 
         # 2.2.7 History information for each profile
-        putNString(historyInstitutionVar,[cfg.history_institution]*nHistoryDimSize,nProfDimSize,string4DimSize)
-        putNString(historyStepVar,[cfg.history_step]*nHistoryDimSize,nProfDimSize,string4DimSize)
-        #putNString(historySoftwareVar,[cfg.history_software]*nHistoryDimSize,nProfDimSize,string4DimSize)
-        #putNString(historySoftwareReleaseVar,[cfg.history_software_release]*nHistoryDimSize,nProfDimSize,string4DimSize)
-        #putNString(historyReferenceVar,[cfg.history_reference]*nHistoryDimSize,nProfDimSize,string64DimSize)
-        putNString(historyDateVar,[currentDate]*nHistoryDimSize,nProfDimSize,dateTimeDimSize)
-        putNString(historyActionVar,[cfg.history_action]*nHistoryDimSize,nProfDimSize,string4DimSize)
+        # putNString(historyInstitutionVar,[cfg.history_institution]*nHistoryDimSize,nProfDimSize,string4DimSize)
+        # putNString(historyStepVar,[cfg.history_step]*nHistoryDimSize,nProfDimSize,string4DimSize)
+        # putNString(historySoftwareVar,[cfg.history_software]*nHistoryDimSize,nProfDimSize,string4DimSize)
+        # putNString(historySoftwareReleaseVar,[cfg.history_software_release]*nHistoryDimSize,nProfDimSize,string4DimSize)
+        # putNString(historyReferenceVar,[cfg.history_reference]*nHistoryDimSize,nProfDimSize,string64DimSize)
+        # putNString(historyDateVar,[currentDate]*nHistoryDimSize,nProfDimSize,dateTimeDimSize)
+        # putNString(historyActionVar,[cfg.history_action]*nHistoryDimSize,nProfDimSize,string4DimSize)
         # filled with default values
         file_cdf.close()

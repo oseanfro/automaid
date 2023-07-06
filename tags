@@ -80,6 +80,7 @@ Pext	vitals.py	/^    Pext = None$/;"	v	class:Vitals
 Pextrange	vitals.py	/^    Pextrange = None$/;"	v	class:Vitals
 Pint	vitals.py	/^    Pint = None$/;"	v	class:Vitals
 Pintmin	vitals.py	/^    Pintmin = None$/;"	v	class:Vitals
+Profil	configuration.py	/^class Profil :$/;"	c	inherits:
 Profile	sbe41.py	/^class Profile:$/;"	c	inherits:
 Profile	sbe61.py	/^class Profile:$/;"	c	inherits:
 Profiles	sbe41.py	/^class Profiles:$/;"	c	inherits:
@@ -96,8 +97,6 @@ SRC	src/V103EC/Makefile	/^SRC=long_ops.c icdf24.c$/;"	m
 START_MISSION_5M	tools/imu.py	/^START_MISSION_5M = "2020-08-31T10:06:19"$/;"	v
 SURFACE	tools/imu.py	/^SURFACE = "2020-09-07T08:48:20"$/;"	v
 SURFACING	tools/imu.py	/^SURFACING = "2020-09-07T06:51:54"$/;"	v
-Sbe41_parameters	configuration.py	/^class Sbe41_parameters :$/;"	c	inherits:
-Sbe41_pilots	configuration.py	/^class Sbe41_pilots :$/;"	c	inherits:
 Scatter	dives.py	/^    Scatter = graph.Scatter$/;"	v
 Scatter	dives.py	/^    Scatter = graph.Scattergl$/;"	v
 Scatter	events.py	/^    Scatter = graph.Scatter$/;"	v
@@ -137,9 +136,8 @@ __init__	argo.py	/^    def __init__(self, name=None, value=None, description=Non
 __init__	argo.py	/^    def __init__(self,cycle,code,date,description,longitude=None,latitude=None,pressure=None,temperature=None,salinity=None):$/;"	m	class:Measurement	access:public
 __init__	argo.py	/^    def __init__(self,dives) :$/;"	m	class:Cycles	access:public
 __init__	configuration.py	/^    def __init__(self, dive):$/;"	m	class:Configuration	access:public
-__init__	configuration.py	/^    def __init__(self, dive):$/;"	m	class:Sbe41_parameters	access:public
-__init__	configuration.py	/^    def __init__(self, dive):$/;"	m	class:Sbe41_pilots	access:public
-__init__	configuration.py	/^    def __init__(self, stage_type=None,pressure_ref_mbar=None,pressure_diff_mbar=None,duration_s=None,expiration_date_s=None,scientific_type=None, duration_estimated_s=None):$/;"	m	class:Stage	access:public
+__init__	configuration.py	/^    def __init__(self, dive, type="ascent"):$/;"	m	class:Profil	access:public
+__init__	configuration.py	/^    def __init__(self,type=None,pressure_ref_mbar=None,pressure_diff_mbar=None,duration_s=None,expiration_date_s=None,scientific=None, profil=None, duration_estimated_s=None):$/;"	m	class:Stage	access:public
 __init__	dives.py	/^    def __init__(self, base_path, log_name, events, profilesS41, profilesS61):$/;"	m	class:Dive	access:public
 __init__	dives.py	/^    def __init__(self, path=None, events=None, profilesS41=None, profilesS61=None):$/;"	m	class:Dives	access:public
 __init__	events.py	/^    def __init__(self, base_path=None):$/;"	m	class:Events	access:public
@@ -163,7 +161,6 @@ add_will_overflow	src/V103/long_ops.c	/^int add_will_overflow (int32_t x, int32_
 add_will_overflow	src/V103/long_ops.h	/^int add_will_overflow (int32_t x, int32_t y);$/;"	p	signature:(int32_t x, int32_t y)
 add_will_overflow	src/V103EC/long_ops.c	/^int add_will_overflow (int32_t x, int32_t y) {$/;"	f	signature:(int32_t x, int32_t y)
 add_will_overflow	src/V103EC/long_ops.h	/^int add_will_overflow (int32_t x, int32_t y);$/;"	p	signature:(int32_t x, int32_t y)
-addtimingdelays	configuration.py	/^    addtimingdelays=None$/;"	v	class:Sbe41_parameters
 argo_config	dives.py	/^    argo_config = None$/;"	v	class:Dive
 ascentEndTime	argo.py	/^    ascentEndTime = None$/;"	v	class:Cycle
 ascentStartTime	argo.py	/^    ascentStartTime = None$/;"	v	class:Cycle
@@ -175,19 +172,18 @@ ascent_speed_mbar_per_s	argo.py	/^    ascent_speed_mbar_per_s = None$/;"	v	class
 ascent_speed_min_mbar_per_s	argo.py	/^    ascent_speed_min_mbar_per_s = None$/;"	v	class:ConfigurationParameters
 ascent_to_surface_timeout_h	argo.py	/^    ascent_to_surface_timeout_h = None$/;"	v	class:ConfigurationParameters
 auto_bin_avg	sbe61.py	/^    auto_bin_avg = None$/;"	v	class:Profile
-autobinavg	configuration.py	/^    autobinavg=None$/;"	v	class:Sbe41_parameters
 base_path	dives.py	/^    base_path = None$/;"	v	class:Dive
 base_path	tools/imu.py	/^    base_path = None$/;"	v	class:Imu
+bin_average_output	configuration.py	/^    bin_average_output=None$/;"	v	class:Profil
 bin_average_output	sbe61.py	/^    bin_average_output = None$/;"	v	class:Profile
 binary	events.py	/^    binary = None$/;"	v	class:Event
 binary	sbe41.py	/^    binary = None$/;"	v	class:Profile
 binary	sbe61.py	/^    binary = None$/;"	v	class:Profile
-binaverageoutput	configuration.py	/^    binaverageoutput=None$/;"	v	class:Sbe41_pilots
 binaverageoutput	sbe41.py	/^    binaverageoutput = None$/;"	v	class:Profile
-bottom_bin_interval	configuration.py	/^    bottom_bin_interval=None$/;"	v	class:Sbe41_parameters
+bottom_bin_interval	configuration.py	/^    bottom_bin_interval=None$/;"	v	class:Profil
 bottom_bin_interval	sbe41.py	/^    bottom_bin_interval = None$/;"	v	class:Profile
 bottom_bin_interval_dbar	sbe61.py	/^    bottom_bin_interval_dbar = None$/;"	v	class:Profile
-bottom_bin_size	configuration.py	/^    bottom_bin_size=None$/;"	v	class:Sbe41_parameters
+bottom_bin_size	configuration.py	/^    bottom_bin_size=None$/;"	v	class:Profil
 bottom_bin_size	sbe41.py	/^    bottom_bin_size = None$/;"	v	class:Profile
 bottom_bin_size_dbar	sbe61.py	/^    bottom_bin_size_dbar = None$/;"	v	class:Profile
 buoy	vitals.py	/^    buoy = None$/;"	v	class:Emergency
@@ -217,7 +213,6 @@ configMissionNumber	argo.py	/^    configMissionNumber = None$/;"	v	class:Cycle
 configurationParameters	argo.py	/^    configurationParameters = None$/;"	v	class:Mission
 configurationParametersNb	argo.py	/^    configurationParametersNb = None$/;"	v	class:Cycles
 connection_timeout_sec	argo.py	/^    connection_timeout_sec = None$/;"	v	class:ConfigurationParameters
-continiousprofile	configuration.py	/^    continiousprofile=None$/;"	v	class:Sbe41_pilots
 continiousprofile	sbe41.py	/^    continiousprofile = None$/;"	v	class:Profile
 convert2dict	utils.py	/^def convert2dict(obj):$/;"	f	access:public
 correct_clock_drift	events.py	/^    def correct_clock_drift(self, gps_descent, gps_ascent):$/;"	m	class:Event	access:public
@@ -227,11 +222,13 @@ counts2pascal	utils.py	/^def counts2pascal(data):$/;"	f	access:public
 create_dim_tuple	mermaid_to_metadata.py	/^def create_dim_tuple(dimensions,value):$/;"	f	access:public
 create_dim_tuple	mermaid_to_mono_profile.py	/^def create_dim_tuple(dimensions,value):$/;"	f	access:public
 create_dim_tuple	mermaid_to_multi_profile.py	/^def create_dim_tuple(dimensions,value):$/;"	f	access:public
+create_dim_tuple	mermaid_to_technical.py	/^def create_dim_tuple(dimensions,value):$/;"	f	access:public
 create_dim_tuple	mermaid_to_trajectory.py	/^def create_dim_tuple(dimensions,value):$/;"	f	access:public
-create_nc_metadata_3_1	mermaid_to_metadata.py	/^def create_nc_metadata_3_1(FloatWmoID,mfloat_nc_path,mCycles,ms41s):$/;"	f	access:public
-create_nc_mono_prof_c_file_3_1	mermaid_to_mono_profile.py	/^def create_nc_mono_prof_c_file_3_1(FloatWmoID,mfloat_nc_path,mCycles,ms41s):$/;"	f	access:public
-create_nc_multi_prof_c_file_3_1	mermaid_to_multi_profile.py	/^def create_nc_multi_prof_c_file_3_1(FloatWmoID,mfloat_nc_path,mCycles,ms41s):$/;"	f	access:public
-create_nc_trajectory_file_3_2	mermaid_to_trajectory.py	/^def create_nc_trajectory_file_3_2(FloatWmoID,mfloat_nc_path,mCycles,ms41s):$/;"	f	access:public
+create_nc_metadata_3_1	mermaid_to_metadata.py	/^def create_nc_metadata_3_1(FloatWmoID,mfloat_nc_path,mCycles,ms61s,metadata):$/;"	f	access:public
+create_nc_mono_prof_c_file_3_1	mermaid_to_mono_profile.py	/^def create_nc_mono_prof_c_file_3_1(FloatWmoID,mfloat_nc_path,mCycles,ms61s,metadata):$/;"	f	access:public
+create_nc_multi_prof_c_file_3_1	mermaid_to_multi_profile.py	/^def create_nc_multi_prof_c_file_3_1(FloatWmoID,mfloat_nc_path,mCycles,ms61s,metadata):$/;"	f	access:public
+create_nc_technical_file_3_2	mermaid_to_technical.py	/^def create_nc_technical_file_3_2(FloatWmoID,mfloat_nc_path,mCycles,ms61s,metadata):$/;"	f	access:public
+create_nc_trajectory_file_3_2	mermaid_to_trajectory.py	/^def create_nc_trajectory_file_3_2(FloatWmoID,mfloat_nc_path,mCycles,ms61s,metadata):$/;"	f	access:public
 criterion	events.py	/^    criterion = None$/;"	v	class:Event
 cycle	argo.py	/^    cycle=None$/;"	v	class:Measurement
 cycleNb	argo.py	/^    cycleNb = None$/;"	v	class:Cycle
@@ -283,13 +280,11 @@ docend	kml.py	/^def docend():$/;"	f	access:public
 down_time_h	argo.py	/^    down_time_h = None$/;"	v	class:ConfigurationParameters
 down_time_s	argo.py	/^    down_time_s = None$/;"	v	class:ConfigurationParameters
 drift_correction	events.py	/^    drift_correction = None$/;"	v	class:Event
-dsreplyformat	configuration.py	/^    dsreplyformat=None$/;"	v	class:Sbe41_parameters
 duration_estimated_s	configuration.py	/^    duration_estimated_s=None$/;"	v	class:Stage
 duration_s	configuration.py	/^    duration_s=None$/;"	v	class:Stage
 dv_landing_ml	configuration.py	/^    dv_landing_ml=None$/;"	v	class:Configuration
 dv_landing_ml_stored	configuration.py	/^    dv_landing_ml_stored=None$/;"	v	class:Configuration
 echo_cmd	sbe61.py	/^    echo_cmd = None$/;"	v	class:Profile
-echocmd	configuration.py	/^    echocmd=None$/;"	v	class:Sbe41_parameters
 end_date	dives.py	/^    end_date = None$/;"	v	class:Dive
 environment	events.py	/^    environment = None$/;"	v	class:Event
 events	dives.py	/^    events = None$/;"	v	class:Dive
@@ -319,6 +314,7 @@ firstMessageTime	argo.py	/^    firstMessageTime = None$/;"	v	class:Cycle
 firstStabilizationTime	argo.py	/^    firstStabilizationTime = None$/;"	v	class:Cycle
 folderbeg	kml.py	/^def folderbeg(name):$/;"	f	access:public
 format_log	utils.py	/^def format_log(log):$/;"	f	access:public
+generate	argo_metadata.py	/^def generate(path):$/;"	f	access:public
 generate	kml.py	/^def generate(dest_path, mfloat_name, dives):$/;"	f	access:public
 generateJSON	dives.py	/^    def generateJSON(self):$/;"	m	class:Dive	access:public
 generate_datetime_log	dives.py	/^    def generate_datetime_log(self):$/;"	m	class:Dive	access:public
@@ -336,19 +332,17 @@ generate_profile_plotly	dives.py	/^    def generate_profile_plotly(self, csv_fil
 generate_s41_environment_file	dives.py	/^    def generate_s41_environment_file(self):$/;"	m	class:Dive	access:public
 generate_s61_environment_file	dives.py	/^    def generate_s61_environment_file(self):$/;"	m	class:Dive	access:public
 get_N_CYCLE	argo.py	/^    def get_N_CYCLE(self) :$/;"	m	class:Cycles	access:public
+get_N_LEVELS	argo.py	/^    def get_N_LEVELS(self):$/;"	m	class:Cycles	access:public
 get_N_LEVELS	sbe41.py	/^    def get_N_LEVELS(self):$/;"	m	class:Profiles	access:public
-get_N_LEVELS	sbe61.py	/^    def get_N_LEVELS(self):$/;"	m	class:Profiles	access:public
 get_N_MEASUREMENTS	argo.py	/^    def get_N_MEASUREMENTS(self) :$/;"	m	class:Cycles	access:public
+get_N_PARAMS	argo.py	/^    def get_N_PARAMS(self):$/;"	m	class:Cycles	access:public
 get_N_PARAMS	sbe41.py	/^    def get_N_PARAMS(self):$/;"	m	class:Profiles	access:public
-get_N_PARAMS	sbe61.py	/^    def get_N_PARAMS(self):$/;"	m	class:Profiles	access:public
+get_N_PROF	argo.py	/^    def get_N_PROF(self):$/;"	m	class:Cycles	access:public
 get_N_PROF	sbe41.py	/^    def get_N_PROF(self):$/;"	m	class:Profiles	access:public
-get_N_PROF	sbe61.py	/^    def get_N_PROF(self):$/;"	m	class:Profiles	access:public
+get_N_TECHNICAL	argo.py	/^    def get_N_TECHNICAL(self) :$/;"	m	class:Cycles	access:public
+get_PARAMS	argo.py	/^    def get_PARAMS(self):$/;"	m	class:Cycles	access:public
 get_PARAMS	sbe41.py	/^    def get_PARAMS(self):$/;"	m	class:Profiles	access:public
-get_PARAMS	sbe61.py	/^    def get_PARAMS(self):$/;"	m	class:Profiles	access:public
 get_buoy	dives.py	/^    def get_buoy(self):$/;"	m	class:Dive	access:public
-get_data_from_nc_file	mermaid_to_metadata.py	/^def get_data_from_nc_file(mfloat_nc_path,dataDict) :$/;"	f	access:public
-get_data_from_nc_file	mermaid_to_mono_profile.py	/^def get_data_from_nc_file(mfloat_nc_path,dataDict) :$/;"	f	access:public
-get_data_from_nc_file	mermaid_to_multi_profile.py	/^def get_data_from_nc_file(mfloat_nc_path,dataDict) :$/;"	f	access:public
 get_data_from_nc_file	mermaid_to_trajectory.py	/^def get_data_from_nc_file(mfloat_nc_path,dataDict) :$/;"	f	access:public
 get_database_version	decrypt.py	/^def get_database_version(file_version,model) :$/;"	f	access:public
 get_date_array	utils.py	/^def get_date_array(date, length, period):$/;"	f	access:public
@@ -377,21 +371,17 @@ header	events.py	/^    header = None$/;"	v	class:Event
 header	sbe41.py	/^    header = None$/;"	v	class:Profile
 header	sbe61.py	/^    header = None$/;"	v	class:Profile
 heading	tools/imu.py	/^    heading = None$/;"	v	class:Imu
-hexoutput	configuration.py	/^    hexoutput=None$/;"	v	class:Sbe41_pilots
 hexoutput	sbe41.py	/^    hexoutput = None$/;"	v	class:Profile
-history_action	mermaid_to_nc_cfg.py	/^history_action = "IP"$/;"	v
-history_institution	mermaid_to_nc_cfg.py	/^history_institution = "JM"$/;"	v
-history_step	mermaid_to_nc_cfg.py	/^history_step = "ARFM"$/;"	v
 icdf24	src/V103/icdf24.c	/^int icdf24 (int32_t* x, size_t lx, size_t K, int normalized) {$/;"	f	signature:(int32_t* x, size_t lx, size_t K, int normalized)
 icdf24	src/V103/icdf24.h	/^int icdf24 (int32_t* x, size_t lx, size_t k, int normalize)$/;"	p	signature:(int32_t* x, size_t lx, size_t k, int normalize)
 icdf24	src/V103EC/icdf24.c	/^int icdf24 (int32_t* x, size_t lx, size_t K, int normalized) {$/;"	f	signature:(int32_t* x, size_t lx, size_t K, int normalized)
 icdf24	src/V103EC/icdf24.h	/^int icdf24 (int32_t* x, size_t lx, size_t k, int normalize)$/;"	p	signature:(int32_t* x, size_t lx, size_t k, int normalize)
+include_nbin	configuration.py	/^    include_nbin=None$/;"	v	class:Profil
 include_nbin	sbe41.py	/^    include_nbin = None$/;"	v	class:Profile
 include_nbin	sbe61.py	/^    include_nbin = None$/;"	v	class:Profile
+include_transition_bin	configuration.py	/^    include_transition_bin=None$/;"	v	class:Profil
 include_transition_bin	sbe41.py	/^    include_transition_bin = None$/;"	v	class:Profile
 include_transition_bin	sbe61.py	/^    include_transition_bin = None$/;"	v	class:Profile
-includenbin	configuration.py	/^    includenbin=None$/;"	v	class:Sbe41_parameters
-includetransitionbin	configuration.py	/^    includetransitionbin=None$/;"	v	class:Sbe41_parameters
 invert_main	tools/tool_invert_mer.py	/^def invert_main():$/;"	f	access:public
 invert_raw	tools/tool_invert_raw.py	/^def invert_raw():$/;"	f	access:public
 invert_transform	events.py	/^    def invert_transform(self):$/;"	m	class:Event	access:public
@@ -399,8 +389,11 @@ is_complete_dive	dives.py	/^    is_complete_dive = None$/;"	v	class:Dive
 is_dive	dives.py	/^    is_dive = None$/;"	v	class:Dive
 is_init	dives.py	/^    is_init = None$/;"	v	class:Dive
 is_stanford_event	events.py	/^    def is_stanford_event(self):$/;"	m	class:Event	access:public
+is_technical	argo.py	/^    is_technical=False$/;"	v	class:Measurement
 kmlbeg	kml.py	/^def kmlbeg():$/;"	f	access:public
 kmlend	kml.py	/^def kmlend():$/;"	f	access:public
+landing_confirmation	configuration.py	/^    landing_confirmation=None$/;"	v	class:Configuration
+landing_confirmation_stored	configuration.py	/^    landing_confirmation_stored=None$/;"	v	class:Configuration
 lastLocationTime	argo.py	/^    lastLocationTime = None$/;"	v	class:Cycle
 lastMessageTime	argo.py	/^    lastMessageTime = None$/;"	v	class:Cycle
 latitude	argo.py	/^    latitude=None$/;"	v	class:Measurement
@@ -415,6 +408,7 @@ list	argo.py	/^    list = None$/;"	v	class:ConfigurationParameters
 list	argo.py	/^    list = None$/;"	v	class:Cycles
 list	argo.py	/^    list=None$/;"	v	class:Measurements
 list_vitals	vitals.py	/^def list_vitals(filepath,client,buoy,mdives,datapath):$/;"	f	access:public
+load_test_sample	configuration.py	/^    load_test_sample=None$/;"	v	class:Profil
 load_test_sample	sbe61.py	/^    load_test_sample = None$/;"	v	class:Profile
 local_html	arguments.py	/^local_html = True$/;"	v
 locations	argo.py	/^    locations = None$/;"	v	class:Cycle
@@ -446,9 +440,10 @@ main	src/V103/icdf24_test.c	/^int main (int argc, char** argv) {$/;"	f	signature
 main	src/V103EC/icdf24_test.c	/^int main (int argc, char** argv) {$/;"	f	signature:(int argc, char** argv)
 main	tools/imu.py	/^def main(argv):$/;"	f	access:public
 main	tools/tool_float_test.py	/^def main():$/;"	f	access:public
+manual_profil	configuration.py	/^    manual_profil=None$/;"	v	class:Profil
 manual_profil	sbe61.py	/^    manual_profil = None$/;"	v	class:Profile
+manual_profil_rate	configuration.py	/^    manual_profil_rate=None$/;"	v	class:Profil
 manual_profil_rate_h	sbe61.py	/^    manual_profil_rate_h = None$/;"	v	class:Profile
-manualprofilerate	configuration.py	/^    manualprofilerate=None$/;"	v	class:Sbe41_pilots
 manualprofilerate	sbe41.py	/^    manualprofilerate = None$/;"	v	class:Profile
 max_surface_delay_s	configuration.py	/^    max_surface_delay_s=None$/;"	v	class:Configuration
 max_surface_delay_s_stored	configuration.py	/^    max_surface_delay_s_stored=None$/;"	v	class:Configuration
@@ -457,17 +452,17 @@ measures	argo.py	/^    measures = None$/;"	v	class:Cycle
 measures	dives.py	/^    measures = None$/;"	v	class:Dive
 merge_vitals	vitals.py	/^def merge_vitals(path,final):$/;"	f	access:public
 mermaid_ploted	arguments.py	/^mermaid_ploted = True$/;"	v
-mermaid_to_nc	mermaid_to_nc.py	/^def mermaid_to_nc(mfloat,date_begin,date_end) :$/;"	f	access:public
 mfloat	tools/tool_float_test.py	/^mfloat = "465.152-R-0002"$/;"	v
-middle_bin_interval	configuration.py	/^    middle_bin_interval=None$/;"	v	class:Sbe41_parameters
+middle_bin_interval	configuration.py	/^    middle_bin_interval=None$/;"	v	class:Profil
 middle_bin_interval	sbe41.py	/^    middle_bin_interval = None$/;"	v	class:Profile
 middle_bin_interval_dbar	sbe61.py	/^    middle_bin_interval_dbar = None$/;"	v	class:Profile
-middle_bin_max	configuration.py	/^    middle_bin_max=None$/;"	v	class:Sbe41_parameters
+middle_bin_max	configuration.py	/^    middle_bin_max=None$/;"	v	class:Profil
 middle_bin_max	sbe41.py	/^    middle_bin_max = None$/;"	v	class:Profile
 middle_bin_max_dbar	sbe61.py	/^    middle_bin_max_dbar = None$/;"	v	class:Profile
-middle_bin_size	configuration.py	/^    middle_bin_size=None$/;"	v	class:Sbe41_parameters
+middle_bin_size	configuration.py	/^    middle_bin_size=None$/;"	v	class:Profil
 middle_bin_size	sbe41.py	/^    middle_bin_size = None$/;"	v	class:Profile
 middle_bin_size_dbar	sbe61.py	/^    middle_bin_size_dbar = None$/;"	v	class:Profile
+middle_mbar_per_s	configuration.py	/^    middle_mbar_per_s = None$/;"	v	class:Configuration
 min_surface_delay_s	configuration.py	/^    min_surface_delay_s=None$/;"	v	class:Configuration
 min_surface_delay_s_stored	configuration.py	/^    min_surface_delay_s_stored=None$/;"	v	class:Configuration
 minimum_mission_time_mn	configuration.py	/^    minimum_mission_time_mn=None$/;"	v	class:Configuration
@@ -479,10 +474,14 @@ mmd_environment	dives.py	/^    mmd_environment = None$/;"	v	class:Dive
 mmd_name	dives.py	/^    mmd_name = None$/;"	v	class:Dive
 mode	tools/tool_invert_raw.py	/^mode = "Binary"$/;"	v
 name	argo.py	/^    name=None$/;"	v	class:ConfigurationParameter
+near_max_mbar_per_s	configuration.py	/^    near_max_mbar_per_s=None$/;"	v	class:Configuration
+near_max_mbar_per_s_stored	configuration.py	/^    near_max_mbar_per_s_stored=None$/;"	v	class:Configuration
 near_mbar	configuration.py	/^    near_mbar=None$/;"	v	class:Configuration
 near_mbar_per_s	configuration.py	/^    near_mbar_per_s=None$/;"	v	class:Configuration
 near_mbar_per_s_stored	configuration.py	/^    near_mbar_per_s_stored=None$/;"	v	class:Configuration
 near_mbar_stored	configuration.py	/^    near_mbar_stored=None$/;"	v	class:Configuration
+near_min_mbar_per_s	configuration.py	/^    near_min_mbar_per_s=None$/;"	v	class:Configuration
+near_min_mbar_per_s_stored	configuration.py	/^    near_min_mbar_per_s_stored=None$/;"	v	class:Configuration
 normalized_2_cdf24	src/V103/cdf24_1.c	/^static void normalized_2_cdf24 (int32_t* x, size_t lx, size_t K) {$/;"	f	file:	signature:(int32_t* x, size_t lx, size_t K)
 normalized_2_cdf24	src/V103/icdf24.c	/^static void normalized_2_cdf24 (int32_t* x, size_t lx, size_t K) {$/;"	f	file:	signature:(int32_t* x, size_t lx, size_t K)
 normalized_2_cdf24	src/V103EC/icdf24.c	/^static void normalized_2_cdf24 (int32_t* x, size_t lx, size_t K) {$/;"	f	file:	signature:(int32_t* x, size_t lx, size_t K)
@@ -495,19 +494,14 @@ oil_coeff_num	configuration.py	/^    oil_coeff_num=None$/;"	v	class:Configuratio
 oil_coeff_num_stored	configuration.py	/^    oil_coeff_num_stored=None$/;"	v	class:Configuration
 old_version	sbe41.py	/^    old_version = None$/;"	v	class:Profile
 optimize	arguments.py	/^optimize = True$/;"	v
-outputPath	mermaid_to_nc.py	/^outputPath = "..\/ARGO\/"$/;"	v
 output_pressure	sbe61.py	/^    output_pressure = None$/;"	v	class:Profile
-outputdensity	configuration.py	/^    outputdensity=None$/;"	v	class:Sbe41_parameters
-outputpressure	configuration.py	/^    outputpressure=None$/;"	v	class:Sbe41_parameters
-outputpts	configuration.py	/^    outputpts=None$/;"	v	class:Sbe41_parameters
-outputrt	configuration.py	/^    outputrt=None$/;"	v	class:Sbe41_parameters
-outputsn	configuration.py	/^    outputsn=None$/;"	v	class:Sbe41_parameters
 p2t_addr	configuration.py	/^    p2t_addr=None$/;"	v	class:Configuration
 p2t_historic_depth	configuration.py	/^    p2t_historic_depth=None$/;"	v	class:Configuration
 p2t_log_mbar	configuration.py	/^    p2t_log_mbar=None$/;"	v	class:Configuration
 p2t_log_mdegc	configuration.py	/^    p2t_log_mdegc=None$/;"	v	class:Configuration
 p2t_offset_mbar	configuration.py	/^    p2t_offset_mbar=None$/;"	v	class:Configuration
 p2t_period_ms	configuration.py	/^    p2t_period_ms=None$/;"	v	class:Configuration
+p_cut_off	configuration.py	/^    p_cut_off=None$/;"	v	class:Profil
 p_cut_off_dbar	sbe61.py	/^    p_cut_off_dbar = None$/;"	v	class:Profile
 parameters	argo.py	/^    parameters = None$/;"	v	class:Cycle
 parameters	argo.py	/^    parameters = None$/;"	v	class:Mission
@@ -522,7 +516,6 @@ park_pressure_dbar	argo.py	/^    park_pressure_dbar = None$/;"	v	class:Cycle
 park_pressure_mbar	argo.py	/^    park_pressure_mbar = None$/;"	v	class:ConfigurationParameters
 park_pressure_status	argo.py	/^    park_pressure_status = None$/;"	v	class:Cycle
 park_time_h	argo.py	/^    park_time_h = None$/;"	v	class:ConfigurationParameters
-pcutoff	configuration.py	/^    pcutoff=None$/;"	v	class:Sbe41_parameters
 pcutoff	sbe41.py	/^    pcutoff = None$/;"	v	class:Profile
 pitch	tools/imu.py	/^    pitch = None$/;"	v	class:Imu
 plot	events.py	/^    def plot(self, path):$/;"	m	class:Event	access:public
@@ -550,6 +543,7 @@ print_all	argo.py	/^    def print_all(self) :$/;"	m	class:Measurements	access:pu
 process	vitals.py	/^def process (list):$/;"	f	access:public
 process_one_float	main.py	/^def process_one_float(mfloat, datapath):$/;"	f	access:public
 processed_directory	arguments.py	/^processed_directory = "..\/processed"$/;"	v
+profil	configuration.py	/^    profil=None$/;"	v	class:Stage
 profile_bottom_bin_interval_cbar	argo.py	/^    profile_bottom_bin_interval_cbar = None$/;"	v	class:ConfigurationParameters
 profile_bottom_slices_tickness_dbar	argo.py	/^    profile_bottom_slices_tickness_dbar = None$/;"	v	class:ConfigurationParameters
 profile_include_transition_bin	argo.py	/^    profile_include_transition_bin = None$/;"	v	class:ConfigurationParameters
@@ -566,6 +560,12 @@ profilesS41	dives.py	/^    profilesS41 = None$/;"	v	class:Dive
 profilesS61	dives.py	/^    profilesS61 = None$/;"	v	class:Dive
 pump_coeff	configuration.py	/^    pump_coeff=None$/;"	v	class:Configuration
 pump_coeff_stored	configuration.py	/^    pump_coeff_stored=None$/;"	v	class:Configuration
+pump_deep_linear_slope	configuration.py	/^    pump_deep_linear_slope=None$/;"	v	class:Configuration
+pump_deep_linear_slope_stored	configuration.py	/^    pump_deep_linear_slope_stored=None$/;"	v	class:Configuration
+pump_deep_linear_y_intercept	configuration.py	/^    pump_deep_linear_y_intercept=None$/;"	v	class:Configuration
+pump_deep_linear_y_intercept_stored	configuration.py	/^    pump_deep_linear_y_intercept_stored=None$/;"	v	class:Configuration
+pump_deep_outflow_uL_mn_V	configuration.py	/^    pump_deep_outflow_uL_mn_V=None$/;"	v	class:Configuration
+pump_deep_outflow_uL_mn_V_stored	configuration.py	/^    pump_deep_outflow_uL_mn_V_stored=None$/;"	v	class:Configuration
 pump_fill_power_percent	configuration.py	/^    pump_fill_power_percent=None$/;"	v	class:Configuration
 pump_fill_power_percent_stored	configuration.py	/^    pump_fill_power_percent_stored=None$/;"	v	class:Configuration
 pump_max_ms	configuration.py	/^    pump_max_ms=None$/;"	v	class:Configuration
@@ -573,41 +573,40 @@ pump_max_ms_stored	configuration.py	/^    pump_max_ms_stored=None$/;"	v	class:Co
 pump_ploted	arguments.py	/^pump_ploted = True$/;"	v
 pump_power_percent	configuration.py	/^    pump_power_percent=None$/;"	v	class:Configuration
 pump_power_percent_stored	configuration.py	/^    pump_power_percent_stored=None$/;"	v	class:Configuration
-pumpfastpt	configuration.py	/^    pumpfastpt=None$/;"	v	class:Sbe41_parameters
+pump_time	configuration.py	/^    pump_time=None$/;"	v	class:Profil
 putNString	mermaid_to_metadata.py	/^def putNString(var,string,nb,varlen):$/;"	f	access:public
 putNString	mermaid_to_mono_profile.py	/^def putNString(var,string,nb,varlen):$/;"	f	access:public
 putNString	mermaid_to_multi_profile.py	/^def putNString(var,string,nb,varlen):$/;"	f	access:public
+putNString	mermaid_to_technical.py	/^def putNString(var,string,nb,varlen):$/;"	f	access:public
 putNString	mermaid_to_trajectory.py	/^def putNString(var,string,nb,varlen):$/;"	f	access:public
 putString	mermaid_to_metadata.py	/^def putString(var,string,varlen):$/;"	f	access:public
 putString	mermaid_to_mono_profile.py	/^def putString(var,string,varlen):$/;"	f	access:public
 putString	mermaid_to_multi_profile.py	/^def putString(var,string,varlen):$/;"	f	access:public
+putString	mermaid_to_technical.py	/^def putString(var,string,varlen):$/;"	f	access:public
 putString	mermaid_to_trajectory.py	/^def putString(var,string,varlen):$/;"	f	access:public
 putStringArray	mermaid_to_metadata.py	/^def putStringArray(var,stringArray,varlen):$/;"	f	access:public
 putStringArray	mermaid_to_mono_profile.py	/^def putStringArray(var,stringArray,varlen):$/;"	f	access:public
 putStringArray	mermaid_to_multi_profile.py	/^def putStringArray(var,stringArray,varlen):$/;"	f	access:public
+putStringArray	mermaid_to_technical.py	/^def putStringArray(var,stringArray,varlen):$/;"	f	access:public
 putStringArray	mermaid_to_trajectory.py	/^def putStringArray(var,stringArray,varlen):$/;"	f	access:public
 redo	main.py	/^redo = "True"$/;"	v
 requested	events.py	/^    requested = None$/;"	v	class:Event
 roll	tools/imu.py	/^    roll = None$/;"	v	class:Imu
 running_pump_before_profile_s	sbe61.py	/^    running_pump_before_profile_s = None$/;"	v	class:Profile
-runningpumpbeforeprofile	configuration.py	/^    runningpumpbeforeprofile=None$/;"	v	class:Sbe41_pilots
 runningpumpbeforeprofile	sbe41.py	/^    runningpumpbeforeprofile = None$/;"	v	class:Profile
 s41_environment	dives.py	/^    s41_environment = None$/;"	v	class:Dive
 s41_name	dives.py	/^    s41_name = None$/;"	v	class:Dive
 s41_start	dives.py	/^    s41_start = None$/;"	v	class:Dive
 salinity	argo.py	/^    salinity=None$/;"	v	class:Measurement
-samplerate	configuration.py	/^    samplerate=None$/;"	v	class:Sbe41_parameters
 samplerate	sbe41.py	/^    samplerate = None$/;"	v	class:Profile
 sampling_file	tools/tool_invert_raw.py	/^sampling_file = "tool_invert_raw\/2021-05-21_freq"$/;"	v
 sampling_period_s	argo.py	/^    sampling_period_s = None$/;"	v	class:ConfigurationParameters
 sbe41ProfileEnvironnement	argo.py	/^    sbe41ProfileEnvironnement = None$/;"	v	class:Cycle
 sbe41ProfileFileName	argo.py	/^    sbe41ProfileFileName = None$/;"	v	class:Cycle
 sbe41Profiles	argo.py	/^    sbe41Profiles = None$/;"	v	class:Cycle
-sbe41_parameters	configuration.py	/^    sbe41_parameters=None$/;"	v	class:Configuration
-sbe41_pilots	configuration.py	/^    sbe41_pilots=None$/;"	v	class:Configuration
+sbe61Profiles	argo.py	/^    sbe61Profiles = None$/;"	v	class:Cycle
 sbe61_ploted	arguments.py	/^sbe61_ploted = True$/;"	v
-scientific_type	configuration.py	/^    scientific_type=None$/;"	v	class:Stage
-serverPath	mermaid_to_nc.py	/^serverPath = "..\/server\/"$/;"	v
+scientific	configuration.py	/^    scientific=None$/;"	v	class:Stage
 server_directory	arguments.py	/^server_directory = "..\/server"$/;"	v
 set_environment	events.py	/^    def set_environment(self, environment):$/;"	m	class:Event	access:public
 snr	events.py	/^    snr = None$/;"	v	class:Event
@@ -616,22 +615,21 @@ sort_vitals	vitals.py	/^def sort_vitals(elem):$/;"	f	access:public
 sortdictbydate	vitals.py	/^def sortdictbydate(value):$/;"	f	access:public
 sortdictbyname	vitals.py	/^def sortdictbyname(value):$/;"	f	access:public
 source	gps.py	/^    source = None$/;"	v	class:GPS
+speed_control	configuration.py	/^    speed_control=None$/;"	v	class:Profil
 speed_control_mbar_per_s	sbe61.py	/^    speed_control_mbar_per_s = None$/;"	v	class:Profile
+speed_detection	configuration.py	/^    speed_detection=None$/;"	v	class:Profil
 speed_detection	sbe61.py	/^    speed_detection = None$/;"	v	class:Profile
 speed_mbar_per_s	configuration.py	/^    speed_mbar_per_s=None$/;"	v	class:Configuration
 speed_mbar_per_s_stored	configuration.py	/^    speed_mbar_per_s_stored=None$/;"	v	class:Configuration
+speed_start	configuration.py	/^    speed_start=None$/;"	v	class:Profil
 speed_start_mbar_per_s	sbe61.py	/^    speed_start_mbar_per_s = None$/;"	v	class:Profile
-speedcontrol	configuration.py	/^    speedcontrol=None$/;"	v	class:Sbe41_pilots
-speeddetection	configuration.py	/^    speeddetection=None$/;"	v	class:Sbe41_pilots
 speeddetection	sbe41.py	/^    speeddetection = None$/;"	v	class:Profile
-speedstart	configuration.py	/^    speedstart=None$/;"	v	class:Sbe41_pilots
 speedstart	sbe41.py	/^    speedstart = None$/;"	v	class:Profile
 split	vitals.py	/^    def split(self,line):$/;"	m	class:Emergency	access:public
 split	vitals.py	/^    def split(self,line,mdives,path):$/;"	m	class:Vitals	access:public
 split_log_lines	utils.py	/^def split_log_lines(content):$/;"	f	access:public
 stab_counts	configuration.py	/^    stab_counts=None$/;"	v	class:Configuration
 stab_counts_stored	configuration.py	/^    stab_counts_stored=None$/;"	v	class:Configuration
-stage_type	configuration.py	/^    stage_type=None$/;"	v	class:Stage
 stages	argo.py	/^    stages = None$/;"	v	class:Cycle
 stages	configuration.py	/^    stages=None$/;"	v	class:Configuration
 stages_nb	argo.py	/^    stages_nb = None$/;"	v	class:Cycle
@@ -652,17 +650,19 @@ surface_mbar	configuration.py	/^    surface_mbar=None$/;"	v	class:Configuration
 surface_mbar_stored	configuration.py	/^    surface_mbar_stored=None$/;"	v	class:Configuration
 surface_reach_loc	dives.py	/^    surface_reach_loc = None$/;"	v	class:Dive
 surface_timeout_h	argo.py	/^    surface_timeout_h = None$/;"	v	class:ConfigurationParameters
+technicalParameters	argo.py	/^    technicalParameters = None$/;"	v	class:Cycle
+technical_value	argo.py	/^    technical_value=None$/;"	v	class:Measurement
 temperature	argo.py	/^    temperature=None$/;"	v	class:Measurement
 temperature	events.py	/^    temperature = None$/;"	v	class:Event
 toJuld	utils.py	/^def toJuld(utcdatetime, reference = UTCDateTime("1950-01-01T00:00:00")):$/;"	f	access:public
 to_sac_and_mseed	events.py	/^    def to_sac_and_mseed(self, path, station_number, force_without_loc):$/;"	m	class:Event	access:public
-top_bin_interval	configuration.py	/^    top_bin_interval=None$/;"	v	class:Sbe41_parameters
+top_bin_interval	configuration.py	/^    top_bin_interval=None$/;"	v	class:Profil
 top_bin_interval	sbe41.py	/^    top_bin_interval = None$/;"	v	class:Profile
 top_bin_interval_dbar	sbe61.py	/^    top_bin_interval_dbar = None$/;"	v	class:Profile
-top_bin_max	configuration.py	/^    top_bin_max=None$/;"	v	class:Sbe41_parameters
+top_bin_max	configuration.py	/^    top_bin_max=None$/;"	v	class:Profil
 top_bin_max	sbe41.py	/^    top_bin_max = None$/;"	v	class:Profile
 top_bin_max_dbar	sbe61.py	/^    top_bin_max_dbar = None$/;"	v	class:Profile
-top_bin_size	configuration.py	/^    top_bin_size=None$/;"	v	class:Sbe41_parameters
+top_bin_size	configuration.py	/^    top_bin_size=None$/;"	v	class:Profil
 top_bin_size	sbe41.py	/^    top_bin_size = None$/;"	v	class:Profile
 top_bin_size_dbar	sbe61.py	/^    top_bin_size_dbar = None$/;"	v	class:Profile
 totimestamp	utils.py	/^def totimestamp(dt, epoch = datetime(1970,1,1)):$/;"	f	access:public
@@ -670,7 +670,7 @@ transmissionEndTime	argo.py	/^    transmissionEndTime = None$/;"	v	class:Cycle
 transmissionStartTime	argo.py	/^    transmissionStartTime = None$/;"	v	class:Cycle
 trig	events.py	/^    trig = None$/;"	v	class:Event
 ts_wait_s	sbe61.py	/^    ts_wait_s = None$/;"	v	class:Profile
-tswait	configuration.py	/^    tswait=None$/;"	v	class:Sbe41_parameters
+type	configuration.py	/^    type=None$/;"	v	class:Stage
 unnormalized_cdf24	src/V103/cdf24_1.c	/^static void unnormalized_cdf24 (int32_t* x, size_t lx, size_t K) {$/;"	f	file:	signature:(int32_t* x, size_t lx, size_t K)
 unnormalized_cdf24	src/V103/icdf24.c	/^static void unnormalized_cdf24 (int32_t* x, size_t lx, size_t K) {$/;"	f	file:	signature:(int32_t* x, size_t lx, size_t K)
 unnormalized_cdf24	src/V103EC/icdf24.c	/^static void unnormalized_cdf24 (int32_t* x, size_t lx, size_t K) {$/;"	f	file:	signature:(int32_t* x, size_t lx, size_t K)

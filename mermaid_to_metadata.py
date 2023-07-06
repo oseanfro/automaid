@@ -3,9 +3,10 @@
 # @Email:  frederic.rocca@osean.fr
 # @Filename: mermaid_to_metadata.py
 # @Last modified by:   fro
-# @Last modified time: 2023-07-03T14:26:28+02:00
+# @Last modified time: 2023-07-06T15:37:40+02:00
 
 import os
+import json
 import shutil
 import sys
 import decrypt
@@ -20,17 +21,8 @@ from netCDF4 import Dataset
 from netCDF4 import stringtochar
 from datetime import datetime,timezone
 import numpy as np
-import mermaid_to_nc_cfg as cfg
 import configuration
-import json
-
-def get_data_from_nc_file(mfloat_nc_path,dataDict) :
-    rd_cdf = Dataset(mfloat_nc_path, "r", format="NETCDF3_CLASSIC")
-    for key in dataDict.keys() :
-        variables = rd_cdf.get_variables_by_attribute(self, name=dataDict.keys())
-        if len(variables) > 0:
-            dataDict[key] = variables[0]
-    return dataDict
+import argo_metadata
 
 def create_dim_tuple(dimensions,value):
     result = value
@@ -49,7 +41,7 @@ def putString(var,string,varlen):
 def putNString(var,string,nb,varlen):
     putStringArray(var,[string]*nb,varlen)
 
-def create_nc_metadata_3_1(FloatWmoID,mfloat_nc_path,mCycles,ms41s):
+def create_nc_metadata_3_1(FloatWmoID,mfloat_nc_path,mCycles,metadata):
     metadataFilePath = mfloat_nc_path + FloatWmoID + "_meta.nc"
     print(metadataFilePath)
     if os.path.exists(metadataFilePath):
@@ -71,8 +63,8 @@ def create_nc_metadata_3_1(FloatWmoID,mfloat_nc_path,mCycles,ms41s):
     string8Dim = file_cdf.createDimension('STRING8', 8);
     string4Dim = file_cdf.createDimension('STRING4', 4);
     string2Dim = file_cdf.createDimension('STRING2', 2);
-    nParamDim = file_cdf.createDimension('N_PARAM', ms41s.get_N_PARAMS());
-    nSensorDim = file_cdf.createDimension('N_SENSORS', ms41s.get_N_PARAMS());
+    nParamDim = file_cdf.createDimension('N_PARAM', len(metadata["PARAMETERS"]));
+    nSensorDim = file_cdf.createDimension('N_SENSORS', len(metadata["SENSORS"]));
     nConfigParamDim = file_cdf.createDimension('N_CONFIG_PARAM', mCycles.configurationParametersNb);
     nLaunchConfigParamDim = file_cdf.createDimension('N_LAUNCH_CONFIG_PARAM', mCycles.launchingParametersNb);
     nMissionDim = file_cdf.createDimension('N_MISSIONS',mCycles.missionsNb);
@@ -109,15 +101,15 @@ def create_nc_metadata_3_1(FloatWmoID,mfloat_nc_path,mCycles,ms41s):
     file_cdf.setncattr('source','Argo float')
 
     currentDate = datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S");
-    globalHistoryText = currentDate + ' creation; ';
+    globalHistoryText = metadata["DATE_CREATION"] + ' creation; ';
     globalHistoryText += currentDate + ' last update (osean float converting raw data)'
 
     file_cdf.setncattr('history', globalHistoryText)
     file_cdf.setncattr('references', 'http://www.argodatamgt.org/Documentation')
-    file_cdf.setncattr('user_manual_version', '3.4')
+    file_cdf.setncattr('user_manual_version', '3.41.1')
     file_cdf.setncattr('Conventions', 'Argo-3.1 CF-1.6')
 
-    dataTypeVar = file_cdf.createVariable('DATA_TYPE','S1',('STRING16',),fill_value=' ')
+    dataTypeVar = file_cdf.createVariable('DATA_TYPE','S1',('STRING32',),fill_value=' ')
     dataTypeVar.setncattr('long_name', 'Data type')
     dataTypeVar.setncattr('conventions', 'Argo reference table 1')
 
@@ -159,16 +151,16 @@ def create_nc_metadata_3_1(FloatWmoID,mfloat_nc_path,mCycles,ms41s):
     positioningSystemVar = file_cdf.createVariable('POSITIONING_SYSTEM','S1',('N_POSITIONING_SYSTEM','STRING8'),fill_value=' ')
     positioningSystemVar.setncattr('long_name', 'Positioning system');
 
-    plateformFamilyVar = file_cdf.createVariable('PLATEFORM_FAMILY','S1',('STRING256',),fill_value=' ')
-    plateformFamilyVar.setncattr('long_name', 'Category of instrument');
+    platformFamilyVar = file_cdf.createVariable('PLATFORM_FAMILY','S1',('STRING256',),fill_value=' ')
+    platformFamilyVar.setncattr('long_name', 'Category of instrument');
 
-    plateformTypeVar = file_cdf.createVariable('PLATFORM_TYPE','S1',('STRING32',),fill_value=' ')
-    plateformTypeVar.setncattr('long_name', 'Type of float');
-    plateformTypeVar.setncattr('conventions', 'Argo reference table 23');
+    platformTypeVar = file_cdf.createVariable('PLATFORM_TYPE','S1',('STRING32',),fill_value=' ')
+    platformTypeVar.setncattr('long_name', 'Type of float');
+    platformTypeVar.setncattr('conventions', 'Argo reference table 23');
 
-    plateformMakerVar = file_cdf.createVariable('PLATFORM_MAKER','S1',('STRING256',),fill_value=' ')
-    plateformMakerVar.setncattr('long_name', 'Name of the manufacturer');
-    plateformMakerVar.setncattr('conventions', 'Argo reference table 24');
+    platformMakerVar = file_cdf.createVariable('PLATFORM_MAKER','S1',('STRING256',),fill_value=' ')
+    platformMakerVar.setncattr('long_name', 'Name of the manufacturer');
+    platformMakerVar.setncattr('conventions', 'Argo reference table 24');
 
     firmwareVersionVar = file_cdf.createVariable('FIRMWARE_VERSION','S1',('STRING64',),fill_value=' ')
     firmwareVersionVar.setncattr('long_name', 'Firmware version for the float');
@@ -271,14 +263,14 @@ def create_nc_metadata_3_1(FloatWmoID,mfloat_nc_path,mCycles,ms41s):
     startUpDateQcVar.setncattr('long_name', 'Quality on startup date');
     startUpDateQcVar.setncattr('conventions', 'Argo reference table 2');
 
-    deployementPlateformVar = file_cdf.createVariable('DEPLOYEMENT_PLATEFORM','S1',('STRING32',),fill_value=' ')
-    deployementPlateformVar.setncattr('long_name', 'Identifier of the deployment platform');
+    deploymentPlatformVar = file_cdf.createVariable('DEPLOYMENT_PLATFORM','S1',('STRING32',),fill_value=' ')
+    deploymentPlatformVar.setncattr('long_name', 'Identifier of the deployment platform');
 
-    deployementCruiseIdVar = file_cdf.createVariable('DEPLOYEMENT_CRUISE_ID','S1',('STRING32',),fill_value=' ')
-    deployementCruiseIdVar.setncattr('long_name', 'Identification number or reference number of the cruise used to deploy the float');
+    deploymentCruiseIdVar = file_cdf.createVariable('DEPLOYMENT_CRUISE_ID','S1',('STRING32',),fill_value=' ')
+    deploymentCruiseIdVar.setncattr('long_name', 'Identification number or reference number of the cruise used to deploy the float');
 
-    deployementReferenceStationIdVar = file_cdf.createVariable('DEPLOYEMENT_REFERENCE_STATION_ID','S1',('STRING256',),fill_value=' ')
-    deployementReferenceStationIdVar.setncattr('long_name', 'Identifier or reference number of co-located stations used to verify the first profile');
+    deploymentReferenceStationIdVar = file_cdf.createVariable('DEPLOYMENT_REFERENCE_STATION_ID','S1',('STRING256',),fill_value=' ')
+    deploymentReferenceStationIdVar.setncattr('long_name', 'Identifier or reference number of co-located stations used to verify the first profile');
 
     endMissionDateVar = file_cdf.createVariable('END_MISSION_DATE','S1',('DATE_TIME',),fill_value=' ')
     endMissionDateVar.setncattr('long_name', 'Date (UTC) of the end of mission of the float');
@@ -343,25 +335,21 @@ def create_nc_metadata_3_1(FloatWmoID,mfloat_nc_path,mCycles,ms41s):
     parameterresolutionVar.setncattr('long_name', 'Resolution of the parameter');
     #2.4.8 Float calibration information
 
-    predeployementCalibEquationVar = file_cdf.createVariable('PREDEPLOYMENT_CALIB_EQUATION','S1',('N_PARAM','STRING1024'),fill_value=' ')
-    predeployementCalibEquationVar.setncattr('long_name', 'Calibration equation for this parameter');
+    predeploymentCalibEquationVar = file_cdf.createVariable('PREDEPLOYMENT_CALIB_EQUATION','S1',('N_PARAM','STRING1024'),fill_value=' ')
+    predeploymentCalibEquationVar.setncattr('long_name', 'Calibration equation for this parameter');
 
-    predeployementCalibCoefficientVar = file_cdf.createVariable('PREDEPLOYMENT_CALIB_COEFFICIENT','S1',('N_PARAM','STRING1024'),fill_value=' ')
-    predeployementCalibCoefficientVar.setncattr('long_name', 'Calibration coefficients for this equation');
+    predeploymentCalibCoefficientVar = file_cdf.createVariable('PREDEPLOYMENT_CALIB_COEFFICIENT','S1',('N_PARAM','STRING1024'),fill_value=' ')
+    predeploymentCalibCoefficientVar.setncattr('long_name', 'Calibration coefficients for this equation');
 
-    predeployementCalibCommentVar = file_cdf.createVariable('PREDEPLOYMENT_CALIB_COMMENT','S1',('N_PARAM','STRING1024'),fill_value=' ')
-    predeployementCalibCommentVar.setncattr('long_name', 'Comment applying to this parameter calibration');
+    predeploymentCalibCommentVar = file_cdf.createVariable('PREDEPLOYMENT_CALIB_COMMENT','S1',('N_PARAM','STRING1024'),fill_value=' ')
+    predeploymentCalibCommentVar.setncattr('long_name', 'Comment applying to this parameter calibration');
 
-    print('END OF DEFINITION');
     ##################################################################################################
     ###                                                                                             ##
     ###                                     Get data                                                ##
     ###                                                                                             ##
     ##################################################################################################
     # Profile data
-    param_names = []
-    for param in ms41s.get_PARAMS() :
-        param_names.append(param["PARAM_NAME"])
     floatSerial = mCycles.get_station_nb()
     softVersions = mCycles.get_software_versions()
     if len(softVersions) > 1 :
@@ -376,49 +364,46 @@ def create_nc_metadata_3_1(FloatWmoID,mfloat_nc_path,mCycles,ms41s):
     configParameterValue = []
     configMissionNumber =[]
     configMissionComment = []
+
     #launch parameters never change
     for parameter in mCycles.launchingParameters.list:
         launchConfigParameterName.append(parameter.name)
         launchConfigParameterValue.append(parameter.value)
-
     for parameter in mCycles.missions[-1].configurationParameters.list:
         configParameterName.append(parameter.name)
-
-    commentFilePath = mfloat_nc_path  + "configMissionComment.json"
-    if os.path.exists(commentFilePath):
-        with open(commentFilePath,"r") as f:
-            configMissionComment = json.loads(f.read())
-    retreiveComments = True
-    if len(configMissionComment) > 0 :
-        retreiveComments = False
-
     for mission in mCycles.missions :
         if mission.missionNumber > 0 :
-            missionParametersNames = []
             missionParametersValues = []
             configMissionNumber.append(mission.missionNumber)
-            if retreiveComments :
-                print(mission.missionNumber)
-                print(mission.configurationParameters)
-                comment = input("give comment on this mission\r\n")
-                if comment != "" :
-                    while (len(comment) > 256) :
-                        print("!!!!!!!!!!!!!string is too long!!!!!!!!!!!!!!!!!")
-                        print(mission.missionNumber)
-                        print(mission.configurationParameters)
-                        comment = input("give comment on this mission\r\n")
-                    configMissionComment.append(comment)
-
             for parameter in mission.configurationParameters.list:
-                missionParametersNames.append(parameter.name)
                 missionParametersValues.append(parameter.value)
             configParameterValue.append(missionParametersValues)
+    missions = []
+    for mission in mCycles.missions:
+        if mission.missionNumber > 0 :
+            mission_params = {}
+            for parameter in mission.configurationParameters.list:
+                if parameter.value:
+                    mission_params.setdefault(parameter.name,str(parameter.value))
+                else :
+                    mission_params.setdefault(parameter.name,"---")
+            mission_params["comment"] = ""
+            mission_params["id"] = str(mission.missionNumber)
+            missions.append(mission_params)
 
-    with open(commentFilePath,"w") as f:
-        f.write(json.dumps(configMissionComment))
+    if "MISSIONS" in metadata:
+        for meta_mission in metadata["MISSIONS"]:
+            for mission in missions:
+                if meta_mission['id'] == mission['id']:
+                    mission['comment'] = meta_mission['comment']
 
+    metadata["MISSIONS"] = missions
+    json_object = json.dumps(metadata, indent=4)
 
-
+    metadata_file_path = os.path.join(mfloat_nc_path, "metadata.json")
+    # Writing to metadata.json
+    with open(metadata_file_path, "w") as outfile:
+        outfile.write(json_object)
     ##################################################################################################
     ###                                                                                             ##
     ###                                     Load data                                               ##
@@ -426,71 +411,114 @@ def create_nc_metadata_3_1(FloatWmoID,mfloat_nc_path,mCycles,ms41s):
     ##################################################################################################
 
     #2.4.3 General information on the metadata file
-    putString(dataTypeVar,'Argo meta-data',string16DimSize)
+    putString(dataTypeVar,'Argo meta-data',string32DimSize)
     putString(formatVersionVar,'3.1',string4DimSize)
     putString(handbookVersionVar,'1.2',string4DimSize)
-    putString(dateCreationVar,currentDate,dateTimeDimSize)
+    putString(dateCreationVar,metadata["DATE_CREATION"],dateTimeDimSize)
     putString(dateUpdateVar,currentDate,dateTimeDimSize)
 
     #2.4.4 Float characteristics
-    putString(platformNumberVar,'A9IIIII',string8DimSize)
-    putString(platformWigosIdVar,'0-22000-0-A9IIIII',string17DimSize)
+    putString(platformNumberVar,metadata["PLATFORM_NUMBER"],string8DimSize)
+    putString(platformWigosIdVar,metadata["PLATFORM_WIGOS_ID"],string17DimSize)
     # numéro de SIM ?????
-    putString(pttVar,'512424',string256DimSize)
-    putNString(transSystemVar,'IRIDIUM',ntransDimSize,string16DimSize)
-    putNString(tranSystemIdVar,'n/a',ntransDimSize,string32DimSize)
-    putNString(transFrequencyVar,'n/a',ntransDimSize,string16DimSize)
-    putNString(positioningSystemVar,'GPS',nPositioningSystemDimSize,string8DimSize)
-    putString(plateformFamilyVar,'FLOAT',string256DimSize)
-    putString(plateformTypeVar,'999',string32DimSize)
-    putString(plateformMakerVar,'OSEAN',string256DimSize)
+    putString(pttVar,metadata["PTT"],string256DimSize)
+    putNString(transSystemVar,metadata["TRANS_SYSTEM"],ntransDimSize,string16DimSize)
+    putNString(tranSystemIdVar,metadata["TRANS_SYSTEM_ID"],ntransDimSize,string32DimSize)
+    putNString(transFrequencyVar,metadata["TRANS_FREQUENCY"],ntransDimSize,string16DimSize)
+    putNString(positioningSystemVar,metadata["POSITIONING_SYSTEM"],nPositioningSystemDimSize,string8DimSize)
+    putString(platformFamilyVar,metadata["PLATFORM_FAMILY"],string256DimSize)
+    putString(platformTypeVar,metadata["PLATFORM_TYPE"],string32DimSize)
+    putString(platformMakerVar,metadata["PLATFORM_MAKER"],string256DimSize)
     putString(firmwareVersionVar,softVersion,string64DimSize)
-    putString(manualVersionVar,'452000852V02',string16DimSize)
+    putString(manualVersionVar,metadata["MANUAL_VERSION"],string16DimSize)
     putString(floatSerialNoVar,floatSerial,string32DimSize)
-    putString(wmoInstTypeVar,'999',string4DimSize)
-    putString(projectNameVar,'ARGOMermaid',string64DimSize)
-    putString(dataCenterVar,cfg.history_institution,string2DimSize)
-    putString(piNameVar,'Frederic Rocca',string64DimSize)
-    putString(batteryTypeVar,'ELECTROCHEM Lithium 15V',string64DimSize)
-    putString(controllerBoardTypePrimaryVar,'MERMAID_PILOT',string32DimSize)
-    putString(controllerBoardSerialNoPrimaryVar,'452.020-P-0051',string32DimSize)
-    putString(floatOwnerVar,'OSEAN',string64DimSize)
-    putString(operatingInstitutionVar,'OSEAN',string64DimSize)
+    putString(standardFormatIdVar,metadata["STANDARD_FORMAT_ID"],string16DimSize)
+    putString(dacFormatIdVar,metadata["DAC_FORMAT_ID"],string16DimSize)
+    putString(wmoInstTypeVar,metadata["WMO_INST_TYPE"],string4DimSize)
+    putString(projectNameVar,metadata["PROJECT_NAME"],string64DimSize)
+    putString(dataCenterVar,metadata["DATA_CENTRE"],string2DimSize)
+    putString(piNameVar,metadata["PI_NAME"],string64DimSize)
+    putString(anomalyVar,metadata["ANOMALY"],string256DimSize)
+    putString(batteryTypeVar,metadata["BATTERY_TYPE"],string64DimSize)
+    putString(batteryPacksVar,metadata["BATTERY_PACKS"],string64DimSize)
+    putString(controllerBoardTypePrimaryVar,metadata["CONTROLLER_BOARD_TYPE_PRIMARY"],string32DimSize)
+    putString(controllerBoardSerialNoPrimaryVar,metadata["CONTROLLER_BOARD_SERIAL_NO_PRIMARY"],string32DimSize)
+    putString(specialFeatureVar,metadata["SPECIAL_FEATURES"],string1024DimSize)
+    putString(floatOwnerVar,metadata["FLOAT_OWNER"],string64DimSize)
+    putString(operatingInstitutionVar,metadata["OPERATING_INSTITUTION"],string64DimSize)
+    putString(customisationVar,metadata["CUSTOMISATION"],string1024DimSize)
 
     #2.4.5 Float deployment and mission information
-    putString(launchDateVar,'20200708070435',dateTimeDimSize)
-    launchLatitudeVar[:] = np.float64(43.3899500)
-    launchLongitudeVar[:] = np.float64(7.8623500)
-    launchQcVar[:] = '0'
-    putString(startDateVar,'20200708123857',dateTimeDimSize)
-    startDateQcVar[:] = '0'
-    putString(startUpDateVar,'20200708065659',dateTimeDimSize)
-    startUpDateQcVar[:] = '0'
-    putString(deployementPlateformVar,'n/a',string32DimSize)
-    putString(deployementCruiseIdVar,'n/a',string32DimSize)
-    putString(deployementReferenceStationIdVar,'n/a',string256DimSize)
-    putString(endMissionDateVar,'20201106083949',dateTimeDimSize)
-    endMissionStatusVar[:] = 'R'
+    putString(launchDateVar,metadata["LAUNCH_DATE"],dateTimeDimSize)
+    launchLatitudeVar[:] = np.float64(metadata["LAUNCH_LATITUDE"])
+    launchLongitudeVar[:] = np.float64(metadata["LAUNCH_LONGITUDE"])
+    launchQcVar[:] = metadata["LAUNCH_QC"]
+    putString(startDateVar,metadata["START_DATE"],dateTimeDimSize)
+    startDateQcVar[:] = metadata["START_DATE_QC"]
+    putString(startUpDateVar,metadata["STARTUP_DATE"],dateTimeDimSize)
+    startUpDateQcVar[:] = metadata["STARTUP_DATE_QC"]
+    putString(deploymentPlatformVar,metadata["DEPLOYMENT_PLATFORM"],string32DimSize)
+    putString(deploymentCruiseIdVar,metadata["DEPLOYMENT_CRUISE_ID"],string32DimSize)
+    putString(deploymentReferenceStationIdVar,metadata["DEPLOYMENT_REFERENCE_STATION_ID"],string256DimSize)
+    putString(endMissionDateVar,metadata["END_MISSION_DATE"],dateTimeDimSize)
+    endMissionStatusVar[:] = metadata["END_MISSION_STATUS"]
 
     #2.4.6 Configuration parameters
+
+    comment_list = []
+    for meta_mission in metadata["MISSIONS"]:
+        comment_list.append(meta_mission["comment"])
+
     putStringArray(launchConfigParameterNameVar,launchConfigParameterName,string128DimSize)
     launchConfigParameterValueVar[:] = launchConfigParameterValue
     putStringArray(configParameterNameVar,configParameterName,string128DimSize)
     configParameterValueVar[:] = configParameterValue
     configMissionNumberVar[:] = configMissionNumber
-    putStringArray(configMissionCommentVar,configMissionComment,string256DimSize)
+    putStringArray(configMissionCommentVar,comment_list,string256DimSize)
 
     #2.4.7 float sensor and parameter information
-    putStringArray(sensorVar,["CTD_PRES","CTD_TEMP","CTD_CNDC"],string32DimSize)
-    putStringArray(sensorMakerVar,["SBE","SBE","SBE"],string256DimSize)
-    putStringArray(sensorModelVar,["SBE41CP_V7.2.5","SBE41CP_V7.2.5","SBE41CP_V7.2.5"],string256DimSize)
-    putStringArray(sensorSerialNoVar,["09396","09396","09396"],string16DimSize)
-    putStringArray(parameterVar,param_names,string64DimSize)
-    putStringArray(parameterSensorVar,["CTD_PRES","CTD_TEMP","CTD_CNDC"],string128DimSize)
-    putStringArray(parameterUnitsVar,["decibar","degree","psu"],string32DimSize)
-    putStringArray(parameterAccuracyVar,["2","0.002","0.005"],string32DimSize)
-    putStringArray(parameterresolutionVar,["1","0.001","0.001"],string32DimSize)
-    putStringArray(predeployementCalibEquationVar,["none","none","none"],string1024DimSize)
-    putStringArray(predeployementCalibCoefficientVar,["none","none","none"],string1024DimSize)
+
+    sensor_list = []
+    sensor_maker_list = []
+    sensor_model_list = []
+    sensor_serialno_list = []
+    for meta_sensor in metadata["SENSORS"]:
+        sensor_list.append(meta_sensor["SENSOR"])
+        sensor_maker_list.append(meta_sensor["SENSOR_MAKER"])
+        sensor_model_list.append(meta_sensor["SENSOR_MODEL"])
+        sensor_serialno_list.append(meta_sensor["SENSOR_SERIAL_NO"])
+
+
+    putStringArray(sensorVar,sensor_list,string32DimSize)
+    putStringArray(sensorMakerVar,sensor_maker_list,string256DimSize)
+    putStringArray(sensorModelVar,sensor_model_list,string256DimSize)
+    putStringArray(sensorSerialNoVar,sensor_serialno_list,string16DimSize)
+
+    params_list = []
+    params_sensor_list = []
+    params_units_list = []
+    params_accuracy_list = []
+    params_resolution_list = []
+    params_pre_calib_eq_list = []
+    params_pre_calib_coeff_list = []
+    params_pre_calib_comment_list = []
+    for meta_params in metadata["PARAMETERS"]:
+        params_list.append(meta_params["PARAM_NAME"])
+        params_sensor_list.append(meta_params["PARAMETER_SENSOR"])
+        params_units_list.append(meta_params["PARAMETER_UNITS"])
+        params_accuracy_list.append(meta_params["PARAMETER_ACCURACY"])
+        params_resolution_list.append(meta_params["PARAMETER_RESOLUTION"])
+        params_pre_calib_eq_list.append(meta_params["PREDEPLOYMENT_CALIB_EQUATION"])
+        params_pre_calib_coeff_list.append(meta_params["PREDEPLOYMENT_CALIB_COEFFICIENT"])
+        params_pre_calib_comment_list.append(meta_params["PREDEPLOYMENT_CALIB_COMMENT"])
+
+    putStringArray(parameterVar,params_list,string64DimSize)
+    putStringArray(parameterSensorVar,params_sensor_list,string128DimSize)
+    putStringArray(parameterUnitsVar,params_units_list,string32DimSize)
+    putStringArray(parameterAccuracyVar,params_accuracy_list,string32DimSize)
+    putStringArray(parameterresolutionVar,params_resolution_list,string32DimSize)
+    putStringArray(predeploymentCalibEquationVar,params_pre_calib_eq_list,string1024DimSize)
+    putStringArray(predeploymentCalibCoefficientVar,params_pre_calib_coeff_list,string1024DimSize)
+    putStringArray(predeploymentCalibCommentVar,params_pre_calib_comment_list,string1024DimSize)
 
     file_cdf.close()
