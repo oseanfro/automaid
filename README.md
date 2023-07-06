@@ -55,4 +55,12 @@ The "arguments.py" file can be edited to select some options:
 * A "generate_profil_csv_file" flag allow the user to generate "csv" file with SBE61 samples
 * Each "*_ploted" flags allow the user to display or not vertical lines when actionners is used or measure is done (in html file)
 * Each "export_*" flags allow the user to choose output format for MERMAID data
-* A "local_html" flags allow the user to generate html with or not plotly librairie (if this flag is False user must have internet access to display html files) 
+* A "local_html" flags allow the user to generate html with or not plotly librairie (if this flag is False user must have internet access to display html files)
+* A "generate_ncdf_files" flags allow the user to generate NETCDF files according argo user manual
+
+To generate NETCDF files you need to install new python module :
+
+* Activate the virtual environment:
+`conda activate pymaid`
+* Install NETCDF module:
+`conda install -c conda-forge netCDF4`
