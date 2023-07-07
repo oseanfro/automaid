@@ -3,26 +3,34 @@
 # @Email:  frederic.rocca@osean.fr
 # @Filename: mermaid_to_metadata.py
 # @Last modified by:   fro
-# @Last modified time: 2023-07-06T15:37:40+02:00
+# @Last modified time: 2023-07-07T12:15:26+02:00
 
 import os
 import json
 import shutil
 import sys
-import decrypt
 import glob
-import dives
-import events
-import sbe41
 import re
-import utils
 from obspy import UTCDateTime
 from netCDF4 import Dataset
 from netCDF4 import stringtochar
 from datetime import datetime,timezone
 import numpy as np
-import configuration
-import argo_metadata
+
+try:
+    import configuration
+    import utils
+    import argo_metadata
+    import decrypt
+    import dives
+    import events
+except:
+    import automaid.configuration as configuration
+    import automaid.utils as utils
+    import automaid.argo_metadata as argo_metadata
+    import automaid.decrypt as decrypt
+    import automaid.dives as dives
+    import automaid.events as events
 
 def create_dim_tuple(dimensions,value):
     result = value

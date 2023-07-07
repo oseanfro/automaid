@@ -3,7 +3,7 @@
 # @Email:  frederic.rocca@osean.fr
 # @Filename: dives.py
 # @Last modified by:   fro
-# @Last modified time: 2023-07-05T16:28:39+02:00
+# @Last modified time: 2023-07-07T12:43:02+02:00
 
 import glob
 import os
@@ -48,6 +48,7 @@ class Dive:
     is_init = None
     is_dive = None
     is_complete_dive = None
+    is_marittimo = None
     log_content = None
     mmd_name = None
     mmd_environment = None
@@ -57,6 +58,7 @@ class Dive:
     soft_version = None
     station_number = None
     gps_list = None
+    gps_list_from_log = None
     gps_list_is_complete = None
     surface_leave_loc = None
     surface_reach_loc = None
@@ -97,13 +99,25 @@ class Dive:
         if "[DIVING," in self.log_content:
             self.is_dive = True
 
+        # Check if the log correspond to a marittimo buoy
+        self.is_marittimo = False
+        if self.is_dive:
+            catch = utils.find_timestamped_values(":\[MAIN.+\]soft pilotage 589.*", self.log_content)
+            if len(catch) > 0:
+                self.is_marittimo = True
         # Check if the log correspond to a complete dive
         self.is_complete_dive = False
         if self.is_dive:
-            catch = utils.find_timestamped_values(
-                "\*\*\* switching to.*", self.log_content)
-            if len(catch) > 0:
-                self.is_complete_dive = True
+            if self.is_marittimo:
+                # Last log is new pressure offset
+                catch = utils.find_timestamped_values(":\[MAIN.+\]New pressure offset:.*", self.log_content)
+                if len(catch) > 0:
+                    self.is_complete_dive = True
+            else :
+                # Last log is switching log
+                catch = utils.find_timestamped_values("\*\*\* switching to.*", self.log_content)
+                if len(catch) > 0:
+                    self.is_complete_dive = True
 
         # Generate the directory name
         self.directory_name = self.date.strftime("%Y%m%d-%Hh%Mm%Ss")
@@ -210,6 +224,9 @@ class Dive:
         # Find the position of the float
         self.gps_list = gps.get_gps_list(
             self.log_content, self.mmd_environment, self.mmd_name)
+        # List the positions stored on the log
+        self.gps_list_from_log = gps.get_gps_from_log(self.log_content)
+
         self.gps_list_is_complete = False
         if self.is_complete_dive:
             # Check that the last GPS fix of the list correspond to the ascent position

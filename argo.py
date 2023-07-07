@@ -3,7 +3,7 @@
 # @Email:  frederic.rocca@osean.fr
 # @Filename: argo.py
 # @Last modified by:   fro
-# @Last modified time: 2023-07-06T14:58:57+02:00
+# @Last modified time: 2023-07-07T13:51:23+02:00
 
 import re
 from obspy import UTCDateTime
@@ -320,7 +320,7 @@ class Measurements:
         currentPressure_time = 0
         cycle_nb = int(dive.cycle_nb)
         # get last clock offset
-        derive_s = utils.find_timestamped_values(":\[GPSFIX.+\].*(-?\d+)s diff.*", dive.log_content)
+        derive_s = utils.find_timestamped_values(":\[GPS.+\].*(-?\d+)s diff.*", dive.log_content)
         self.clockOffset = np.float64(int(derive_s[-1][0]) / 86400.0)
         ############## First surface step (cycle_nb -1) ##################################################
         connections = utils.find_timestamped_values(":\[SURF.+\].*connected in \d+s, signal quality \d+", dive.log_content)

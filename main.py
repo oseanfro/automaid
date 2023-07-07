@@ -3,7 +3,7 @@
 # @Email:  frederic.rocca@osean.fr
 # @Filename: main.py
 # @Last modified by:   fro
-# @Last modified time: 2023-07-06T15:18:15+02:00
+# @Last modified time: 2023-07-07T13:53:06+02:00
 
 import os
 import json
@@ -54,6 +54,7 @@ redo = "True"
 
 # Generate processed files
 def generate_processed_files(mfloat, mfloat_path):
+    marittimo_buoy = False
     # Build list of all mermaid events recorded by the float
     mevents = events.Events(mfloat_path)
     # Build list of all S41 profiles recorded
@@ -64,6 +65,8 @@ def generate_processed_files(mfloat, mfloat_path):
     mdives = dives.Dives(mfloat_path, mevents, ms41s,ms61s)
     # Compute files for each dive
     for dive in mdives.get_dives():
+        if dive.is_marittimo :
+            marittimo_buoy = True
         # Create the directory
         if not os.path.exists(dive.export_path):
             os.mkdir(dive.export_path)
@@ -109,7 +112,7 @@ def generate_processed_files(mfloat, mfloat_path):
         os.mkdir(mfloat_nc_profiles_path)
 
 
-    if arguments.generate_ncdf_files:
+    if arguments.generate_ncdf_files and not marittimo_buoy :
         ##################################################################################################
         ###                                                                                             ##
         ###                                     ARGO file management                                    ##
@@ -215,7 +218,7 @@ def process_one_float(mfloat, datapath):
 #       standalones functions
 # #############################
 
-def update_tree(mfloat_serial, src_path, dest_path) :
+def update_tree(mfloat_serial, src_path, dest_path, is_src_buoy_dir = False) :
     # Get float number
     mfloat_nb = re.findall("(\d+)$", mfloat_serial)[0]
     mfloat_path = os.path.join(dest_path, mfloat_serial)
@@ -244,6 +247,18 @@ def update_tree(mfloat_serial, src_path, dest_path) :
     # Copy files
     for f in files_to_copy:
         shutil.copy(f, mfloat_src_path)
+
+    # Check if global vitale file exist
+    mfloat_vit_path = os.path.join(mfloat_src_path, mfloat_serial + ".vit")
+    print(mfloat_vit_path)
+
+    if is_src_buoy_dir:
+        if not os.path.exists(mfloat_vit_path):
+            # Find splitted vit files on directory (all must belong to same buoy !!!!)
+            files_to_copy = glob.glob(src_path + "/*.vit")
+            # Copy splitted vit files
+            for f in files_to_copy:
+                shutil.copy(f, mfloat_src_path)
 
 
 # generate as a script (python automaid.py)
@@ -276,7 +291,8 @@ def main():
             buoy_dir = re.match('.*([0-9]{3}.[0-9]{3}-[A-z]-([0-9]{4}|[0-9]{2}))', dir)
             if (buoy_dir):
                 buoy_serial = buoy_dir.group(1)
-                update_tree(buoy_serial,root,outputPath)
+                buoy_path = os.path.join(root,dir)
+                update_tree(buoy_serial,buoy_path,outputPath,True)
                 mfloats += [buoy_serial]
         for file in files:
             print(file)

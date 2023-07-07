@@ -3,26 +3,34 @@
 # @Email:  frederic.rocca@osean.fr
 # @Filename: mermaid_to_trajectory.py
 # @Last modified by:   fro
-# @Last modified time: 2023-07-06T16:02:06+02:00
+# @Last modified time: 2023-07-07T12:12:05+02:00
 
 import os
 import json
 import shutil
 import sys
-import decrypt
 import glob
-import dives
-import events
-import sbe41
 import re
-import utils
 from obspy import UTCDateTime
 from netCDF4 import Dataset
 from netCDF4 import stringtochar
 from datetime import datetime,timezone
 import numpy as np
-import configuration
-import argo_metadata
+
+try:
+    import argo_metadata
+    import configuration
+    import decrypt
+    import dives
+    import events
+    import utils
+except:
+    import automaid.argo_metadata as argo_metadata
+    import automaid.configuration as configuration
+    import automaid.decrypt as decrypt
+    import automaid.dives as dives
+    import automaid.events as events
+    import automaid.utils as utils
 
 def get_data_from_nc_file(mfloat_nc_path,dataDict) :
     rd_cdf = Dataset(mfloat_nc_path, "r", format="NETCDF3_CLASSIC")

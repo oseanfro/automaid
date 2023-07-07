@@ -3,7 +3,7 @@
 # @Email:  frederic.rocca@osean.fr
 # @Filename: arguments.py
 # @Last modified by:   fro
-# @Last modified time: 2023-07-06T15:17:18+02:00
+# @Last modified time: 2023-07-07T12:49:58+02:00
 
 import datetime
 
@@ -12,8 +12,8 @@ server_directory = "../server"
 processed_directory = "../processed"
 
 # Generate CSV with SB61 data
-generate_dive_csv_file = True
-generate_profil_csv_file = True
+generate_dive_csv_file = False
+generate_profil_csv_file = False
 
 # Plot actionners
 bypass_ploted = True
@@ -23,10 +23,10 @@ mermaid_ploted = True
 sbe61_ploted = True
 
 # Argo
-generate_ncdf_files = True
+generate_ncdf_files = False
 
 # Plot interactive figures in HTML format for acoustic events
-events_plotly = False
+events_plotly = True
 # Export formats
 export_msd = False
 export_sac = False
@@ -34,6 +34,6 @@ export_wav = False
 
 # Html generation
 # if local_html is false user need internet to open html
-local_html = True
+local_html = False
 # if optimize is true we use Scattergl graph (optimized graph when they are a lot of points)
 optimize = True

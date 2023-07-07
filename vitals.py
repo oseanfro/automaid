@@ -1,3 +1,9 @@
+# @Author: Frédéric Rocca <fro>
+# @Date:   2023-06-09T09:36:17+02:00
+# @Email:  frederic.rocca@osean.fr
+# @Filename: vitals.py
+# @Last modified by:   fro
+# @Last modified time: 2023-07-07T12:23:30+02:00
 
 import re
 from obspy import UTCDateTime
@@ -230,6 +236,28 @@ def list_vitals(filepath,client,buoy,mdives,datapath):
         if emergency._state == "In_progress":
             emergency._state = "Interrupted"
             listread.append(utils.convert2dict(emergency))
+
+    for dive in mdives.dives :
+        for gps in dive.gps_list_from_log :
+            gps_is_present = False
+            for vital in listread :
+                if vital['date'] == gps.date.timestamp :
+                    gps_is_present = True
+            if not gps_is_present :
+                vital = Vitals(client,buoy)
+                vital._state = "Full"
+                vital.deployed = True
+                vital.date = gps.date.timestamp
+                vital.latitude = gps.latitude
+                vital.longitude = gps.longitude
+                divefiles = os.listdir(datapath + "/" + buoy + "/processed/" + dive.directory_name)
+                for divefile in divefiles:
+                    if '.md5' not in divefile :
+                        divefilepath = "/" + dive.directory_name + "/" + divefile
+                        if divefilepath not in vital.divepath:
+                            vital.divepath.append("/" + dive.directory_name + "/" + divefile)
+                print(utils.convert2dict(vital))
+                listread.append(utils.convert2dict(vital))
     return listread
 
 def sort_vitals(elem):
