@@ -13,11 +13,6 @@ try :
 except:
     import automaid.utils as utils
 
-#1:CLIENT
-#2:SUPERUSERS
-#3:ADMINISTRATOR
-user_level = 3
-
 # Get database name with link file and version read on file
 def get_database_version(file_version,model) :
     absFilePath = os.path.abspath(__file__)
@@ -81,8 +76,493 @@ def concatenate_bin_files(path):
                 with open(path + bin_file, "wb") as fl:
                     fl.write(bin)
                 bin = b''
+
+
+def decrypt_explicit(f,LOG_card,WARN_card,ERR_card) :
+    #Read head
+    string = ""
+    IDbytes = f.read(2)
+    if len(IDbytes) != 2 :
+        print("err:IDbytes")
+        return "err:IDbytes\r\n";
+    TIMESTAMPbytes = f.read(4)
+    if len(TIMESTAMPbytes) != 4 :
+        print("err:TIMESTAMPbytes")
+        return "err:TIMESTAMPbytes\r\n";
+    INFOSbytes = f.read(1)
+    if INFOSbytes == "" :
+        print("err:INFOSbytes")
+        return "err:INFOSbytes\r\n";
+    DATASIZEbytes = f.read(1)
+    if DATASIZEbytes == "" :
+        print("err:DATASIZEbytes")
+        return "err:DATASIZEbytes\r\n";
+    #unpack head
+    try :
+        id = struct.unpack('<H', IDbytes)[0]
+        timestamp = struct.unpack('<I', TIMESTAMPbytes)[0]
+        infos = struct.unpack('<B', INFOSbytes)[0]
+        dataSize = struct.unpack('<B', DATASIZEbytes)[0]
+    except :
+        traceback.print_exc()
+        print("err:header")
+        return "err:header\r\n";
+
+    #Process head
+    idString = "0x"+"{0:0{1}X}".format(id,4)+"UL"
+    binaryinfo = "{0:08b}".format(infos)
+    logtype = "00"
+    argformat = "00"
+    logtype = binaryinfo[-2:]
+    argformat = binaryinfo[-4:-2]
+    if argformat != "00":
+        return "err:argformat\r\n";
+
+    #print ("ID : " + str(id))
+    #print ("IDString : " + str(idString))
+    #print ("Timestamp : " + str(timestamp))
+    #print ("Infos : " + str(infos))
+    #print ("BinaryInfos : " + str(binaryinfo))
+    #print ("Type : " + str(type))
+    #print ("ArgFormat : " + str(argformat))
+    #print ("dataSize : " + str(dataSize))
+
+    decrypt_card={}
+    type_string = ""
+    if logtype == "00":
+        decrypt_card = LOG_card
+    elif logtype == "01":
+        type_string = "<WARN>"
+        decrypt_card = WARN_card
+    elif logtype == "10":
+        type_string = "<ERR>"
+        decrypt_card = ERR_card
+    else :
+        type_string = "<DBG>"
+
+    Formats = []
+    File = "MAIN"
+    Level = "1"
+
+    if(id < len(decrypt_card)) :
+        index = id
+    else :
+        index = len(decrypt_card)-1
+    while index >= 0 :
+        if decrypt_card[index]["ID"] == idString:
+            Formats = decrypt_card[index]["FORMATS"]
+            File = decrypt_card[index]["FILE"]
+            Level = decrypt_card[index]["LEVEL"]
+            break;
+        index = index - 1
+
+    if len(Formats) <= 0 :
+        f.read(dataSize)
+        string += str(timestamp) + ":" + type_string + "["+"{:04d}".format(id)+"] Format not found\r\n"
+        return string
+    #print (Formats)
+    string += str(timestamp) + ":" + type_string
+    string +="["+"{:6}".format(File)+","+"{:04d}".format(id)+"]"
+    index=0
+    argIndex=0
+    if dataSize > 0:
+        while index < dataSize :
+            #Read Argument Head
+            ARGINFOSByte = f.read(1)
+            if ARGINFOSByte == "":
+                print("err:ARGINFOSByte")
+                return "err:ARGINFOSByte\r\n"
+            ARGSIZEByte = f.read(1)
+            if ARGSIZEByte == "":
+                print("err:ARGSIZEByte")
+                return "err:ARGSIZEByte\r\n"
+            #Unpack Argument Head
+            try :
+                ArgInfos=struct.unpack('<B', ARGINFOSByte)[0]
+                ArgSize = struct.unpack('<B', ARGSIZEByte)[0]
+            except :
+                traceback.print_exc()
+                print("err:INFOSSIZE")
+                return "err:INFOSSIZE\r\n"
+
+            #Process Argument Head
+            ArgInfosBinary="{0:08b}".format(ArgInfos)
+            ArgType = ArgInfosBinary[-2:]
+
+            #print ("ArgInfosBinary : " + str(ArgInfosBinary))
+            #print ("ArgType : " + str(ArgType))
+            #print ("ArgSize : " + str(ArgSize))
+            index = index+2
+            Formats[argIndex] = Formats[argIndex].replace(r"\r\n","\r\n")
+            if ArgSize > 0:
+                Arg = 0
+                if ArgType == "00":
+                    if ArgSize == 4:
+                        ArgByte = f.read(4)
+                        if len(ArgByte) != 4 :
+                            print("err:TYPE00SIZE04")
+                            return "err:TYPE00SIZE04\r\n"
+                        try :
+                            Arg = struct.unpack('<i', ArgByte)[0]
+                        except :
+                            traceback.print_exc()
+                            print("err:TYPE00SIZE04")
+                            return "err:TYPE00SIZE04\r\n"
+                    elif ArgSize == 2:
+                        ArgByte = f.read(2)
+                        if len(ArgByte) != 2 :
+                            print("err:TYPE00SIZE02")
+                            return "err:TYPE00SIZE02\r\n"
+                        try :
+                            Arg = struct.unpack('<h', ArgByte)[0]
+                        except :
+                            traceback.print_exc()
+                            print("err:TYPE00SIZE02")
+                            return "err:TYPE00SIZE02\r\n"
+                    elif ArgSize == 1:
+                        ArgByte = f.read(1)
+                        if ArgByte == "" :
+                            print("err:TYPE00SIZE01")
+                            return "err:TYPE00SIZE01\r\n"
+                        try :
+                            Arg = struct.unpack('<b', ArgByte)[0]
+                        except :
+                            traceback.print_exc()
+                            print("err:TYPE00SIZE01")
+                            return "err:TYPE00SIZE01\r\n"
+                elif ArgType == "01":
+                    # unsigned integer
+                    if ArgSize == 4:
+                        ArgByte = f.read(4)
+                        if len(ArgByte) != 4 :
+                            print("err:TYPE01SIZE04")
+                            return "err:TYPE01SIZE04\r\n"
+                        try :
+                            Arg = struct.unpack('<I', ArgByte)[0]
+                        except :
+                            traceback.print_exc()
+                            print("err:TYPE01SIZE04")
+                            return "err:TYPE01SIZE04\r\n"
+                    elif ArgSize == 2:
+                        ArgByte = f.read(2)
+                        if len(ArgByte) != 2 :
+                            print("err:TYPE01SIZE02")
+                            return "err:TYPE01SIZE02\r\n"
+                        try :
+                            Arg = struct.unpack('<H', ArgByte)[0]
+                        except :
+                            traceback.print_exc()
+                            print("err:TYPE01SIZE02")
+                            return "err:TYPE01SIZE02\r\n"
+                    elif ArgSize == 1:
+                        ArgByte = f.read(1)
+                        if ArgByte == "":
+                            print("err:TYPE01SIZE01")
+                            return "err:TYPE01SIZE01\r\n"
+                        try :
+                            Arg = struct.unpack('<B', ArgByte)[0]
+                        except :
+                            traceback.print_exc()
+                            print("err:TYPE01SIZE01")
+                            return "err:TYPE01SIZE01\r\n"
+                elif ArgType == "11":
+                    # string
+                    ArgByte = f.read(ArgSize)
+                    if len(ArgByte) != ArgSize :
+                        print("err:TYPE11")
+                        return "err:TYPE11\r\n"
+                    if ArgByte[ArgSize-1] == 0 :
+                        ArgByte = ArgByte[:-1]
+                    Arg = ArgByte
+                    try :
+                        Arg = Arg.decode('ascii', 'ignore')
+                    except :
+                        traceback.print_exc()
+                        print("err:TYPE11")
+                        return "err:TYPE11\r\n"
+                    #replace none ascii characters
+                #print (ArgSize)
+                #print ("Format : " + str(Formats[argIndex]) + "\r\n")
+                try :
+                    if "%.*s" in Formats[argIndex]:
+                        string += (Formats[argIndex] % (ArgSize,Arg))
+                    else :
+                        string += (Formats[argIndex] % Arg)
+                except :
+                    traceback.print_exc()
+                    print("error format")
+                    return "err:format\r\n"
+            else :
+                #print ("Format : " + str(Formats[argIndex]) + "\r\n")
+                string += str(Formats[argIndex])
+                index = index + 1
+            index = index + ArgSize
+            argIndex = argIndex + 1
+    else :
+        #print ("Format : " + (Formats[0].replace(r"\r\n","\r\n")) + "\r\n")
+        string += str(Formats[0].replace(r"\r\n","\r\n"))
+    string += "\r\n"
+    return string
+
+
+def decrypt_short(f) :
+    string = ""
+    id = f.read(1)
+    format = ""
+    shortId = 256
+    if id == "" :
+        print("err:EMPTYSHORTID")
+        return "err:EMPTYSHORTID\r\n";
+    try :
+        shortId = struct.unpack('<B', id)[0]
+    except :
+        traceback.print_exc()
+        print("err:UNPACKSHORTID")
+        return "err:UNPACKSHORTID\r\n"
+    if shortId == 0 :
+        # Pressure LOG
+        TIMESTAMPbytes = f.read(4)
+        if len(TIMESTAMPbytes) != 4 :
+            print("err:TIMESTAMPbytes")
+            return "err:TIMESTAMPbytes\r\n";
+        # pressure measure
+        PRESSbytes = f.read(4)
+        if len(PRESSbytes) != 4 :
+            print("err:PRESSbytes")
+            return "err:PRESSbytes\r\n";
+        timestamp = 0
+        pressure = 0
+        try :
+            # Unpack Integer of 4 bytes
+            timestamp = struct.unpack('<I', TIMESTAMPbytes)[0]
+            pressure = struct.unpack('<l', PRESSbytes)[0]
+        except :
+            traceback.print_exc()
+            print("err:UNPACKPRESS")
+            return "err:UNPACKPRESS\r\n"
+        format = str(timestamp) + ":[PRESS ,0038]P%+7dmbar\r\n"
+        return format % pressure
+    elif shortId == 1 :
+        # Pump time LOG
+        TIMESTAMPbytes = f.read(4)
+        if len(TIMESTAMPbytes) != 4 :
+            print("err:TIMESTAMPbytes")
+            return "err:TIMESTAMPbytes\r\n";
+        PUMPTIMEbytes = f.read(4)
+        if len(PUMPTIMEbytes) != 4 :
+            print("err:PUMPTIMEbytes")
+            return "err:PUMPTIMEbytes\r\n";
+        timestamp = 0
+        pump_time = 0
+        try :
+            # Unpack Integer of 4 bytes
+            timestamp = struct.unpack('<I', TIMESTAMPbytes)[0]
+            pump_time = struct.unpack('<l', PUMPTIMEbytes)[0]
+        except :
+            traceback.print_exc()
+            print("err:UNPACKPUMPTIME")
+            return "err:UNPACKPUMPTIME\r\n"
+        format = str(timestamp) + ":[PUMP  ,0016]pump during %dms\r\n"
+        return format % pump_time
+    elif shortId == 2 :
+        # Valve time LOG
+        TIMESTAMPbytes = f.read(4)
+        if len(TIMESTAMPbytes) != 4 :
+            print("err:TIMESTAMPbytes")
+            return "err:TIMESTAMPbytes\r\n";
+        VALVETIMEbytes = f.read(4)
+        if len(VALVETIMEbytes) != 4 :
+            print("err:VALVETIMEbytes")
+            return "err:VALVETIMEbytes\r\n";
+        timestamp = 0
+        valve_time = 0
+        try :
+            # Unpack Integer of 4 bytes
+            timestamp = struct.unpack('<I', TIMESTAMPbytes)[0]
+            valve_time = struct.unpack('<l', VALVETIMEbytes)[0]
+        except :
+            traceback.print_exc()
+            print("err:UNPACKVALVETIME")
+            return "err:UNPACKVALVETIME\r\n"
+        format = str(timestamp) + ":[VALVE ,0034]valve opening %dms\r\n"
+        return format % valve_time
+    elif shortId == 3 :
+        # Bypass time LOG
+        TIMESTAMPbytes = f.read(4)
+        if len(TIMESTAMPbytes) != 4 :
+            print("err:TIMESTAMPbytes")
+            return "err:TIMESTAMPbytes\r\n";
+        BYPASSTIMEbytes = f.read(4)
+        if len(BYPASSTIMEbytes) != 4 :
+            print("err:BYPASSTIMEbytes")
+            return "err:BYPASSTIMEbytes\r\n";
+        timestamp = 0
+        bypass_time = 0
+        try :
+            # Unpack Integer of 4 bytes
+            timestamp = struct.unpack('<I', TIMESTAMPbytes)[0]
+            bypass_time = struct.unpack('<l', BYPASSTIMEbytes)[0]
+        except :
+            traceback.print_exc()
+            print("err:UNPACKBYPASSTIME")
+            return "err:UNPACKBYPASSTIME\r\n"
+        format = str(timestamp) + ":[BYPASS,0035]bypass opening %dms\r\n"
+        return format % bypass_time
+    elif shortId == 4 :
+        # Pump power LOG
+        TIMESTAMPbytes = f.read(4)
+        if len(TIMESTAMPbytes) != 4 :
+            print("err:TIMESTAMPbytes")
+            return "err:TIMESTAMPbytes\r\n";
+        PUMPVOLTbytes = f.read(4)
+        if len(PUMPVOLTbytes) != 4 :
+            print("err:PUMPVOLTbytes")
+            return "err:PUMPVOLTbytes\r\n";
+        PUMPCURRENTbytes = f.read(4)
+        if len(PUMPCURRENTbytes) != 4 :
+            print("err:PUMPCURRENTbytes")
+            return "err:PUMPCURRENTbytes\r\n";
+        PUMPPRESSbytes = f.read(4)
+        if len(PUMPPRESSbytes) != 4 :
+            print("err:PUMPPRESSbytes")
+            return "err:PUMPPRESSbytes\r\n";
+        timestamp = 0
+        pump_volt = 0
+        pump_current = 0
+        pump_press = 0
+        try :
+            # Unpack Integer of 4 bytes
+            timestamp = struct.unpack('<I', TIMESTAMPbytes)[0]
+            pump_volt = struct.unpack('<l', PUMPVOLTbytes)[0]
+            pump_current = struct.unpack('<l', PUMPCURRENTbytes)[0]
+            pump_press = struct.unpack('<l', PUMPPRESSbytes)[0]
+        except :
+            traceback.print_exc()
+            print("err:UNPACKPUMPPOWER")
+            return "err:UNPACKPUMPPOWER\r\n"
+        format = str(timestamp) + ":[PUMP  ,0212]battery %5dmV, %7duA (steady state), P%+7dmbar\r\n"
+        return format % (pump_volt,pump_current,pump_press)
+    elif shortId == 5 :
+        # Valve power LOG
+        TIMESTAMPbytes = f.read(4)
+        if len(TIMESTAMPbytes) != 4 :
+            print("err:TIMESTAMPbytes")
+            return "err:TIMESTAMPbytes\r\n";
+        VALVEVOLTbytes = f.read(4)
+        if len(VALVEVOLTbytes) != 4 :
+            print("err:VALVEVOLTbytes")
+            return "err:VALVEVOLTbytes\r\n";
+        VALVECURRENTbytes = f.read(4)
+        if len(VALVECURRENTbytes) != 4 :
+            print("err:VALVECURRENTbytes")
+            return "err:VALVECURRENTbytes\r\n";
+        VALVEPRESSbytes = f.read(4)
+        if len(VALVEPRESSbytes) != 4 :
+            print("err:VALVEPRESSbytes")
+            return "err:VALVEPRESSbytes\r\n";
+        timestamp = 0
+        valve_volt = 0
+        valve_current = 0
+        valve_press = 0
+        try :
+            # Unpack Integer of 4 bytes
+            timestamp = struct.unpack('<I', TIMESTAMPbytes)[0]
+            valve_volt = struct.unpack('<l', VALVEVOLTbytes)[0]
+            valve_current = struct.unpack('<l', VALVECURRENTbytes)[0]
+            valve_press = struct.unpack('<l', VALVEPRESSbytes)[0]
+        except :
+            traceback.print_exc()
+            print("err:UNPACKVALVEPOWER")
+            return "err:UNPACKVALVEPOWER\r\n"
+        format = str(timestamp) + ":[VALVE ,0234]battery %5dmV, %7duA, P%+7dmbar\r\n"
+        return format % (valve_volt,valve_current,valve_press)
+    elif shortId == 6 :
+        # Bpopen power LOG
+        TIMESTAMPbytes = f.read(4)
+        if len(TIMESTAMPbytes) != 4 :
+            print("err:TIMESTAMPbytes")
+            return "err:TIMESTAMPbytes\r\n";
+        BPOPENVOLTbytes = f.read(4)
+        if len(BPOPENVOLTbytes) != 4 :
+            print("err:BPOPENVOLTbytes")
+            return "err:BPOPENVOLTbytes\r\n";
+        BPOPENCURRENTbytes = f.read(4)
+        if len(BPOPENCURRENTbytes) != 4 :
+            print("err:BPOPENCURRENTbytes")
+            return "err:BPOPENCURRENTbytes\r\n";
+        BPOPENPRESSbytes = f.read(4)
+        if len(BPOPENPRESSbytes) != 4 :
+            print("err:BPOPENPRESSbytes")
+            return "err:BPOPENPRESSbytes\r\n";
+        timestamp = 0
+        bpopen_volt = 0
+        bpopen_current = 0
+        bpopen_press = 0
+        try :
+            # Unpack Integer of 4 bytes
+            timestamp = struct.unpack('<I', TIMESTAMPbytes)[0]
+            bpopen_volt = struct.unpack('<l', BPOPENVOLTbytes)[0]
+            bpopen_current = struct.unpack('<l', BPOPENCURRENTbytes)[0]
+            bpopen_press = struct.unpack('<l', BPOPENPRESSbytes)[0]
+        except :
+            traceback.print_exc()
+            print("err:UNPACKVALVEPOWER")
+            return "err:UNPACKVALVEPOWER\r\n"
+        format = str(timestamp) + ":[BYPASS,0104]battery %5dmV, %7duA (bypass opening), P%+7dmbar\r\n"
+        return format % (bpopen_volt,bpopen_current,bpopen_press)
+    elif shortId == 7 :
+        # Bpclose power LOG
+        TIMESTAMPbytes = f.read(4)
+        if len(TIMESTAMPbytes) != 4 :
+            print("err:TIMESTAMPbytes")
+            return "err:TIMESTAMPbytes\r\n";
+        BPCLOSEVOLTbytes = f.read(4)
+        if len(BPCLOSEVOLTbytes) != 4 :
+            print("err:BPCLOSEVOLTbytes")
+            return "err:BPCLOSEVOLTbytes\r\n";
+        BPCLOSECURRENTbytes = f.read(4)
+        if len(BPCLOSECURRENTbytes) != 4 :
+            print("err:BPCLOSECURRENTbytes")
+            return "err:BPCLOSECURRENTbytes\r\n";
+        BPCLOSEPRESSbytes = f.read(4)
+        if len(BPCLOSEPRESSbytes) != 4 :
+            print("err:BPCLOSEPRESSbytes")
+            return "err:BPCLOSEPRESSbytes\r\n";
+        timestamp = 0
+        bpclose_volt = 0
+        bpclose_current = 0
+        bpclose_press = 0
+        try :
+            # Unpack Integer of 4 bytes
+            timestamp = struct.unpack('<I', TIMESTAMPbytes)[0]
+            bpclose_volt = struct.unpack('<l', BPCLOSEVOLTbytes)[0]
+            bpclose_current = struct.unpack('<l', BPCLOSECURRENTbytes)[0]
+            bpclose_press = struct.unpack('<l', BPCLOSEPRESSbytes)[0]
+        except :
+            traceback.print_exc()
+            print("err:UNPACKVALVEPOWER")
+            return "err:UNPACKVALVEPOWER\r\n"
+        format = str(timestamp) + ":[BYPASS,0106]battery %5dmV, %7duA (bypass closing), P%+7dmbar\r\n"
+        return format % (bpclose_volt,bpclose_current,bpclose_press)
+    elif shortId == 8 :
+        # Mermaid detect
+        TIMESTAMPbytes = f.read(4)
+        if len(TIMESTAMPbytes) != 4 :
+            print("err:TIMESTAMPbytes")
+            return "err:TIMESTAMPbytes\r\n";
+        timestamp = 0
+        try :
+            # Unpack Integer of 4 bytes
+            timestamp = struct.unpack('<I', TIMESTAMPbytes)[0]
+        except :
+            traceback.print_exc()
+            print("err:UNPACKMERMAIDDETECT")
+            return "err:UNPACKMERMAIDDETECT\r\n"
+        format = str(timestamp) + ":[MRMAID,0027]0dbar, 0degC\r\n"
+        return format
+    return ""
 # Decrypt one file with LOG, WARN,and ERR cards give in arguments
-def decrypt_one(path,LOG_card,WARN_card,ERR_card,version):
+def decrypt_one(path,LOG_card,WARN_card,ERR_card):
     #parse data
     string =""
     with open(path, "rb") as f:
@@ -90,230 +570,17 @@ def decrypt_one(path,LOG_card,WARN_card,ERR_card,version):
         while byte != b'':
             byte = f.read(1)
             if byte != b'#':
-                continue
+                if byte != b'@':
+                    continue
+                else :
+                    string += decrypt_short(f);
             else :
                 byte = f.read(1)
                 if byte != b'*':
                     continue
                 else :
-                    #Read head
-                    IDbytes = f.read(2)
-                    if len(IDbytes) != 2 :
-                        print("err:IDbytes")
-                        break;
-                    TIMESTAMPbytes = f.read(4)
-                    if len(TIMESTAMPbytes) != 4 :
-                        print("err:TIMESTAMPbytes")
-                        break;
-                    INFOSbytes = f.read(1)
-                    if INFOSbytes == "" :
-                        print("err:INFOSbytes")
-                        break;
-                    DATASIZEbytes = f.read(1)
-                    if DATASIZEbytes == "" :
-                        print("err:DATASIZEbytes")
-                        break;
+                    string += decrypt_explicit(f,LOG_card,WARN_card,ERR_card);
 
-                    #unpack head
-                    try :
-                        id = struct.unpack('<H', IDbytes)[0]
-                        timestamp = struct.unpack('<I', TIMESTAMPbytes)[0]
-                        infos = struct.unpack('<B', INFOSbytes)[0]
-                        dataSize = struct.unpack('<B', DATASIZEbytes)[0]
-                    except :
-                        traceback.print_exc()
-                        print("err:header")
-
-                    #Process head
-                    idString = "0x"+"{0:0{1}X}".format(id,4)+"UL"
-                    binaryinfo = "{0:08b}".format(infos)
-                    logtype = "00"
-                    argformat = "00"
-                    logtype = binaryinfo[-2:]
-                    argformat = binaryinfo[-4:-2]
-                    if argformat != "00":
-                        continue
-
-                    #print ("ID : " + str(id))
-                    #print ("IDString : " + str(idString))
-                    #print ("Timestamp : " + str(timestamp))
-                    #print ("Infos : " + str(infos))
-                    #print ("BinaryInfos : " + str(binaryinfo))
-                    #print ("Type : " + str(type))
-                    #print ("ArgFormat : " + str(argformat))
-                    #print ("dataSize : " + str(dataSize))
-
-
-                    decrypt_card={}
-                    type_string = ""
-                    if logtype == "00":
-                        decrypt_card = LOG_card
-                    elif logtype == "01":
-                        type_string = "<WARN>"
-                        decrypt_card = WARN_card
-                    elif logtype == "10":
-                        type_string = "<ERR>"
-                        decrypt_card = ERR_card
-                    else :
-                        type_string = "<DBG>"
-
-                    Formats = []
-                    File = "MAIN"
-                    Level = "1"
-
-                    if(id < len(decrypt_card)) :
-                        index = id
-                    else :
-                        index = len(decrypt_card)-1
-
-                    while index >= 0 :
-                        if decrypt_card[index]["ID"] == idString:
-                            Formats = decrypt_card[index]["FORMATS"]
-                            File = decrypt_card[index]["FILE"]
-                            Level = decrypt_card[index]["LEVEL"]
-                            break;
-                        index = index - 1
-
-                    if int(Level) > user_level :
-                        continue
-                    if len(Formats) <= 0 :
-                        f.read(dataSize)
-                        string+=str(timestamp) + ":" + type_string + "["+"{:04d}".format(id)+"] Format not found\r\n"
-                        continue
-                    #print (Formats)
-                    string += str(timestamp) + ":" + type_string
-                    string +="["+"{:6}".format(File)+","+"{:04d}".format(id)+"]"
-                    index=0
-                    argIndex=0
-                    if dataSize > 0:
-                        while index < dataSize :
-                            #Read Argument Head
-                            ARGINFOSByte = f.read(1)
-                            if ARGINFOSByte == "":
-                                print("err:ARGINFOSByte")
-                                break
-                            ARGSIZEByte = f.read(1)
-                            if ARGSIZEByte == "":
-                                print("err:ARGSIZEByte")
-                                break
-                            #Unpack Argument Head
-                            try :
-                                ArgInfos=struct.unpack('<B', ARGINFOSByte)[0]
-                                ArgSize = struct.unpack('<B', ARGSIZEByte)[0]
-                            except :
-                                traceback.print_exc()
-                                print("err:INFOSSIZE")
-
-                            #Process Argument Head
-                            ArgInfosBinary="{0:08b}".format(ArgInfos)
-                            ArgType = ArgInfosBinary[-2:]
-
-                            #print ("ArgInfosBinary : " + str(ArgInfosBinary))
-                            #print ("ArgType : " + str(ArgType))
-                            #print ("ArgSize : " + str(ArgSize))
-                            index = index+2
-                            Formats[argIndex] = Formats[argIndex].replace(r"\r\n","\r\n")
-                            if ArgSize > 0:
-                                Arg = 0
-                                if ArgType == "00":
-                                    # integer
-                                    if ArgSize == 4:
-                                        ArgByte = f.read(4)
-                                        if len(ArgByte) != 4 :
-                                            print("err:TYPE00SIZE04")
-                                            break;
-                                        try :
-                                            Arg = struct.unpack('<i', ArgByte)[0]
-                                        except :
-                                            traceback.print_exc()
-                                            print("err:TYPE00SIZE04")
-                                    elif ArgSize == 2:
-                                        ArgByte = f.read(2)
-                                        if len(ArgByte) != 2 :
-                                            print("err:TYPE00SIZE02")
-                                            break;
-                                        try :
-                                            Arg = struct.unpack('<h', ArgByte)[0]
-                                        except :
-                                            traceback.print_exc()
-                                            print("err:TYPE00SIZE02")
-                                    elif ArgSize == 1:
-                                        ArgByte = f.read(1)
-                                        if ArgByte == "" :
-                                            print("err:TYPE00SIZE01")
-                                            break;
-                                        try :
-                                            Arg = struct.unpack('<b', ArgByte)[0]
-                                        except :
-                                            traceback.print_exc()
-                                            print("err:TYPE00SIZE01")
-                                elif ArgType == "01":
-                                    # unsigned integer
-                                    if ArgSize == 4:
-                                        ArgByte = f.read(4)
-                                        if len(ArgByte) != 4 :
-                                            print("err:TYPE01SIZE04")
-                                            break;
-                                        try :
-                                            Arg = struct.unpack('<I', ArgByte)[0]
-                                        except :
-                                            traceback.print_exc()
-                                            print("err:TYPE01SIZE04")
-                                    elif ArgSize == 2:
-                                        ArgByte = f.read(2)
-                                        if len(ArgByte) != 2 :
-                                            print("err:TYPE01SIZE02")
-                                            break;
-                                        try :
-                                            Arg = struct.unpack('<H', ArgByte)[0]
-                                        except :
-                                            traceback.print_exc()
-                                            print("err:TYPE01SIZE02")
-                                    elif ArgSize == 1:
-                                        ArgByte = f.read(1)
-                                        if ArgByte == "":
-                                            print("err:TYPE01SIZE01")
-                                            break
-                                        try :
-                                            Arg = struct.unpack('<B', ArgByte)[0]
-                                        except :
-                                            traceback.print_exc()
-                                            print("err:TYPE01SIZE01")
-                                elif ArgType == "11":
-                                    # string
-                                    ArgByte = f.read(ArgSize)
-                                    if len(ArgByte) != ArgSize :
-                                        print("err:TYPE11")
-                                        break;
-                                    if ArgByte[ArgSize-1] == 0 :
-                                        ArgByte = ArgByte[:-1]
-                                    Arg = ArgByte
-                                    try :
-                                        Arg = Arg.decode('ascii', 'ignore')
-                                    except :
-                                        traceback.print_exc()
-                                        print("err:TYPE11")
-                                    #replace none ascii characters
-                                #print (ArgSize)
-                                #print ("Format : " + str(Formats[argIndex]) + "\r\n")
-                                try :
-                                    if "%.*s" in Formats[argIndex]:
-                                        string += (Formats[argIndex] % (ArgSize,Arg))
-                                    else :
-                                        string += (Formats[argIndex] % Arg)
-                                except :
-                                    traceback.print_exc()
-                                    print("error format")
-                            else :
-                                #print ("Format : " + str(Formats[argIndex]) + "\r\n")
-                                string += str(Formats[argIndex])
-                                index = index + 1
-                            index = index + ArgSize
-                            argIndex = argIndex + 1
-                    else :
-                        #print ("Format : " + (Formats[0].replace(r"\r\n","\r\n")) + "\r\n")
-                        string += str(Formats[0].replace(r"\r\n","\r\n"))
-                    string += "\r\n"
     #print ("finished")
     return string
 # Decrypt all BIN files in a path
@@ -343,6 +610,8 @@ def decrypt_all(path):
             model = 0
             if catch[-1][0] == "589" :
                 model = 1
+            elif catch[-1][0] == "458" :
+                model = 2
             database_file = get_database_version(file_version,model)
             if database_file != "" :
                 database_file_path = os.path.join(scriptpath,"databases",database_file)
@@ -369,7 +638,7 @@ def decrypt_all(path):
                         elif decrypt_card["TYPE"] == "ERR":
                             err_card = decrypt_card["DECRYPTCARD"]
                     try :
-                        result = decrypt_one(binary_file,log_card,warn_card,err_card,file_version)
+                        result = decrypt_one(binary_file,log_card,warn_card,err_card)
                     except:
                         print(("FORMAT ERROR :" +str(binary_file)))
                     else:

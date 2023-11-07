@@ -345,7 +345,7 @@ class Measurements:
         mc = 100
         lines = utils.split_log_lines(dive.log_content)
         for line in lines :
-            pressure = utils.find_timestamped_value("\[PRESS ,0038\]P *\+(\d+)mbar,T *\+\d+mdegC", line)
+            pressure = utils.find_timestamped_value("\[PRESS ,.+\]P *\+(\d+)mbar", line)
             if len(pressure) > 0 :
                 currentPressure_mbar = int(pressure[0])
                 currentPressure_time = pressure[1]
@@ -495,12 +495,10 @@ class Measurements:
                 if len(match) > 0 :
                     self.list.append(Measurement(cycle_nb,600,match[1],"Ascent end time (profiler reach the surface)"))
                     mc = 700
-                    break;
                 match_2 = utils.find_timestamped_value(":\[STAGE.+\]Mode changed from PROFILING to SLEEP.*", line)
                 if len(match_2) > 0 :
                     self.list.append(Measurement(cycle_nb,600,match_2[1],"Ascent end time (profiler reach the surface)"))
                     mc = 700
-                    break;
 
         self.list.append(Measurement(cycle_nb,703,dive.gps_list[-1].date,"First GPS position in surface",dive.gps_list[-1].longitude,dive.gps_list[-1].latitude))
     def print_all(self) :
