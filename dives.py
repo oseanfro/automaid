@@ -232,6 +232,10 @@ class Dive:
             # Check that the last GPS fix of the list correspond to the ascent position
             surface_date = utils.find_timestamped_values(
                 "\[MAIN *, *\d+\]surface", self.log_content)
+            if not surface_date :
+                surface_date = utils.find_timestamped_values(
+                "\[MAIN *, *\d+\]Pext", self.log_content)
+
             surface_date = surface_date[-1][1]
             if len(self.gps_list) == 0:
                 print(("WARNING: No GPS synchronization at all for \""
