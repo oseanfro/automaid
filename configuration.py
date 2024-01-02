@@ -201,26 +201,26 @@ class Configuration :
             return
         if dive.is_init :
             return
-        bypass = re.findall(":\[BYCMD.+\] +bypass (\d+)ms (\d+)ms \((\d+)ms (\d+)ms stored\)",  dive.log_content)
-        valve = re.findall(":\[BYCMD.+\] +valve (\d+)ms (\d+) \((\d+)ms (\d+) stored\)",  dive.log_content)
-        pump_2000m = re.findall(":\[BYCMD.+\] +pump (\d+)ms (\d+)% (\d+) (\d+)% \((\d+)ms (\d+)% (\d+) (\d+)% stored\)",  dive.log_content)
-        pump_4000m = re.findall(":\[BYCMD.+\] +pump (\d+)ms (\d+) (\d+) (\d+) \((\d+)ms (\d+) (\d+) (\d+) stored\)",  dive.log_content)
-        rate = re.findall(":\[BYCMD.+\] +rate (\d+)mbar/s \((\d+)mbar/s stored\)",  dive.log_content)
-        surface = re.findall(":\[BYCMD.+\] +surface (\d+)mbar \((\d+)mbar stored\)",  dive.log_content)
-        near_2000m = re.findall(":\[BYCMD.+\] +near (\d+)mbar (\d+)mbar/s \((\d+)mbar (\d+)mbar/s stored\)",  dive.log_content)
-        near_4000m = re.findall(":\[BYCMD.+\] +near (\d+)mbar (\d+):(\d+):(\d+)mbar/s \((\d+)mbar (\d+):(\d+):(\d+)mbar/s stored\)",  dive.log_content)
-        middle = re.findall(":\[BYCMD.+\] +middle (\d+)mbar/s \((\d+)mbar/s stored\)",  dive.log_content)
-        far = re.findall(":\[BYCMD.+\] +far (\d+)mbar (\d+)mbar/s \((\d+)mbar (\d+)mbar/s stored\)",  dive.log_content)
-        ascent = re.findall(":\[BYCMD.+\] +ascent (\d+)mbar/s \((\d+)mbar/s stored\)",  dive.log_content)
-        dead = re.findall(":\[BYCMD.+\] +dead (\d+)s \((\d+)s stored\)",  dive.log_content)
-        coeff = re.findall(":\[BYCMD.+\] +coeff (\d+)/(\d+) \((\d+)/(\d+) stored\)",  dive.log_content)
-        stab = re.findall(":\[BYCMD.+\] +stab (\d+) \((\d+) stored\)",  dive.log_content)
-        delay = re.findall(":\[BYCMD.+\] +delay (\d+)s (\d+)s \((\d+)s (\d+)s stored\)",  dive.log_content)
-        mmtime = re.findall(":\[BYCMD.+\] +mmtime (\d+)min \((\d+)min stored\)",  dive.log_content)
-        dv_landing = re.findall(":\[BYCMD.+\] +dv_landing (\d+)ml \((\d+)ml stored\)",  dive.log_content)
-        conf_landing = re.findall(":\[BYCMD.+\] +landing confirmation (\d+) \((\d+) stored\)",  dive.log_content)
-        p2t_1 = re.findall(":\[MKDCMD.+\] +p2t(\d+): (\d+)x(\d+)ms, offset (\d+)mbar",  dive.log_content)
-        p2t_2 = re.findall(":\[P2TCMD.+\] +p2t\d+: dp (\d+)mbar, dt (\d+)mdegC",  dive.log_content)
+        bypass = re.findall(":\[.+\] +bypass (\d+)ms (\d+)ms \((\d+)ms (\d+)ms stored\)",  dive.log_content)
+        valve = re.findall(":\[.+\] +valve (\d+)ms (\d+) \((\d+)ms (\d+) stored\)",  dive.log_content)
+        pump_2000m = re.findall(":\[.+\] +pump (\d+)ms (\d+)% (\d+) (\d+)% \((\d+)ms (\d+)% (\d+) (\d+)% stored\)",  dive.log_content)
+        pump_4000m = re.findall(":\[.+\] +pump (\d+)ms (\d+) (\d+) (\d+) \((\d+)ms (\d+) (\d+) (\d+) stored\)",  dive.log_content)
+        rate = re.findall(":\[.+\] +rate (\d+)mbar/s \((\d+)mbar/s stored\)",  dive.log_content)
+        surface = re.findall(":\[.+\] +surface (\d+)mbar \((\d+)mbar stored\)",  dive.log_content)
+        near_2000m = re.findall(":\[.+\] +near (\d+)mbar (\d+)mbar/s \((\d+)mbar (\d+)mbar/s stored\)",  dive.log_content)
+        near_4000m = re.findall(":\[.+\] +near (\d+)mbar (\d+):(\d+):(\d+)mbar/s \((\d+)mbar (\d+):(\d+):(\d+)mbar/s stored\)",  dive.log_content)
+        middle = re.findall(":\[.+\] +middle (\d+)mbar/s \((\d+)mbar/s stored\)",  dive.log_content)
+        far = re.findall(":\[.+\] +far (\d+)mbar (\d+)mbar/s \((\d+)mbar (\d+)mbar/s stored\)",  dive.log_content)
+        ascent = re.findall(":\[.+\] +ascent (\d+)mbar/s \((\d+)mbar/s stored\)",  dive.log_content)
+        dead = re.findall(":\[.+\] +dead (\d+)s \((\d+)s stored\)",  dive.log_content)
+        coeff = re.findall(":\[.+\] +coeff (\d+)/(\d+) \((\d+)/(\d+) stored\)",  dive.log_content)
+        stab = re.findall(":\[.+\] +stab (\d+) \((\d+) stored\)",  dive.log_content)
+        delay = re.findall(":\[.+\] +delay (\d+)s (\d+)s \((\d+)s (\d+)s stored\)",  dive.log_content)
+        mmtime = re.findall(":\[.+\] +mmtime (\d+)min \((\d+)min stored\)",  dive.log_content)
+        dv_landing = re.findall(":\[.+\] +dv_landing (\d+)ml \((\d+)ml stored\)",  dive.log_content)
+        conf_landing = re.findall(":\[.+\] +landing confirmation (\d+) \((\d+) stored\)",  dive.log_content)
+        p2t_1 = re.findall(":\[.+\] +p2t(\d+): (\d+)x(\d+)ms, offset (\d+)mbar",  dive.log_content)
+        p2t_2 = re.findall(":\[.+\] +p2t\d+: dp (\d+)mbar",  dive.log_content)
 
         if len(bypass) > 0 :
             self.bypass_1st_ms = int(bypass[0][0])
@@ -313,7 +313,7 @@ class Configuration :
             self.p2t_offset_mbar=int(p2t_1[0][3])
         if len(p2t_2) > 0 :
             self.p2t_log_mbar=int(p2t_2[0][0])
-            self.p2t_log_mdegc=int(p2t_2[0][1])
+            self.p2t_log_mdegc=-1
         # get all stages
         self.stages = []
         stage_nb = 0

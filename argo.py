@@ -428,7 +428,7 @@ class Measurements:
                 self.list.append(measure)
 
             #detect pressure, temperature and salinity measure
-            pts = utils.find_timestamped_value(":\[SBE61.+\]P.*\+(\d+),T.*\+(\d+),S(\d+)", line)
+            pts = utils.find_timestamped_value(":\[SBE61.+\]P\s*(\+?\-?\d+),T\s*(\+?\-?\d+),S\s*(\+?\-?\d+)", line)
             if len(pts) > 0 :
                 self.list.append(Measurement(cycle_nb,mc-10,pts[1],"SBE61 drift measure",None,None,int(pts[0][0]),int(pts[0][1]),int(pts[0][2])))
 

@@ -230,12 +230,9 @@ class Dive:
         self.gps_list_is_complete = False
         if self.is_complete_dive:
             # Check that the last GPS fix of the list correspond to the ascent position
-            surface_date = utils.find_timestamped_values(
-                "\[MAIN *, *\d+\]surface", self.log_content)
+            surface_date = utils.find_timestamped_values("\[MAIN.+\]surface", self.log_content)
             if not surface_date :
-                surface_date = utils.find_timestamped_values(
-                "\[MAIN *, *\d+\]Pext", self.log_content)
-
+                surface_date = utils.find_timestamped_values("\[MAIN.+\]Pext", self.log_content)
             surface_date = surface_date[-1][1]
             if len(self.gps_list) == 0:
                 print(("WARNING: No GPS synchronization at all for \""
@@ -398,18 +395,12 @@ class Dive:
             os.remove(export_path)
         print(export_path)
         # Search pressure values
-        pressure = utils.find_timestamped_values(
-            "]P\s*(\+?\-?\d+)mbar", self.log_content)
-        bypass = utils.find_timestamped_values(
-            ":\[BYPASS.+\].*opening.*[0-9]+ms", self.log_content)
-        valve = utils.find_timestamped_values(
-            ":\[VALVE.+\].*opening.*[0-9]+ms", self.log_content)
-        pump = utils.find_timestamped_values(
-            ":\[PUMP.+\].*during.*[0-9]+ms", self.log_content)
-        mermaid_events = utils.find_timestamped_values(
-            ":\[MRMAID,\d+\] *\d+dbar, *-?\d+degC", self.log_content)
-        sbe61_measures = utils.find_timestamped_values(
-            ":\[SBE61.+,\d+\]P\s*(\+?\-?\d+),T\s*(\+?\-?\d+),S\s*(\+?\-?\d+)", self.log_content)
+        pressure = utils.find_timestamped_values("]P\s*(\+?\-?\d+)mbar", self.log_content)
+        bypass = utils.find_timestamped_values(":\[BYPASS.+\].*opening.*[0-9]+ms", self.log_content)
+        valve = utils.find_timestamped_values(":\[VALVE.+\].*opening.*[0-9]+ms", self.log_content)
+        pump = utils.find_timestamped_values(":\[PUMP.+\].*during.*[0-9]+ms", self.log_content)
+        mermaid_events = utils.find_timestamped_values(":\[MRMAID.+\] *\d+dbar, *-?\d+degC", self.log_content)
+        sbe61_measures = utils.find_timestamped_values(":\[SBE.+\]P\s*(\+?\-?\d+),T\s*(\+?\-?\d+),S\s*(\+?\-?\d+)", self.log_content)
 
         # Return if there is no data to plot
         if len(pressure) < 1:
@@ -570,15 +561,13 @@ class Dive:
         gps_after_dive = [self.gps_list[-1]] + next_dive.gps_list[:-1]
 
         # Find location when float leave the surface
-        surface_leave_date = utils.find_timestamped_values(
-            "\[DIVING, *\d+\] *(\d+)mbar reached", self.log_content)
+        surface_leave_date = utils.find_timestamped_values("\[DIVING, *\d+\] *(\d+)mbar reached", self.log_content)
         surface_leave_date = surface_leave_date[0][1]
         self.surface_leave_loc = gps.linear_interpolation(
             gps_before_dive, surface_leave_date)
 
         # Find location when float reach the surface
-        surface_reach_date = utils.find_timestamped_values(
-            "\[SURFIN, *\d+\]filling external bladder", self.log_content)
+        surface_reach_date = utils.find_timestamped_values("\[SURFIN, *\d+\]filling external bladder", self.log_content)
         surface_reach_date = surface_reach_date[-1][1]
         self.surface_reach_loc = gps.linear_interpolation(
             gps_after_dive, surface_reach_date)
@@ -587,8 +576,7 @@ class Dive:
         mixed_layer_depth_m = 50
 
         # Find pressure values
-        pressure = utils.find_timestamped_values(
-            "P\s*(\+?\-?\d+)mbar", self.log_content)
+        pressure = utils.find_timestamped_values("P\s*(\+?\-?\d+)mbar", self.log_content)
         pressure_date = [p[1] for p in pressure]
         pressure_val = [int(p[0]) / 100. for p in pressure]
 

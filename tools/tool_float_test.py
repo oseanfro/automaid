@@ -185,7 +185,7 @@ def main():
     nb_ouverture_secondaire_bypass = []
     for dive in mdives:
         if dive.is_complete_dive:
-            bypass_all_str = re.findall("BYPASS,\d+\]opening (\d+)", dive.log_content)
+            bypass_all_str = re.findall("BYPASS.+\]opening (\d+)", dive.log_content)
             if len(bypass_all_str) == 0:
                 break
             bypass_first = int(bypass_all_str[0])
@@ -211,7 +211,7 @@ def main():
     for dive in mdives:
         if dive.is_complete_dive:
             start_filling_date = utils.find_timestampedUTC_values("filling external bladder", dive.log_content)[0][1]
-            temps_pompe_timestamp_str = utils.find_timestampedUTC_values("PUMP  ,\d+\]during (\d+)", dive.log_content)
+            temps_pompe_timestamp_str = utils.find_timestampedUTC_values("PUMP.+\]during (\d+)", dive.log_content)
             liste_activation_pompe = [int(tp[0]) for tp in temps_pompe_timestamp_str if tp[1] < start_filling_date]
             temps_total_pompe_par_plongee = sum(liste_activation_pompe)
             temps_pompe += [temps_total_pompe_par_plongee]
@@ -227,7 +227,7 @@ def main():
     temps_valve = []
     for dive in mdives:
         if dive.is_complete_dive:
-            temps_valve_str = re.findall("VALVE ,\d+\]opening for (\d+)", dive.log_content)
+            temps_valve_str = re.findall("VALVE.+\]opening for (\d+)", dive.log_content)
             liste_activation_valve = [int(tv) for tv in temps_valve_str]
             temps_total_valve_par_plongee = sum(liste_activation_valve)
             temps_valve += [temps_total_valve_par_plongee]

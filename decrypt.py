@@ -560,6 +560,40 @@ def decrypt_short(f) :
             return "err:UNPACKMERMAIDDETECT\r\n"
         format = str(timestamp) + ":[MRMAID,0027]0dbar, 0degC\r\n"
         return format
+    elif shortId == 9 :
+        # SBEx1 measures
+        TIMESTAMPbytes = f.read(4)
+        if len(TIMESTAMPbytes) != 4 :
+            print("err:TIMESTAMPbytes")
+            return "err:TIMESTAMPbytes\r\n";
+        SBEPRESSUREbytes = f.read(4)
+        if len(SBEPRESSUREbytes) != 4 :
+            print("err:SBEPRESSUREbytes")
+            return "err:SBEPRESSUREbytes\r\n";
+        SBETEMPbytes = f.read(4)
+        if len(SBETEMPbytes) != 4 :
+            print("err:SBETEMPbytes")
+            return "err:SBETEMPbytes\r\n";
+        SBESALbytes = f.read(4)
+        if len(SBESALbytes) != 4 :
+            print("err:SBESALbytes")
+            return "err:SBESALbytes\r\n";
+        timestamp = 0
+        sbe_press = 0
+        sbe_temp = 0
+        sbe_sal = 0
+        try :
+            # Unpack Integer of 4 bytes
+            timestamp = struct.unpack('<I', TIMESTAMPbytes)[0]
+            sbe_press = struct.unpack('<l', SBEPRESSUREbytes)[0]
+            sbe_temp = struct.unpack('<l', SBETEMPbytes)[0]
+            sbe_sal = struct.unpack('<l', SBESALbytes)[0]
+        except :
+            traceback.print_exc()
+            print("err:UNPACKSBE")
+            return "err:UNPACKSBE\r\n"
+        format = str(timestamp) + ":[SBE61 ,0396]P%+7d,;T%+7d;,S+7%d;\r\n"
+        return format % (sbe_press,sbe_temp,sbe_sal)
     return ""
 # Decrypt one file with LOG, WARN,and ERR cards give in arguments
 def decrypt_one(path,LOG_card,WARN_card,ERR_card):
