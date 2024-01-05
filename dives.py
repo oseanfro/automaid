@@ -66,9 +66,6 @@ class Dive:
     great_depth_leave_loc = None
     argo_config = None
     profilesS41 = None
-    s41_name = None
-    s41_environment = None
-    s41_start = None
     profilesS61 = None
     measures = None
 
@@ -199,27 +196,9 @@ class Dive:
                         # 4 Invert wavelet transform of event
                         event.invert_transform()
 
-        # Find the .S41 file of the ascent
-        catch = re.findall("bytes in (\w+/\w+\.S41)", self.log_content)
-        if len(catch) > 0:
-            self.s41_name = catch[-1].replace("/", "_")
-        # If the dive contain a sbe41 profile file
-        self.profilesS41 = list()
-        if self.s41_name:
-            try:
-                # Read the sbe41 environnement
-                with open(self.base_path + self.s41_name, "r", encoding='latin1') as f:
-                    content = f.read()
-            except IOError:
-                print(("manque le fichier " + self.s41_name))
-                self.s41_name = None
-            else:
-                self.s41_environment = re.findall(
-                    "<PARAMETERS>.+</PILOTS>", content, re.DOTALL)[0]
-                self.profilesS41 = profilesS41.get_profiles_between(
-                    self.date, self.end_date)
-
-        # If the dive contain a sbe41 profile file
+        # Find the S41 profiles if any
+        self.profilesS41 = profilesS41.get_profiles_between(self.date, self.end_date)
+        # Find the S61 profiles if any
         self.profilesS61 = profilesS61.get_profiles_between(self.date, self.end_date)
         # Find the position of the float
         self.gps_list = gps.get_gps_list(
@@ -318,15 +297,19 @@ class Dive:
             md5_file.write(md5Current)
 
     def generate_s41_environment_file(self):
-        # Check if there is a Mermaid file
-        if self.s41_name is None:
+        if len(self.profilesS41) == 0:
             return
         # Check if file exist
-        export_path = self.export_path + self.log_name + "." + self.s41_name + ".params"
-        export_path_md5 = self.export_path + "." + \
-            self.log_name + "." + self.s41_name + ".md5"
+        export_path = self.export_path + self.log_name + ".S41.params"
+        export_path_md5 = self.export_path + "." + self.log_name + ".S41.md5"
 
-        md5Current = utils.get_md5_from_string(self.s41_environment)
+        environment = ""
+        for profile in self.profilesS41:
+            environment += "<PARAMETERS file=" + profile.file_name + ">\r\n"
+            environment += profile.parameters_header()
+            environment += "<\PARAMETERS>\r\n"
+
+        md5Current = utils.get_md5_from_string(environment)
         md5Old = ""
         if os.path.exists(export_path_md5) and os.path.exists(export_path):
             with open(export_path_md5, "r") as f:
@@ -339,7 +322,7 @@ class Dive:
             os.remove(export_path)
         # Write file
         with open(export_path, "w") as f:
-            f.write(self.s41_environment)
+            f.write(environment)
         with open(export_path_md5, mode='w') as md5_file:
             md5_file.write(md5Current)
 
