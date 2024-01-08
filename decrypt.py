@@ -592,8 +592,149 @@ def decrypt_short(f) :
             traceback.print_exc()
             print("err:UNPACKSBE")
             return "err:UNPACKSBE\r\n"
-        format = str(timestamp) + ":[SBE61 ,0396]P%+7d,;T%+7d;,S+7%d;\r\n"
+        format = str(timestamp) + ":[SBE61 ,0396]P%+7d,T%+7d,S+7%d\r\n"
         return format % (sbe_press,sbe_temp,sbe_sal)
+    elif shortId == 10 :
+        # Mermaid start
+        TIMESTAMPbytes = f.read(4)
+        if len(TIMESTAMPbytes) != 4 :
+            print("err:TIMESTAMPbytes")
+            return "err:TIMESTAMPbytes\r\n";
+        timestamp = 0
+        try :
+            # Unpack Integer of 4 bytes
+            timestamp = struct.unpack('<I', TIMESTAMPbytes)[0]
+        except :
+            traceback.print_exc()
+            print("err:UNPACKMERMAIDSTART")
+            return "err:UNPACKMERMAIDSTART\r\n"
+        format = str(timestamp) + ":[MRMAID,0002]acq started\r\n"
+        return format
+    elif shortId == 11 :
+        # Mermaid stop
+        TIMESTAMPbytes = f.read(4)
+        if len(TIMESTAMPbytes) != 4 :
+            print("err:TIMESTAMPbytes")
+            return "err:TIMESTAMPbytes\r\n";
+        timestamp = 0
+        try :
+            # Unpack Integer of 4 bytes
+            timestamp = struct.unpack('<I', TIMESTAMPbytes)[0]
+        except :
+            traceback.print_exc()
+            print("err:UNPACKMERMAIDSTOP")
+            return "err:UNPACKMERMAIDSTOP\r\n"
+        format = str(timestamp) + ":[MRMAID,0003]acq stopped\r\n"
+        return format
+    elif shortId == 12 :
+        # GPS POS
+        TIMESTAMPbytes = f.read(4)
+        if len(TIMESTAMPbytes) != 4 :
+            print("err:TIMESTAMPbytes")
+            return "err:TIMESTAMPbytes\r\n";
+        LATHEMIbytes = f.read(1)
+        if len(LATHEMIbytes) != 1 :
+            print("err:LATHEMIbytes")
+            return "err:LATHEMIbytes\r\n";
+        LATDEGbytes = f.read(1)
+        if len(LATDEGbytes) != 1 :
+            print("err:LATDEGbytes")
+            return "err:LATDEGbytes\r\n";
+        LATMINbytes = f.read(1)
+        if len(LATMINbytes) != 1 :
+            print("err:LATMINbytes")
+            return "err:LATMINbytes\r\n";
+        LATMMbytes = f.read(2)
+        if len(LATMMbytes) != 2 :
+            print("err:LATMMbytes")
+            return "err:LATMMbytes\r\n";
+
+        LONGHEMIbytes = f.read(1)
+        if len(LONGHEMIbytes) != 1 :
+            print("err:LONGHEMIbytes")
+            return "err:LONGHEMIbytes\r\n";
+        LONGDEGbytes = f.read(1)
+        if len(LONGDEGbytes) != 1 :
+            print("err:LONGDEGbytes")
+            return "err:LONGDEGbytes\r\n";
+        LONGMINbytes = f.read(1)
+        if len(LONGMINbytes) != 1 :
+            print("err:LONGMINbytes")
+            return "err:LONGMINbytes\r\n";
+        LONGMMbytes = f.read(2)
+        if len(LONGMMbytes) != 2 :
+            print("err:LONGMMbytes")
+            return "err:LONGMMbytes\r\n";
+
+        timestamp = 0
+        lat_hemi = '?'
+        lat_deg = 0
+        lat_min = 0
+        lat_mm = 0
+
+        long_hemi = '?'
+        long_deg = 0
+        long_min = 0
+        long_mm = 0
+        try :
+            # Unpack Integer of 4 bytes
+            timestamp = struct.unpack('<I', TIMESTAMPbytes)[0]
+            lat_hemi = struct.unpack('<c', LATHEMIbytes)[0]
+            lat_deg = struct.unpack('<B', LATDEGbytes)[0]
+            lat_min = struct.unpack('<B', LATMINbytes)[0]
+            lat_mm = struct.unpack('<H', LATMMbytes)[0]
+
+            long_hemi = struct.unpack('<c', LONGHEMIbytes)[0]
+            long_deg = struct.unpack('<B', LONGDEGbytes)[0]
+            long_min = struct.unpack('<B', LONGMINbytes)[0]
+            long_mm = struct.unpack('<H', LONGMMbytes)[0]
+        except :
+            traceback.print_exc()
+            print("err:UNPACKGPSPOS")
+            return "err:UNPACKGPSPOS\r\n"
+        format = str(timestamp) + ":[SURF  ,0082]%c%02ddeg%02d.%03dmn, %c%03ddeg%02d.%03dmn\r\n"
+        return format % (lat_hemi,lat_deg,lat_min,lat_mm,long_hemi,long_deg,long_min,long_mm)
+    elif shortId == 13 :
+        # GPS DOP
+        TIMESTAMPbytes = f.read(4)
+        if len(TIMESTAMPbytes) != 4 :
+            print("err:TIMESTAMPbytes")
+            return "err:TIMESTAMPbytes\r\n";
+        HDOPbytes = f.read(1)
+        if len(HDOPbytes) != 1 :
+            print("err:HDOPbytes")
+            return "err:HDOPbytes\r\n";
+        mHDOPbytes = f.read(2)
+        if len(mHDOPbytes) != 1 :
+            print("err:mHDOPbytes")
+            return "err:mHDOPbytes\r\n";
+        VDOPbytes = f.read(1)
+        if len(VDOPbytes) != 1 :
+            print("err:VDOPbytes")
+            return "err:VDOPbytes\r\n";
+        mVDOPbytes = f.read(2)
+        if len(mVDOPbytes) != 1 :
+            print("err:mVDOPbytes")
+            return "err:mVDOPbytes\r\n";
+        timestamp = 0
+        hdop = 0
+        mhdop = 0
+        vdop = 0
+        mvdop = 0
+        try :
+            # Unpack Integer of 4 bytes
+            timestamp = struct.unpack('<I', TIMESTAMPbytes)[0]
+            hdop = struct.unpack('<b', LATHEMIbytes)[0]
+            mhdop = struct.unpack('<h', LATDEGbytes)[0]
+            vdop = struct.unpack('<b', LATMINbytes)[0]
+            mvdop = struct.unpack('<h', LATMMbytes)[0]
+        except :
+            traceback.print_exc()
+            print("err:UNPACKGPSDOP")
+            return "err:UNPACKGPSDOP\r\n"
+        format = str(timestamp) + ":[SURF  ,0084]hdop %d.%03d, vdop %d.%03d\r\n"
+        return format % (hdop,mhdop,vdop,mvdop)
+
     return ""
 # Decrypt one file with LOG, WARN,and ERR cards give in arguments
 def decrypt_one(path,LOG_card,WARN_card,ERR_card):
