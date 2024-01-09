@@ -679,12 +679,12 @@ def decrypt_short(f) :
         try :
             # Unpack Integer of 4 bytes
             timestamp = struct.unpack('<I', TIMESTAMPbytes)[0]
-            lat_hemi = struct.unpack('<c', LATHEMIbytes)[0]
+            lat_hemi = struct.unpack('<B', LATHEMIbytes)[0]
             lat_deg = struct.unpack('<B', LATDEGbytes)[0]
             lat_min = struct.unpack('<B', LATMINbytes)[0]
             lat_mm = struct.unpack('<H', LATMMbytes)[0]
 
-            long_hemi = struct.unpack('<c', LONGHEMIbytes)[0]
+            long_hemi = struct.unpack('<B', LONGHEMIbytes)[0]
             long_deg = struct.unpack('<B', LONGDEGbytes)[0]
             long_min = struct.unpack('<B', LONGMINbytes)[0]
             long_mm = struct.unpack('<H', LONGMMbytes)[0]
@@ -705,7 +705,7 @@ def decrypt_short(f) :
             print("err:HDOPbytes")
             return "err:HDOPbytes\r\n";
         mHDOPbytes = f.read(2)
-        if len(mHDOPbytes) != 1 :
+        if len(mHDOPbytes) != 2 :
             print("err:mHDOPbytes")
             return "err:mHDOPbytes\r\n";
         VDOPbytes = f.read(1)
@@ -713,7 +713,7 @@ def decrypt_short(f) :
             print("err:VDOPbytes")
             return "err:VDOPbytes\r\n";
         mVDOPbytes = f.read(2)
-        if len(mVDOPbytes) != 1 :
+        if len(mVDOPbytes) != 2 :
             print("err:mVDOPbytes")
             return "err:mVDOPbytes\r\n";
         timestamp = 0
@@ -724,10 +724,10 @@ def decrypt_short(f) :
         try :
             # Unpack Integer of 4 bytes
             timestamp = struct.unpack('<I', TIMESTAMPbytes)[0]
-            hdop = struct.unpack('<b', LATHEMIbytes)[0]
-            mhdop = struct.unpack('<h', LATDEGbytes)[0]
-            vdop = struct.unpack('<b', LATMINbytes)[0]
-            mvdop = struct.unpack('<h', LATMMbytes)[0]
+            hdop = struct.unpack('<b', HDOPbytes)[0]
+            mhdop = struct.unpack('<h', mHDOPbytes)[0]
+            vdop = struct.unpack('<b', VDOPbytes)[0]
+            mvdop = struct.unpack('<h', mVDOPbytes)[0]
         except :
             traceback.print_exc()
             print("err:UNPACKGPSDOP")
