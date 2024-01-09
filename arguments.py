@@ -30,7 +30,7 @@ events_plotly = True
 # Export formats
 export_msd = False
 export_sac = False
-export_wav = True
+export_wav = False
 
 # Html generation
 # if local_html is false user need internet to open html
