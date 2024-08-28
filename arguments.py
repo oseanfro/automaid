@@ -26,9 +26,9 @@ sbe61_ploted = True
 generate_ncdf_files = False
 
 # Plot interactive figures in HTML format for acoustic events
-events_plotly = True
+events_plotly = False
 # Export formats
-export_msd = False
+export_msd = True
 export_sac = False
 export_wav = False
 
