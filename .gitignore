@@ -13,3 +13,6 @@ statistics/
 netCDF/
 bin/wtcoeffs*
 bin/icdf24*
+*.kdev4
+src/V103/icdf24_v103_test
+src/V103EC/icdf24_v103ec_test
